@@ -35,10 +35,10 @@ export default function Hero() {
                     </p>
                     <div className="flex gap-3">
                         <a
-                            href="/projects"
+                            href="/about"
                             className="rounded-full bg-sky-500 px-5 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition-colors"
                         >
-                            View projects
+                            About Me
                         </a>
                         <a
                             href="https://github.com/yih0nk"
