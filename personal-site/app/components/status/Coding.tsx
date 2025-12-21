@@ -1,15 +1,15 @@
 const codingData = {
     building: [
         "My personal site with React, Next.js, TypeScript, and Tailwind CSS.",
-        "The landing-website for HackSC, USC's largest flagship hackathon.",
-        "A USC Makers robot from scratch using stepper motors and Raspberry Pi.",
+        "The landing website for HackSC, USC's largest flagship hackathon.",
+        "A USC Makers robot from scratch, incorporating reinforcement learning using Python and Isaac Sim.",
     ],
     learning: [
         "System design fundamentals and scalability patterns.",
         "Data structures, algorithms, and problem-solving patterns for SWE roles.",
     ],
     exploring: [
-        "AI-assisted tools: using LLMs to analyze code and generate tests,",
+        "AI-assisted tools: using LLMs to analyze code and generate tests.",
         "Cloud-backend services on AWS (Lambda, API Gateway, RDS/Supabase)",
     ],
 };
