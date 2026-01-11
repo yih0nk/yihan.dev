@@ -161,7 +161,7 @@ export default function Spotify() {
 
                 {recentTracks.length === 0 && (
                     <p className="text-xs text-slate-500">
-                        Looks quiet here. Play something on Spotify and refresh.
+                        Looks quiet here...
                     </p>
                 )}
             </div>
