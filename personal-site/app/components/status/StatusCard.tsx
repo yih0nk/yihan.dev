@@ -8,7 +8,7 @@ export default function StatusCard() {
     const [tab, setTab] = useState<"coding" | "spotify">("coding");
 
     return (
-        <div className="h-[32rem] md:h-[36rem] rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-xl p-5 flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.65)]">
+        <div className="w-[32rem] h-[30rem] md:h-[34rem] rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-xl p-5 flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.65)]">
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
                 <div>
@@ -43,7 +43,7 @@ export default function StatusCard() {
                                 : "text-slate-300 hover:text-slate-100"
                             }`}
                     >
-                        Spotify
+                        My Spotify
                     </button>
                 </div>
             </div>

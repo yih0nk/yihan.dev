@@ -14,7 +14,7 @@ export default function Hero() {
                         Software Developer · Student
                     </p>
                     <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                        Hey, I’m <span className="text-sky-400">Yihan</span> 👋
+                        Hi, I’m <span className="text-sky-400">Yihan</span>
                     </h1>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-5 w-[50rem]">
                         I build{" "}
@@ -33,20 +33,12 @@ export default function Hero() {
                         <br></br>
                         I’m currently looking for software engineering internships where I can implement user-facing features across the stack.
                     </p>
-                    <div className="flex gap-3">
-                        <a
-                            href="/about"
-                            className="rounded-full bg-sky-500 px-5 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition-colors"
-                        >
-                            About Me
-                        </a>
-                        <a
-                            href="https://github.com/yih0nk"
-                            className="rounded-full border border-slate-600 px-5 py-2 text-sm font-medium text-slate-200 hover:border-slate-300 transition-colors"
-                        >
-                            GitHub
-                        </a>
-                    </div>
+                    <a
+                        href="https://github.com/yih0nk"
+                        className="rounded-full border border-slate-600 px-5 py-2 text-sm font-medium text-slate-200 hover:border-slate-300 transition-colors"
+                    >
+                        GitHub
+                    </a>
                 </div>
                 <div className="flex-1 max-w-md lg:max-w-lg xl:max-w-xl">
                     <StatusCard />
