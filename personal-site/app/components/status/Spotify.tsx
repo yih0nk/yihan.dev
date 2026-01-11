@@ -70,33 +70,39 @@ export default function Spotify() {
     return (
         <div className="text-sm text-slate-200 space-y-4">
             {/* PROFILE HEADER */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    {profile.images?.[0]?.url && (
-                        <img
-                            src={profile.images[0].url}
-                            alt="Spotify avatar"
-                            className="h-10 w-10 rounded-full object-cover border border-white/10"
-                        />
-                    )}
-                    <div>
-                        <p className="font-semibold text-sky-400 leading-tight">
-                            {profile.display_name}
-                        </p>
-                        <p className="text-[11px] text-slate-500">
-                            Connected to Spotify
-                        </p>
+            {/* PROFILE HEADER */}
+            {profile && (
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        {profile.images?.[0]?.url && (
+                            <img
+                                src={profile.images[0].url}
+                                alt="Spotify avatar"
+                                className="h-10 w-10 rounded-full object-cover border border-white/10"
+                            />
+                        )}
+                        <div>
+                            <p className="font-semibold text-sky-400 leading-tight">
+                                {profile.display_name}
+                            </p>
+                            <p className="text-[11px] text-slate-500">
+                                Connected to Spotify
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <a
-                    href={profile.external_urls?.spotify}
-                    target="_blank"
-                    className="text-[11px] px-2 py-1 rounded-full border border-slate-700/70 text-slate-400 hover:border-sky-500 hover:text-sky-400 transition"
-                >
-                    Open profile ↗
-                </a>
-            </div>
+                    {profile.external_urls?.spotify && (
+                        <a
+                            href={profile.external_urls.spotify}
+                            target="_blank"
+                            className="text-[11px] px-2 py-1 rounded-full border border-slate-700/70 text-slate-400 hover:border-sky-500 hover:text-sky-400 transition"
+                        >
+                            Open profile ↗
+                        </a>
+                    )}
+                </div>
+            )}
+
 
             {/* RECENTLY PLAYED LIST */}
             <div className="space-y-2">
