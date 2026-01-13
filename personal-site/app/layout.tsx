@@ -20,13 +20,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
-            <Head>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <body
-                className={`${inter.variable} ${firaCode.variable} bg-slate-950 text-slate-100`}
-            >
+        <html lang="en" className="overflow-x-hidden">
+            <body className="overflow-x-hidden">
                 {children}
             </body>
         </html>
