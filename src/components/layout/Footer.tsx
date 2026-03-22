@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
         <p
           className="text-sm text-gray-400"
-          style={{ fontFamily: "var(--font-sketch)" }}
+          style={{ fontFamily: "var(--font-mono)" }}
         >
           © {new Date().getFullYear()} Yihan Hong
         </p>

@@ -15,13 +15,13 @@ export default function HomePage() {
 
       <section className="content-width px-6 py-20 text-center">
         <h1
-          className="text-5xl md:text-7xl font-bold mb-4"
-          style={{ fontFamily: "var(--font-sketch)" }}
+          className="text-4xl md:text-5xl mb-3 tracking-wide whitespace-nowrap"
+          style={{ fontFamily: "var(--font-mono)" }}
         >
           Hi, I&apos;m Yihan
         </h1>
-        <p className="text-lg text-gray-500 max-w-md mx-auto">
-          Developer, artist, musician. USC CS student building real things.
+        <p className="text-base text-gray-500 whitespace-nowrap">
+          Developer, artist, musician. USC CECS student building real things.
         </p>
       </section>
     </PageTransition>

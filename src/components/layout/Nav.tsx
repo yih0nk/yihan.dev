@@ -44,8 +44,8 @@ export default function Nav() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <span
-              className="font-sketch text-2xl font-bold leading-none"
-              style={{ fontFamily: "var(--font-sketch)" }}
+              className="font-mono-display text-2xl font-bold leading-none"
+              style={{ fontFamily: "var(--font-mono)" }}
             >
               Yihan
             </span>
@@ -115,7 +115,7 @@ export default function Nav() {
                       "text-4xl font-bold text-white hover:text-gray-300 transition-colors",
                       pathname === link.href && "underline underline-offset-4"
                     )}
-                    style={{ fontFamily: "var(--font-sketch)" }}
+                    style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {link.label}
                   </Link>

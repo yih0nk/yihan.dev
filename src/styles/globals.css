@@ -1,5 +1,5 @@
 /* Google Fonts import must come first */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 @import "tailwindcss";
 
@@ -12,7 +12,7 @@
     --color-gray-light: #cccccc;
 
     --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
-    --font-sketch: "Caveat", "Patrick Hand", cursive;
+    --font-mono: "Space Mono", "Courier New", monospace;
   }
 
   html {
@@ -48,8 +48,8 @@
 }
 
 @layer utilities {
-  .font-sketch {
-    font-family: var(--font-sketch);
+  .font-mono-display {
+    font-family: var(--font-mono);
   }
 
   .text-balance {
