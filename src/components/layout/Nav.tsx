@@ -44,10 +44,10 @@ export default function Nav() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <span
-              className="font-mono-display text-2xl font-bold leading-none"
-              style={{ fontFamily: "var(--font-mono)" }}
+              className="text-2xl leading-none"
+              style={{ fontFamily: "'Caveat', 'Patrick Hand', cursive", fontWeight: 700 }}
             >
-              Yihan
+              YIHAN
             </span>
           </Link>
 

@@ -5,10 +5,11 @@ import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: "Yihan Hong",
-    template: "%s | Yihan Hong",
+    default: "Yihan — Developer, Artist, Musician",
+    template: "%s | Yihan",
   },
-  description: "Developer, artist, musician. USC CS student.",
+  description:
+    "Personal website of Yihan — a USC computer science student who builds full-stack apps, draws things, plays piano and tenor sax, and cares about craft.",
 };
 
 export default function RootLayout({

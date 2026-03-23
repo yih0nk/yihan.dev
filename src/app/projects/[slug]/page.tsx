@@ -1,7 +1,23 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import PageTransition from "@/components/layout/PageTransition";
+import { getProject, projects } from "@/lib/projects";
 
-export const metadata: Metadata = { title: "Project" };
+export async function generateStaticParams() {
+  return projects.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) return {};
+  return { title: project.title, description: project.tagline };
+}
 
 export default async function ProjectDetailPage({
   params,
@@ -9,13 +25,63 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) notFound();
+
   return (
     <PageTransition>
-      <div className="content-width px-6 py-20">
-        <h1 className="text-4xl font-bold mb-8" style={{ fontFamily: "var(--font-mono)" }}>
-          {slug}
+      <div className="max-w-[800px] mx-auto px-6 py-20">
+        {/* Back */}
+        <Link
+          href="/projects"
+          className="text-xs text-gray-400 hover:text-black transition-colors mb-10 inline-flex items-center gap-1"
+        >
+          ← all projects
+        </Link>
+
+        <h1
+          className="text-4xl md:text-5xl mt-6 mb-4"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          {project.title}
         </h1>
-        <p className="text-gray-400">Content coming in Phase 2.</p>
+
+        <p className="text-lg text-gray-500 mb-10 leading-relaxed">
+          {project.tagline}
+        </p>
+
+        {/* Thumbnail placeholder */}
+        <div className="w-full aspect-video bg-gray-50 border border-gray-100 flex items-center justify-center mb-12">
+          <span className="text-gray-300 text-xs tracking-widest uppercase">
+            screenshot / demo — coming soon
+          </span>
+        </div>
+
+        {/* Description */}
+        <div className="space-y-5 text-gray-700 leading-relaxed mb-12">
+          {project.description.map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </div>
+
+        {/* Tags */}
+        {project.tags.length > 0 && (
+          <div>
+            <h2 className="text-xs tracking-widest uppercase text-gray-400 mb-4">
+              tech
+            </h2>
+            <ul className="flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="text-sm border border-gray-200 px-3 py-1 text-gray-600"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </PageTransition>
   );
