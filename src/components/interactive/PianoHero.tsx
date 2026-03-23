@@ -40,7 +40,7 @@ interface ToneSynth {
 
 // The 5 notes that spell YIHAN, chosen to form a pleasant ascending melody
 const YIHAN_NOTES = ['C4', 'E4', 'G4', 'A4', 'C5'] as const
-const YIHAN_LETTERS = ['Y', 'I', 'H', 'A', 'N'] as const
+const YIHAN_LETTERS = ['y', 'i', 'h', 'a', 'n'] as const
 
 // Full 2-octave keyboard: C4–B5
 const ALL_KEYS: KeyDef[] = [
@@ -235,7 +235,7 @@ export default function PianoHero() {
             <span
               aria-hidden
               style={{
-                fontFamily: "'Caveat', 'Patrick Hand', cursive",
+                fontFamily: "var(--font-mono)",
                 fontSize: 'clamp(56px, 9vw, 108px)',
                 fontWeight: 700,
                 color: 'transparent',
@@ -255,7 +255,7 @@ export default function PianoHero() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 16 }}
                   style={{
-                    fontFamily: "'Caveat', 'Patrick Hand', cursive",
+                    fontFamily: "var(--font-mono)",
                     fontSize: 'clamp(56px, 9vw, 108px)',
                     fontWeight: 700,
                     color: '#000',
@@ -291,15 +291,26 @@ export default function PianoHero() {
             >
               developer. artist. musician.
             </p>
-            <motion.a
-              href="/about"
+            <motion.div
               animate={{ y: [0, -5, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              className="inline-block border border-black px-6 py-2 text-sm text-black hover:bg-black hover:text-white transition-colors"
-              style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
+              className="flex gap-4 justify-center"
             >
-              let&apos;s explore →
-            </motion.a>
+              <a
+                href="/projects"
+                className="inline-block border border-black px-6 py-2 text-sm text-black hover:bg-black hover:text-white transition-colors"
+                style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
+              >
+                see my work →
+              </a>
+              <a
+                href="/about"
+                className="inline-block border border-black px-6 py-2 text-sm text-black hover:bg-black hover:text-white transition-colors"
+                style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
+              >
+                get to know me →
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

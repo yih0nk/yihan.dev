@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import PageTransition from "@/components/layout/PageTransition";
 import { getProject, projects } from "@/lib/projects";
 
@@ -46,15 +47,46 @@ export default async function ProjectDetailPage({
           {project.title}
         </h1>
 
-        <p className="text-lg text-gray-500 mb-10 leading-relaxed">
+        <p className="text-lg text-gray-500 mb-6 leading-relaxed">
           {project.tagline}
         </p>
 
-        {/* Thumbnail placeholder */}
-        <div className="w-full aspect-video bg-gray-50 border border-gray-100 flex items-center justify-center mb-12">
-          <span className="text-gray-300 text-xs tracking-widest uppercase">
-            screenshot / demo — coming soon
-          </span>
+        {/* Links */}
+        {project.links && project.links.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-10">
+            {project.links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition-colors"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                {link.label} →
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* Image */}
+        <div className="w-full aspect-video bg-gray-50 border border-gray-100 overflow-hidden mb-12">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={project.title}
+              width={800}
+              height={450}
+              unoptimized
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-gray-300 text-xs tracking-widest uppercase">
+                screenshot / demo — coming soon
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Description */}

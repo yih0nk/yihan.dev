@@ -120,11 +120,15 @@ export default function HobbiesPage() {
               beautiful sunset, a busy street, or a loved one.
             </p>
           </div>
-          <div className="border border-dashed border-gray-200 p-10 text-center">
-            <p className="text-gray-300 text-sm">
-              photo gallery — add images to public/images/photos/
-            </p>
-          </div>
+          <a
+            href="https://www.instagram.com/yih0nk/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 border border-black px-4 py-2 text-sm hover:bg-black hover:text-white transition-colors"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
+            follow on instagram →
+          </a>
         </section>
 
         <HandDrawnDivider />

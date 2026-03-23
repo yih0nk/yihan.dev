@@ -1,3 +1,8 @@
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -5,6 +10,8 @@ export interface Project {
   description: string[];
   tags: string[];
   featured: boolean;
+  image?: string;       // path relative to /public, e.g. "/images/projects/aiep.png"
+  links?: ProjectLink[];
 }
 
 export const projects: Project[] = [
@@ -29,6 +36,10 @@ export const projects: Project[] = [
       "Real TLC Data",
     ],
     featured: true,
+    image: "/images/projects/robotaxi.png",
+    links: [
+      { label: "GitHub", href: "https://github.com/yih0nk/sias-project" },
+    ],
   },
   {
     slug: "rocket-robot",
@@ -50,6 +61,10 @@ export const projects: Project[] = [
       "Reinforcement Learning",
     ],
     featured: true,
+    image: "/images/projects/rocket.png",
+    links: [
+      { label: "GitHub", href: "https://github.com/uscmakers/Rocket" },
+    ],
   },
   {
     slug: "aiep",
@@ -72,6 +87,10 @@ export const projects: Project[] = [
       "Agent Architecture",
     ],
     featured: true,
+    image: "/images/projects/aiep.png",
+    links: [
+      { label: "GitHub", href: "https://github.com/yih0nk/AiEP" },
+    ],
   },
   {
     slug: "solvexchange",
@@ -84,6 +103,11 @@ export const projects: Project[] = [
     ],
     tags: ["Python", "Flask", "HTML/CSS", "JavaScript", "SQLAlchemy", "Full-Stack"],
     featured: true,
+    image: "/images/projects/solvexchange.png",
+    links: [
+      { label: "GitHub", href: "https://github.com/yih0nk/SolveXchange-Website" },
+      { label: "Live Site", href: "https://solvexchange.ca" },
+    ],
   },
 ];
 

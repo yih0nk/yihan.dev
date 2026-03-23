@@ -82,7 +82,7 @@ export default function ExperiencePage() {
             subtitle="B.S. Computer Engineering and Computer Science · Class of 2029 · GPA: 3.93"
             location="Los Angeles, CA"
             bullets={[
-              "Awards: Viterbi Scholar Award · Director's Scholarship",
+              "Viterbi Scholar Award · Director's Scholarship",
               "Object Oriented Programming",
               "Discrete Methods in Computer Science",
               "Data Structures & Object-Oriented Design",

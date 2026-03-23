@@ -9,12 +9,12 @@ export const metadata: Metadata = {
 };
 
 const facts = [
-  { label: "based in", value: "Los Angeles, CA (via Beijing → Montreal → Toronto)" },
-  { label: "studying", value: "USC '29 · Computer Engineering & CS · 3.93 GPA" },
+  { label: "based in", value: "Los Angeles (via Beijing, Montreal, and Toronto)" },
+  { label: "studying", value: "USC '29 Computer Engineering & CS: 3.93 GPA" },
   { label: "awards", value: "Viterbi Scholar Award · Director's Scholarship" },
   { label: "instruments", value: "piano (15 yrs) · tenor sax (3 yrs)" },
   { label: "sport", value: "badminton — retired doubles player" },
-  { label: "favourite drink", value: "matcha einspanner" },
+  { label: "favourite drink", value: "matcha einspanner & always an iced latte" },
 ];
 
 export default function AboutPage() {
