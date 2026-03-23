@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const links = [
-  { icon: "✉️", label: "email", href: "mailto:your@email.com", display: "your@email.com" },
-  { icon: "🐙", label: "github", href: "https://github.com/yourusername", display: "github.com/yourusername" },
-  { icon: "💼", label: "linkedin", href: "https://linkedin.com/in/yourusername", display: "linkedin.com/in/yourusername" },
+  { icon: "✉️", label: "email", href: "mailto:yihanhon@usc.edu", display: "yihanhon@usc.edu" },
+  { icon: "🐙", label: "github", href: "https://github.com/yih0nk", display: "github.com/yih0nk" },
+  { icon: "💼", label: "linkedin", href: "https://linkedin.com/in/yihan-hon", display: "linkedin.com/in/yihan-hon" },
 ];
 
 export default function ContactPage() {
@@ -24,13 +24,9 @@ export default function ContactPage() {
           let&apos;s talk.
         </h1>
 
-        <p className="text-gray-600 leading-relaxed mb-2 max-w-md">
+        <p className="text-gray-600 leading-relaxed mb-12 max-w-md">
           Whether it&apos;s about an internship, a project idea, or just to say
           hi — I&apos;d love to hear from you.
-        </p>
-        <p className="text-gray-600 leading-relaxed mb-12 max-w-md">
-          The best way to reach me is email. I also exist on the internet in the
-          following places:
         </p>
 
         <ul className="space-y-6 mb-20">
@@ -58,11 +54,8 @@ export default function ContactPage() {
         </ul>
 
         <div className="border-t border-gray-100 pt-8">
-          <div className="w-16 h-16 border border-gray-200 bg-gray-50 flex items-center justify-center mb-3">
-            <span className="text-gray-300 text-xs">pfp</span>
-          </div>
           <p className="text-xs text-gray-400">
-            built with next.js, three.js, and too much coffee. © 2026 yihan.
+            built with next.js and too much coffee. © 2026 yihan.
           </p>
         </div>
       </div>

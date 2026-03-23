@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PageTransition from "@/components/layout/PageTransition";
 import HandDrawnDivider from "@/components/ui/HandDrawnDivider";
+import AudioPlayer from "@/components/ui/AudioPlayer";
 
 export const metadata: Metadata = {
   title: "Hobbies",
   description: "What Yihan does when not coding — music, art, photography, badminton.",
 };
+
+const artImages = [
+  "/images/IMG_1630.jpg",
+  "/images/IMG_2089.jpg",
+  "/images/IMG_4626.jpg",
+  "/images/IMG_4924.JPG",
+  "/images/IMG_5028.jpg",
+  "/images/IMG_9513.jpg",
+];
 
 export default function HobbiesPage() {
   return (
@@ -27,7 +38,7 @@ export default function HobbiesPage() {
           <h2 className="text-2xl mb-6" style={{ fontFamily: "var(--font-mono)" }}>
             keys &amp; reeds
           </h2>
-          <div className="text-gray-600 leading-relaxed space-y-4">
+          <div className="text-gray-600 leading-relaxed space-y-4 mb-6">
             <p>
               I play piano and tenor saxophone — two instruments that have almost
               nothing in common except that they both sound terrible when
@@ -39,7 +50,24 @@ export default function HobbiesPage() {
               later and taught me something different: how to breathe, how to
               phrase, how to make one note say more than twenty.
             </p>
+            <p>
+              I love all genres of music — Jazz, Rock, Indie Pop, Rap, Hip-Hop,
+              R&amp;B, Soul, and Classical. Some favourites: Matt Maltese, The
+              1975, Radiohead, Sade, and MF Doom.
+            </p>
+            <p className="text-sm text-gray-400">
+              Piano: 15 years and counting &nbsp;·&nbsp; Sax: 3 years and counting
+            </p>
           </div>
+          <p className="text-gray-500 text-sm mb-4">and here are some not so perfect tunes.</p>
+
+          <AudioPlayer
+            tracks={[
+              { src: "/audio/piece-01.mp3" },
+              { src: "/audio/piece-02.mp3" },
+              { src: "/audio/piece-03.mp3" },
+            ]}
+          />
         </section>
 
         <HandDrawnDivider />
@@ -51,20 +79,26 @@ export default function HobbiesPage() {
           </h2>
           <div className="text-gray-600 leading-relaxed space-y-4 mb-8">
             <p>
-              I draw and paint — mostly ink, mostly by hand. That little character
-              you&apos;ve been seeing around this site? I sketched that. It started
-              as a doodle in a notebook margin and became my whole brand.
+              I do oil painting and pencil/ink sketching. Oil painting is slow
+              and deliberate — mixing colors, building layers, waiting for things
+              to dry. Sketching is the opposite — fast, instinctive, just a pen
+              and whatever comes out.
             </p>
-            <p>
-              I like the honesty of black ink on white paper. No undo button, no
-              layers panel. Just a line and a decision. My style leans expressive
-              and loose — I&apos;d rather capture energy than accuracy.
-            </p>
+            <p>I like having both.</p>
           </div>
-          <div className="border border-dashed border-gray-200 p-10 text-center">
-            <p className="text-gray-300 text-sm">
-              art gallery — add images to public/images/art/
-            </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {artImages.map((src, i) => (
+              <div key={i} className="aspect-square overflow-hidden border border-gray-100 bg-gray-50">
+                <Image
+                  src={src}
+                  alt={`Artwork ${i + 1}`}
+                  width={400}
+                  height={400}
+                  unoptimized
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            ))}
           </div>
         </section>
 
@@ -80,6 +114,10 @@ export default function HobbiesPage() {
               Photography is how I practice seeing. It&apos;s the same muscle as
               design — noticing composition, contrast, the way light falls on
               ordinary things and makes them worth a second look.
+            </p>
+            <p>
+              I shoot anything and everything that I cherish. That can be a
+              beautiful sunset, a busy street, or a loved one.
             </p>
           </div>
           <div className="border border-dashed border-gray-200 p-10 text-center">
@@ -108,6 +146,10 @@ export default function HobbiesPage() {
               somewhat slower. But the footwork, the reflexes, the split-second
               decisions — it&apos;s the closest thing to a real-time algorithm
               I&apos;ve found outside of code.
+            </p>
+            <p>
+              I have played for about 7 years — I have competed provincially in
+              Ontario (I won gold for doubles!), and I now play recreationally.
             </p>
           </div>
         </section>

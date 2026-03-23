@@ -5,17 +5,14 @@ import HandDrawnDivider from "@/components/ui/HandDrawnDivider";
 
 export const metadata: Metadata = {
   title: "Experience",
-  description: "Education, projects, and skills.",
+  description: "Education, experience, and skills.",
 };
 
 const skillGroups = [
-  { category: "Languages", skills: ["Python", "TypeScript", "JavaScript", "C++", "HTML/CSS"] },
-  { category: "Frontend", skills: ["Next.js", "React", "Tailwind CSS"] },
-  { category: "Backend", skills: ["Flask", "Celery", "Redis", "PostgreSQL"] },
-  { category: "Cloud", skills: ["Vercel", "Azure Functions", "Cosmos DB", "Blob Storage", "Document Intelligence"] },
-  { category: "AI / ML", skills: ["Claude API", "Function Calling", "Agent Architecture", "TensorFlow.js"] },
-  { category: "Hardware", skills: ["Arduino", "ATmega328P", "Embedded C"] },
-  { category: "Tools", skills: ["Git", "SUMO / TraCI", "Blender (learning)"] },
+  { category: "Languages", skills: ["Python", "Java", "C#", "C++", "JavaScript", "TypeScript", "SQL", "HTML/CSS"] },
+  { category: "Frameworks", skills: ["React", "Next.js", "Node.js", "Vite", "FastAPI", "Flask", ".NET", "PyTorch"] },
+  { category: "Databases", skills: ["SQL Server", "MySQL", "SQLite", "Supabase", "PostgreSQL"] },
+  { category: "Cloud & Tools", skills: ["AWS", "Azure", "Google Cloud", "Docker", "Redis", "Celery", "CI/CD", "Git/GitHub"] },
 ];
 
 export default function ExperiencePage() {
@@ -33,46 +30,64 @@ export default function ExperiencePage() {
           <h2 className="text-xs tracking-widest uppercase text-gray-400 mb-8">timeline</h2>
 
           <TimelineItem
-            period="Aug 2024 — Present"
-            title="University of Southern California"
-            subtitle="B.S. Computer Science · Class of 2029"
+            period="Jan 2026 — Present"
+            title="FORTIS Lab & SIAS Lab, University of Southern California"
+            subtitle="Research Assistant"
             location="Los Angeles, CA"
             bullets={[
-              "CS 104: Data Structures & Object-Oriented Design (C++)",
-              "EE 109: Introduction to Embedded Systems (ATmega328P / Arduino)",
-              "WRIT 150: Writing and Critical Reasoning — Aesthetics",
+              "Building a multi-agent RL framework for competitive autonomous vehicle fleet pricing and routing using Python, PyTorch, and SUMO",
             ]}
           />
 
           <TimelineItem
-            period="2025"
-            title="AiEP — Hackathon Project"
-            subtitle="AI agent for special education teachers"
+            period="Jan 2026 — Present"
+            title="AdminifAI"
+            subtitle="Software Engineering Intern"
+            location="Remote"
             bullets={[
-              "Built during a hackathon — AI agent that generates lesson plans from IEPs",
-              "Claude API with function calling and custom agent loop",
-              "Azure Functions, Cosmos DB, Document Intelligence, Next.js",
+              "Built end-to-end data migration system and async validation pipeline for a multi-tenant salon SaaS platform",
             ]}
           />
 
           <TimelineItem
-            period="2024 — 2025"
-            title="Salon SaaS Platform"
-            subtitle="Freelance / Personal Project"
+            period="Jun 2025 — Aug 2025"
+            title="Triple J Canada Consulting Inc."
+            subtitle="Software Engineer"
+            location="Toronto, Canada"
             bullets={[
-              "Full-stack salon management platform with CSV data migration",
-              "Python / Flask / Celery / Redis / PostgreSQL backend",
-              "Async import pipeline normalizing data from Fresha, Vagaro, Square",
+              "Built and shipped a tax-filing client portal and internal workflow system serving 14,000+ forms and 2,000+ clients",
             ]}
           />
 
           <TimelineItem
-            period="2024"
-            title="SUMO Traffic Simulation"
-            subtitle="Personal Research Project"
+            period="Oct 2023 — Jun 2025"
+            title="Mississauga Chess Club"
+            subtitle="System Developer"
+            location="Mississauga, Canada"
             bullets={[
-              "Built traffic simulation environment with SUMO and Python TraCI",
-              "Exploring multi-agent RL on road networks",
+              "Architected a tournament and membership management system for 1,000+ members, reducing tournament setup time by 97%",
+            ]}
+            isLast
+          />
+        </section>
+
+        <HandDrawnDivider />
+
+        <section className="mt-12 mb-16">
+          <h2 className="text-xs tracking-widest uppercase text-gray-400 mb-8">education</h2>
+
+          <TimelineItem
+            period="Aug 2025 — May 2029"
+            title="University of Southern California, Viterbi School of Engineering"
+            subtitle="B.S. Computer Engineering and Computer Science · Class of 2029 · GPA: 3.93"
+            location="Los Angeles, CA"
+            bullets={[
+              "Awards: Viterbi Scholar Award · Director's Scholarship",
+              "Object Oriented Programming",
+              "Discrete Methods in Computer Science",
+              "Data Structures & Object-Oriented Design",
+              "Introduction to Embedded Systems",
+              "Calculus III",
             ]}
             isLast
           />
