@@ -79,7 +79,7 @@ export default function ExperiencePage() {
           <TimelineItem
             period="Aug 2025 — May 2029"
             title="University of Southern California, Viterbi School of Engineering"
-            subtitle="B.S. Computer Engineering and Computer Science · Class of 2029 · GPA: 3.93"
+            subtitle="B.S. Computer Engineering and Computer Science"
             location="Los Angeles, CA"
             bullets={[
               "Viterbi Scholar Award · Director's Scholarship",
