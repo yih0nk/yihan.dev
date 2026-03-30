@@ -37,7 +37,7 @@ export default function AboutPage() {
 
           <div className="space-y-5 text-gray-700 leading-relaxed">
             <p>
-              I&apos;m Yihan — a freshman at USC studying computer engineering and
+              I&apos;m Yihan — a student at USC studying computer engineering and
               computer science, currently neck-deep in data structures, embedded
               systems, and figuring out how to make things work at every layer of
               the stack.
