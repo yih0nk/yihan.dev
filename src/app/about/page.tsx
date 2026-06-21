@@ -31,7 +31,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-[200px_1fr] gap-12 mb-16">
           <div className="flex-shrink-0">
             <div className="w-40 h-40 md:w-full md:h-auto md:aspect-square border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden">
-              <Image src="/images/pfp.jpg" alt="Yihan" width={200} height={200} className="h-full w-full object-cover" />
+              <Image src="/images/IMG_4699.jpg" alt="Yihan" width={200} height={200} className="h-full w-full object-cover" />
             </div>
           </div>
 
