@@ -291,26 +291,22 @@ export default function PianoHero() {
             >
               developer. artist. musician.
             </p>
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              className="flex gap-4 justify-center"
-            >
+            <div className="flex gap-4 justify-center">
               <a
                 href="/projects"
-                className="inline-block border border-black px-6 py-2 text-sm text-black hover:bg-black hover:text-white transition-colors"
+                className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
                 style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
               >
                 see my work →
               </a>
               <a
                 href="/about"
-                className="inline-block border border-black px-6 py-2 text-sm text-black hover:bg-black hover:text-white transition-colors"
+                className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
                 style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
               >
                 get to know me →
               </a>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
