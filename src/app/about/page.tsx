@@ -22,7 +22,7 @@ export default function AboutPage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-12"
+          className="text-4xl md:text-5xl mb-12 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           about me.

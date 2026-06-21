@@ -28,7 +28,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 
         <div className="p-6">
           <h3
-            className="text-xl font-bold mb-2 group-hover:underline underline-offset-2"
+            className="text-xl mb-2 lowercase group-hover:underline underline-offset-2"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             {project.title}

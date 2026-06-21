@@ -13,12 +13,12 @@ export default function ProjectsPage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-4"
+          className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           projects.
         </h1>
-        <p className="text-gray-500 mb-14 leading-relaxed max-w-lg">
+        <p className="text-gray-500 mb-14 leading-relaxed max-w-lg lowercase">
           Things I&apos;ve built, broken, and rebuilt. I gravitate toward systems
           that move data in interesting ways — pipelines, agents, simulations.
           Here are a few I&apos;m proud of.

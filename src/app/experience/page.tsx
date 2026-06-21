@@ -20,7 +20,7 @@ export default function ExperiencePage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-14"
+          className="text-4xl md:text-5xl mb-14 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           experience.

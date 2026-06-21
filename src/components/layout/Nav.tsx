@@ -44,7 +44,7 @@ export default function Nav() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <span
-              className="text-2xl leading-none"
+              className="text-xl leading-none"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               yihan
@@ -112,7 +112,7 @@ export default function Nav() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "text-4xl font-bold text-white hover:text-gray-300 transition-colors",
+                      "text-4xl font-bold text-white lowercase hover:text-gray-300 transition-colors",
                       pathname === link.href && "underline underline-offset-4"
                     )}
                     style={{ fontFamily: "var(--font-mono)" }}
@@ -142,9 +142,10 @@ function NavLink({
     <Link
       href={href}
       className={cn(
-        "relative text-sm font-medium transition-colors hover:text-black",
+        "relative text-sm font-medium lowercase transition-colors hover:text-black",
         active ? "text-black" : "text-gray-500"
       )}
+      style={{ fontFamily: "var(--font-mono)" }}
     >
       {children}
       {/* Hand-drawn underline for active state */}

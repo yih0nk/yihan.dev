@@ -23,12 +23,12 @@ export default function HobbiesPage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-4"
+          className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           hobbies.
         </h1>
-        <p className="text-gray-500 mb-16 leading-relaxed">
+        <p className="text-gray-500 mb-16 leading-relaxed lowercase">
           I write code from 9 to 5 (okay, 9 to 2 AM). Here&apos;s what I do
           with the other hours.
         </p>

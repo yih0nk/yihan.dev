@@ -11,7 +11,7 @@ export default function BlogPage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-4"
+          className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           blog.

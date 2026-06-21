@@ -18,13 +18,13 @@ export default function ContactPage() {
     <PageTransition>
       <div className="max-w-[800px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-6"
+          className="text-4xl md:text-5xl mb-6 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           let&apos;s talk.
         </h1>
 
-        <p className="text-gray-600 leading-relaxed mb-12 max-w-md">
+        <p className="text-gray-600 leading-relaxed mb-12 max-w-md lowercase">
           Whether it&apos;s about an internship, a project idea, or just to say
           hi — I&apos;d love to hear from you.
         </p>
