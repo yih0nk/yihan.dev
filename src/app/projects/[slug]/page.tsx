@@ -40,37 +40,8 @@ export default async function ProjectDetailPage({
           ← all projects
         </Link>
 
-        <h1
-          className="text-4xl md:text-5xl mt-6 mb-4"
-          style={{ fontFamily: "var(--font-mono)" }}
-        >
-          {project.title}
-        </h1>
-
-        <p className="text-lg text-gray-500 mb-6 leading-relaxed">
-          {project.tagline}
-        </p>
-
-        {/* Links */}
-        {project.links && project.links.length > 0 && (
-          <div className="flex flex-wrap gap-3 mb-10">
-            {project.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition-colors"
-                style={{ fontFamily: "var(--font-mono)" }}
-              >
-                {link.label} →
-              </a>
-            ))}
-          </div>
-        )}
-
         {/* Image */}
-        <div className="w-full aspect-video bg-gray-50 border border-gray-100 overflow-hidden mb-12">
+        <div className="w-full aspect-video bg-gray-50 border border-gray-100 overflow-hidden mt-6 mb-10">
           {project.image ? (
             <Image
               src={project.image}
@@ -88,6 +59,37 @@ export default async function ProjectDetailPage({
             </div>
           )}
         </div>
+
+        {/* Title + Links */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <h1
+            className="text-4xl md:text-5xl"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
+            {project.title}
+          </h1>
+
+          {project.links && project.links.length > 0 && (
+            <div className="flex flex-wrap gap-3 shrink-0 pt-2">
+              {project.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition-colors"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <p className="text-lg text-gray-500 mb-6 leading-relaxed">
+          {project.tagline}
+        </p>
 
         {/* Description */}
         <div className="space-y-5 text-gray-700 leading-relaxed mb-12">

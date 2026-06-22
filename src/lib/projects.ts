@@ -17,7 +17,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: "robotaxi-simulation",
-    title: "Multi-Company Robotaxi Simulation",
+    title: "Multi Agent RL Simulation",
     tagline:
       "Simulating competitive ride-hailing on a real Manhattan road network, where two companies learn pricing and routing strategies through multi-agent RL.",
     description: [
