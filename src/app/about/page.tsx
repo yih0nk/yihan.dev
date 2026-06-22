@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 const facts = [
-  { label: "based in", value: "Los Angeles (via Beijing, Montreal, and Toronto)" },
-  { label: "studying", value: "USC '29 Computer Engineering & CS: 3.93 GPA" },
-  { label: "awards", value: "Viterbi Scholar Award · Director's Scholarship" },
-  { label: "instruments", value: "piano (15 yrs) · tenor sax (3 yrs)" },
-  { label: "sport", value: "badminton — retired doubles player" },
+  { label: "based in", value: "los angeles (via beijing, montreal, and toronto)" },
+  { label: "studying", value: "usc: computer engineering & computer science" },
+  { label: "awards", value: "viterbi scholar award, director's scholarship" },
+  { label: "instruments", value: "piano (15 yrs), tenor sax (3 yrs)" },
+  { label: "sport", value: "badminton: retired doubles player" },
   { label: "favourite drink", value: "matcha einspanner & always an iced latte" },
 ];
 
@@ -37,17 +37,17 @@ export default function AboutPage() {
 
           <div className="space-y-5 text-gray-700 leading-relaxed">
             <p>
-              I&apos;m Yihan — a student at USC studying computer engineering and
-              computer science, currently neck-deep in data structures, embedded
-              systems, and figuring out how to make things work at every layer of
-              the stack.
+              I&apos;m Yihan — a student at USC studying Computer Engineering and
+              Computer Science, currently splitting my time between coursework and
+              building things that probably should&apos;ve taken twice as long.
             </p>
             <p>
-              I like building real things. I&apos;ve shipped a chess club
-              management system, an internal workflow application, a client
-              frontend for an accounting firm, and an AI agent that writes lesson
-              plans for special education teachers. I&apos;m passionate about
-              building software that makes a real impact for different communities.
+              I like building real things. I&apos;ve shipped a tax-filing portal
+              for 2,000+ clients, a chess club management system for 1,000+
+              members, and a cafe operations platform that won a traction award.
+              Lately I&apos;ve been going deep on agentic AI and reinforcement
+              learning — systems that don&apos;t just respond, but act, adapt,
+              and learn.
             </p>
             <p>
               I am multifaceted. I draw and paint, play piano and tenor saxophone,
@@ -55,10 +55,6 @@ export default function AboutPage() {
               competitively enough to take it personally when I lose.
             </p>
             <p>I build things that work and things that matter. Ideally both.</p>
-            <p className="text-gray-500 text-sm">
-              Currently looking for summer 2026 internships where I can build
-              things that matter with people who care about craft.
-            </p>
           </div>
         </div>
 
