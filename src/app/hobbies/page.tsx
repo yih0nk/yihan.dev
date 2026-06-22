@@ -84,7 +84,7 @@ export default function HobbiesPage() {
               to dry. Sketching is the opposite — fast, instinctive, just a pen
               and whatever comes out.
             </p>
-            <p>I like having both.</p>
+            <p>I like doing both. (oil painting pics incoming...)</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {artImages.map((src, i) => (

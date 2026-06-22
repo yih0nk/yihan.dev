@@ -110,11 +110,6 @@ export default function AudioPlayer({ tracks }: AudioPlayerProps) {
                   className="absolute left-0 top-0 h-full bg-black transition-none"
                   style={{ width: `${progress[i] * 100}%` }}
                 />
-                {/* Thumb dot */}
-                <div
-                  className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-black rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ left: `${progress[i] * 100}%`, transform: 'translate(-50%, -50%)' }}
-                />
               </div>
             </div>
           </li>
