@@ -28,8 +28,7 @@ interface KeyDef {
   note: string
   type: 'white' | 'black'
   keyboardKey: string
-  whiteIndex: number   // sequential position among white keys (0-based)
-  yihanIndex?: number  // 0–4 if this key is part of the YIHAN sequence
+  whiteIndex: number
 }
 
 interface ToneSynth {
@@ -39,27 +38,31 @@ interface ToneSynth {
 
 // ─── Piano data ───────────────────────────────────────────────────────────────
 
-// The 5 notes that spell YIHAN, chosen to form a pleasant ascending melody
-const YIHAN_NOTES = ['C4', 'E4', 'G4', 'A4', 'C5'] as const
+const MELODY = [
+  'C4','C4','G4','G4','A4','A4','G4',
+  'F4','F4','E4','E4','D4','D4','C4',
+] as const
+const MELODY_LENGTH = MELODY.length
+
 const YIHAN_LETTERS = ['y', 'i', 'h', 'a', 'n'] as const
 
 // Full 2-octave keyboard: C4–B5
 const ALL_KEYS: KeyDef[] = [
   // ── Octave 4 ──
-  { note: 'C4',  type: 'white', keyboardKey: 'a', whiteIndex: 0,  yihanIndex: 0 },
+  { note: 'C4',  type: 'white', keyboardKey: 'a', whiteIndex: 0 },
   { note: 'C#4', type: 'black', keyboardKey: 'w', whiteIndex: 0 },
   { note: 'D4',  type: 'white', keyboardKey: 's', whiteIndex: 1 },
   { note: 'D#4', type: 'black', keyboardKey: 'e', whiteIndex: 1 },
-  { note: 'E4',  type: 'white', keyboardKey: 'd', whiteIndex: 2,  yihanIndex: 1 },
+  { note: 'E4',  type: 'white', keyboardKey: 'd', whiteIndex: 2 },
   { note: 'F4',  type: 'white', keyboardKey: 'f', whiteIndex: 3 },
   { note: 'F#4', type: 'black', keyboardKey: 't', whiteIndex: 3 },
-  { note: 'G4',  type: 'white', keyboardKey: 'g', whiteIndex: 4,  yihanIndex: 2 },
+  { note: 'G4',  type: 'white', keyboardKey: 'g', whiteIndex: 4 },
   { note: 'G#4', type: 'black', keyboardKey: 'y', whiteIndex: 4 },
-  { note: 'A4',  type: 'white', keyboardKey: 'h', whiteIndex: 5,  yihanIndex: 3 },
+  { note: 'A4',  type: 'white', keyboardKey: 'h', whiteIndex: 5 },
   { note: 'A#4', type: 'black', keyboardKey: 'u', whiteIndex: 5 },
   { note: 'B4',  type: 'white', keyboardKey: 'j', whiteIndex: 6 },
   // ── Octave 5 ──
-  { note: 'C5',  type: 'white', keyboardKey: 'k', whiteIndex: 7,  yihanIndex: 4 },
+  { note: 'C5',  type: 'white', keyboardKey: 'k', whiteIndex: 7 },
   { note: 'C#5', type: 'black', keyboardKey: 'o', whiteIndex: 7 },
   { note: 'D5',  type: 'white', keyboardKey: 'l', whiteIndex: 8 },
   { note: 'D#5', type: 'black', keyboardKey: 'p', whiteIndex: 8 },
@@ -114,7 +117,7 @@ export default function PianoHero() {
   const audioReady      = useRef(false)
   const isMobile        = useIsMobile()
 
-  // On mobile show C4–C5 (8 white keys) so all YIHAN notes fit
+  // On mobile show C4–C5 (8 white keys) so all melody notes fit
   const visibleKeys = isMobile
     ? ALL_KEYS.filter(k => k.whiteIndex <= 7)
     : ALL_KEYS
@@ -160,15 +163,15 @@ export default function PianoHero() {
     playNote(note)
 
     setRevealedCount(prev => {
-      if (prev >= YIHAN_NOTES.length) return prev
-      if (note === YIHAN_NOTES[prev]) {
+      if (prev >= MELODY_LENGTH) return prev
+      if (note === MELODY[prev]) {
         const next = prev + 1
-        if (next === YIHAN_NOTES.length) {
+        if (next === MELODY_LENGTH) {
           setTimeout(() => setCompleted(true), 700)
         }
         return next
       }
-      return prev // wrong note — no penalty, just don't advance
+      return prev
     })
   }, [playNote])
 
@@ -212,9 +215,11 @@ export default function PianoHero() {
 
   // ── Skip ─────────────────────────────────────────────────────────────────
 
+  const nextTargetNote = revealedCount < MELODY_LENGTH ? MELODY[revealedCount] : null
+
   const skip = useCallback(() => {
     initAudio()
-    setRevealedCount(YIHAN_NOTES.length)
+    setRevealedCount(MELODY_LENGTH)
     setCompleted(true)
   }, [initAudio])
 
@@ -225,116 +230,99 @@ export default function PianoHero() {
       className="relative flex flex-col items-center justify-center flex-1 py-16 px-4 select-none"
       style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
     >
-      {/* ── YIHAN name display ─────────────────────────────────────────── */}
-      <div className="flex items-end justify-center mb-8" style={{ height: 130, gap: 4 }}>
-        {YIHAN_LETTERS.map((letter, i) => (
-          <div
-            key={letter}
-            style={{ position: 'relative', width: 'clamp(44px, 9vw, 88px)' }}
-          >
-            {/* Reserve space with invisible ghost letter */}
-            <span
-              aria-hidden
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 'clamp(56px, 9vw, 108px)',
-                fontWeight: 700,
-                color: 'transparent',
-                display: 'block',
-                lineHeight: 1,
-                textAlign: 'center',
-              }}
-            >
-              {letter}
-            </span>
-
-            {/* Revealed letter animates in */}
-            <AnimatePresence>
-              {i < revealedCount && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.3, y: 24 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 16 }}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 'clamp(56px, 9vw, 108px)',
-                    fontWeight: 700,
-                    color: '#000',
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    lineHeight: 1,
-                  }}
-                >
-                  {letter}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Subtitle + CTA after completion ───────────────────────────── */}
-      <AnimatePresence>
-        {completed && (
+      <AnimatePresence mode="wait">
+        {!completed ? (
           <motion.div
-            key="subtitle"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.25 }}
-            className="text-center mb-12"
+            key="playing"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="flex flex-col items-center"
           >
-            <p
-              className="text-sm text-gray-500 mb-5"
-              style={{ letterSpacing: '0.18em' }}
-            >
-              developer. artist. musician.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <a
-                href="/projects"
-                className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
-                style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
-              >
-                see my work →
-              </a>
-              <a
-                href="/about"
-                className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
-                style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
-              >
-                get to know me →
-              </a>
+            {/* ── Melody progress dots ───────────────────────────────────── */}
+            <div className="flex flex-col items-center mb-8" style={{ minHeight: 80, justifyContent: 'center' }}>
+              <div className="flex items-center justify-center" style={{ gap: 6, marginBottom: 6 }}>
+                {MELODY.slice(0, 7).map((_, i) => {
+                  const filled = i < revealedCount
+                  const current = i === revealedCount
+                  return (
+                    <motion.div
+                      key={`dot-${i}-${filled}`}
+                      initial={filled ? { scale: 0.3, opacity: 0 } : false}
+                      animate={
+                        filled
+                          ? { scale: 1, opacity: 1 }
+                          : current
+                          ? { scale: [1, 1.25, 1] }
+                          : { scale: 1 }
+                      }
+                      transition={
+                        filled
+                          ? { type: 'spring', stiffness: 400, damping: 15 }
+                          : current
+                          ? { duration: 1.2, repeat: Infinity, ease: 'easeInOut' }
+                          : {}
+                      }
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: '50%',
+                        border: filled ? 'none' : `1.5px solid ${current ? '#333' : '#ccc'}`,
+                        background: filled ? '#333' : 'transparent',
+                      }}
+                    />
+                  )
+                })}
+              </div>
+              <div className="flex items-center justify-center" style={{ gap: 6 }}>
+                {MELODY.slice(7, 14).map((_, i) => {
+                  const idx = i + 7
+                  const filled = idx < revealedCount
+                  const current = idx === revealedCount
+                  return (
+                    <motion.div
+                      key={`dot-${idx}-${filled}`}
+                      initial={filled ? { scale: 0.3, opacity: 0 } : false}
+                      animate={
+                        filled
+                          ? { scale: 1, opacity: 1 }
+                          : current
+                          ? { scale: [1, 1.25, 1] }
+                          : { scale: 1 }
+                      }
+                      transition={
+                        filled
+                          ? { type: 'spring', stiffness: 400, damping: 15 }
+                          : current
+                          ? { duration: 1.2, repeat: Infinity, ease: 'easeInOut' }
+                          : {}
+                      }
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: '50%',
+                        border: filled ? 'none' : `1.5px solid ${current ? '#333' : '#ccc'}`,
+                        background: filled ? '#333' : 'transparent',
+                      }}
+                    />
+                  )
+                })}
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* ── Hint text before completion ────────────────────────────────── */}
-      {!completed && (
-        <p
-          className="text-xs text-gray-400 mb-8 uppercase"
-          style={{ letterSpacing: '0.15em', minHeight: '1em' }}
-        >
-          {revealedCount === 0
-            ? 'play the highlighted keys to spell my name'
-            : revealedCount < YIHAN_NOTES.length
-            ? `${YIHAN_NOTES.length - revealedCount} more…`
-            : '✓'}
-        </p>
-      )}
+            {/* ── Hint text ─────────────────────────────────────────────── */}
+            <p
+              className="text-xs text-gray-400 mb-8 uppercase"
+              style={{ letterSpacing: '0.15em', minHeight: '1em' }}
+            >
+              {revealedCount === 0
+                ? 'play twinkle twinkle — follow the highlighted key'
+                : revealedCount < MELODY_LENGTH
+                ? `${MELODY_LENGTH - revealedCount} notes left…`
+                : '✓'}
+            </p>
 
-      {/* ── Piano keyboard ─────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {!completed && (
-          <motion.div
-            key="keyboard"
-            exit={{ opacity: 0, scaleY: 0.75, y: 24 }}
-            transition={{ duration: 0.45, ease: 'easeInOut' }}
-            style={{ originY: 1 }}
-          >
+            {/* ── Piano keyboard ─────────────────────────────────────────── */}
+            <div>
             {/* Keys container */}
             <div
               style={{
@@ -346,10 +334,8 @@ export default function PianoHero() {
             >
               {/* White keys */}
               {whiteKeys.map((key, i) => {
-                const isActive  = activeNotes.has(key.note)
-                const isTarget  = key.yihanIndex !== undefined
-                const isRevealed = isTarget && key.yihanIndex! < revealedCount
-                const letter    = isTarget ? YIHAN_LETTERS[key.yihanIndex!] : undefined
+                const isActive = activeNotes.has(key.note)
+                const isNextTarget = key.note === nextTargetNote
 
                 return (
                   <div
@@ -375,26 +361,22 @@ export default function PianoHero() {
                       paddingBottom: 8,
                       transform: isActive ? 'translateY(2px)' : 'translateY(0)',
                       transition: 'background 0.04s, transform 0.04s',
-                      // Subtle inset ring on target keys that haven't been revealed
-                      boxShadow: isTarget && !isRevealed
+                      boxShadow: isNextTarget
                         ? 'inset 0 0 0 2px #333'
                         : 'none',
                     }}
                   >
-                    {/* YIHAN letter label */}
-                    {letter && (
+                    {isNextTarget && (
                       <span style={{
                         fontFamily: "'Caveat', cursive",
                         fontSize: 16,
                         fontWeight: 700,
-                        color: isRevealed ? '#ccc' : '#444',
+                        color: '#444',
                         marginBottom: 18,
-                        transition: 'color 0.3s',
                       }}>
-                        {letter}
+                        {key.note.replace(/\d/, '')}
                       </span>
                     )}
-                    {/* Keyboard shortcut hint */}
                     <span style={{
                       fontFamily: 'monospace',
                       fontSize: isMobile ? 9 : 10,
@@ -471,6 +453,65 @@ export default function PianoHero() {
                 starts at C4
               </p>
             )}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="completed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="flex flex-col items-center"
+          >
+            {/* ── Name reveal ──────────────────────────────────────────── */}
+            <div
+              className="flex items-end justify-center mb-4"
+              style={{ height: 130, gap: 4 }}
+            >
+              {YIHAN_LETTERS.map((letter) => (
+                <span
+                  key={letter}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 'clamp(56px, 9vw, 108px)',
+                    fontWeight: 700,
+                    color: '#000',
+                    lineHeight: 1,
+                    display: 'inline-block',
+                    width: 'clamp(44px, 9vw, 88px)',
+                    textAlign: 'center',
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+
+            {/* ── Subtitle + CTA ───────────────────────────────────────── */}
+            <div className="text-center mb-12">
+              <p
+                className="text-sm text-gray-500 mb-5"
+                style={{ letterSpacing: '0.18em' }}
+              >
+                developer. artist. musician.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <a
+                  href="/projects"
+                  className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
+                  style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
+                >
+                  see my work →
+                </a>
+                <a
+                  href="/about"
+                  className="inline-block border-2 border-black px-6 py-2 text-sm text-black btn-grain hover:bg-black hover:text-white transition-all"
+                  style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif", letterSpacing: '0.05em' }}
+                >
+                  get to know me →
+                </a>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
