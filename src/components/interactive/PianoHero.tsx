@@ -493,7 +493,7 @@ export default function PianoHero() {
                 className="text-sm text-gray-500 mb-5"
                 style={{ letterSpacing: '0.18em' }}
               >
-                developer. artist. musician.
+                moving people through art and software engineering.
               </p>
               <div className="flex gap-4 justify-center">
                 <a
