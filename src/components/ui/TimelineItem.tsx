@@ -25,7 +25,7 @@ export default function TimelineItem({
       {/* Node — sketch-style circle */}
       <div className="absolute left-0 top-1.5 w-3.5 h-3.5 border-2 border-black bg-white rounded-full" />
 
-      <div className="pb-10">
+      <div className="pb-6">
         <p className="text-xs text-gray-400 mb-1 font-mono tracking-wide">
           {period}
         </p>
