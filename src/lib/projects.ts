@@ -16,6 +16,55 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: "trove",
+    title: "Trove",
+    tagline:
+      "An all-in-one cafe operations platform with real-time inventory, automated ordering, and ML-driven demand forecasting.",
+    description: [
+      "Built for the USC LavaLab accelerator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
+      "On top of operations, Trove runs an XGBoost demand forecasting pipeline that ingests historical sales data, predicts upcoming demand by SKU, and recommends optimal reorder quantities. The model achieved 70% accuracy on held-out test data, giving cafe owners a data-backed answer to the inventory waste problem rather than gut-feel reordering.",
+      "Trove won the Best Traction Award ($500) at the USC LavaLab Demo Day.",
+    ],
+    tags: [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Supabase",
+      "PostgreSQL",
+      "Python",
+      "XGBoost",
+      "REST API",
+      "Browser Agent",
+      "Demand Forecasting",
+    ],
+    featured: true,
+    image: "/images/projects/trove.jpg",
+  },
+  {
+    slug: "ai-clinical-trials",
+    title: "AI for Clinical Trials",
+    tagline:
+      "Automating the drafting of clinical trial eligibility criteria using retrieval-augmented generation over real oncology trial data.",
+    description: [
+      "A research project at USC's AI for Healthcare Lab building tooling that reduces the manual effort researchers spend writing inclusion and exclusion criteria for oncology trials. A Python ETL pipeline pulls from the ClinicalTrials.gov REST API to bulk-download, parse, and structure a corpus of real trial records into a queryable format.",
+      "When a researcher begins drafting criteria for a new trial, a RAG pipeline using Sentence-Transformers and ChromaDB retrieves the most semantically similar existing trials from the corpus. Those retrieved examples are passed to Llama 3 running locally via Ollama, which synthesizes grounded, citation-backed eligibility criteria drafts — reducing blank-page friction and anchoring output in real precedent rather than hallucinated structure.",
+    ],
+    tags: [
+      "Python",
+      "ETL",
+      "REST API",
+      "ClinicalTrials.gov",
+      "Sentence-Transformers",
+      "ChromaDB",
+      "RAG",
+      "Llama 3",
+      "Ollama",
+      "NLP",
+    ],
+    featured: true,
+    image: "/images/projects/isi-logo.jpg",
+  },
+  {
     slug: "robotaxi-simulation",
     title: "Multi Agent RL Simulation",
     tagline:
