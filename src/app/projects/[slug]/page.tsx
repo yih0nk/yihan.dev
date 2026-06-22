@@ -41,7 +41,7 @@ export default async function ProjectDetailPage({
         </Link>
 
         <h1
-          className="text-4xl md:text-5xl mt-6 mb-4 lowercase"
+          className="text-4xl md:text-5xl mt-6 mb-4"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           {project.title}
