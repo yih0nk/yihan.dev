@@ -20,6 +20,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Doodles from './Doodles'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -473,6 +474,9 @@ export default function PianoHero() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Doodles after completion ──────────────────────────────────── */}
+      {completed && <Doodles />}
 
       {/* ── Skip button ────────────────────────────────────────────────── */}
       {!completed && (
