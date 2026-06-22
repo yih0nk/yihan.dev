@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const links = [
   { icon: "✉️", label: "email", href: "mailto:yihanhon@usc.edu", display: "yihanhon@usc.edu" },
-  { icon: "🐙", label: "github", href: "https://github.com/yih0nk", display: "github.com/yih0nk" },
+  { icon: "🐱", label: "github", href: "https://github.com/yih0nk", display: "github.com/yih0nk" },
   { icon: "💼", label: "linkedin", href: "https://linkedin.com/in/yihan-hon", display: "linkedin.com/in/yihan-hon" },
 ];
 
@@ -53,11 +53,6 @@ export default function ContactPage() {
           ))}
         </ul>
 
-        <div className="border-t border-gray-100 pt-8">
-          <p className="text-xs text-gray-400">
-            built with next.js and too much coffee. © 2026 yihan.
-          </p>
-        </div>
       </div>
     </PageTransition>
   );

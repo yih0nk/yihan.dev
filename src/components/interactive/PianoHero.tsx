@@ -221,7 +221,7 @@ export default function PianoHero() {
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center min-h-screen py-16 px-4 select-none"
+      className="relative flex flex-col items-center justify-center flex-1 py-16 px-4 select-none"
       style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
     >
       {/* ── YIHAN name display ─────────────────────────────────────────── */}

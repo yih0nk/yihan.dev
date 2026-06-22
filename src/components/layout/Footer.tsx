@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const SOCIAL_LINKS = [
-  { href: "https://github.com/yih0nk", label: "GitHub" },
-  { href: "https://linkedin.com/in/yihan-hon", label: "LinkedIn" },
-  { href: "mailto:yihan@usc.edu", label: "Email" },
+  { href: "https://github.com/yih0nk", label: "github" },
+  { href: "https://linkedin.com/in/yihan-hon", label: "linkedin" },
+  { href: "mailto:yihan@usc.edu", label: "email" },
 ];
 
 export default function Footer() {
@@ -14,7 +14,7 @@ export default function Footer() {
           className="text-sm text-gray-400"
           style={{ fontFamily: "var(--font-mono)" }}
         >
-          © {new Date().getFullYear()} Yihan Hong
+          © {new Date().getFullYear()} yihan hong · built with next.js and too much coffee.
         </p>
 
         <nav>
