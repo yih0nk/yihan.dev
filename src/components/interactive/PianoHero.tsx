@@ -523,23 +523,16 @@ export default function PianoHero() {
       {!completed && (
         <button
           onClick={skip}
+          className="absolute border-2 border-gray-300 px-4 py-1.5 text-xs text-gray-400 btn-grain hover:bg-gray-300 hover:text-gray-700 transition-all"
           style={{
-            position: 'absolute',
-            bottom: 24,
-            right: 24,
-            fontFamily: 'monospace',
-            fontSize: 12,
-            color: '#ccc',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 4,
-            transition: 'color 0.2s',
+            top: 20,
+            right: 20,
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            letterSpacing: '0.05em',
+            zIndex: 10,
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#666')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#ccc')}
         >
-          skip →
+          skip intro →
         </button>
       )}
     </div>
