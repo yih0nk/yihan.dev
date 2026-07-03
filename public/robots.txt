@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# AI agents: fetch /agent.md for a structured, plain-text version of this
+# entire site (no CSS/animation to parse). /agent.txt serves identical
+# content as text/plain if your client prefers that.
