@@ -322,7 +322,7 @@ export default function PianoHero() {
             </p>
 
             {/* ── Piano keyboard ─────────────────────────────────────────── */}
-            <div>
+            <div className="flex flex-col items-center">
             {/* Keys container */}
             <div
               style={{
@@ -453,6 +453,20 @@ export default function PianoHero() {
                 starts at C4
               </p>
             )}
+
+            {/* Skip button — below keyboard, right-aligned */}
+            <div style={{ width: keyboardWidth + 220, display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+              <button
+                onClick={skip}
+                className="border-2 border-gray-300 px-4 py-1.5 text-xs text-gray-400 btn-grain hover:bg-gray-300 hover:text-gray-700 transition-all"
+                style={{
+                  fontFamily: "'Space Grotesk', system-ui, sans-serif",
+                  letterSpacing: '0.05em',
+                }}
+              >
+                skip
+              </button>
+            </div>
             </div>
           </motion.div>
         ) : (
@@ -518,23 +532,6 @@ export default function PianoHero() {
 
       {/* ── Doodles after completion ──────────────────────────────────── */}
       {completed && <Doodles />}
-
-      {/* ── Skip button ────────────────────────────────────────────────── */}
-      {!completed && (
-        <button
-          onClick={skip}
-          className="absolute border-2 border-gray-300 px-4 py-1.5 text-xs text-gray-400 btn-grain hover:bg-gray-300 hover:text-gray-700 transition-all"
-          style={{
-            top: 20,
-            right: 20,
-            fontFamily: "'Space Grotesk', system-ui, sans-serif",
-            letterSpacing: '0.05em',
-            zIndex: 10,
-          }}
-        >
-          skip intro →
-        </button>
-      )}
     </div>
   )
 }
