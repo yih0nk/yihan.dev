@@ -35,7 +35,7 @@ export default function ExperiencePage() {
             subtitle="Software Engineering Intern"
             location="San Francisco, CA"
             bullets={[
-              "Contributing to the core product — a MacOS app — building full-stack features end-to-end and driving technical momentum",
+              "Building the next infrastructure layer between human judgement and AI",
             ]}
           />
 
@@ -45,7 +45,7 @@ export default function ExperiencePage() {
             subtitle="Research Assistant"
             location="Los Angeles, CA"
             bullets={[
-              "Building an AI-powered clinical trial platform using RAG and LLMs to automate eligibility criteria draft generation for researchers",
+              "Using LLMs and RAG to automate clinical trial eligibility screening",
             ]}
           />
 
@@ -55,7 +55,7 @@ export default function ExperiencePage() {
             subtitle="Research Assistant"
             location="Los Angeles, CA"
             bullets={[
-              "Building a multi-agent RL framework for competitive autonomous vehicle fleet pricing and routing using Python, PyTorch, and SUMO",
+              "Training competing RL agents to price against each other in a large-scale autonomous ride-hailing simulation",
             ]}
           />
 
@@ -75,7 +75,7 @@ export default function ExperiencePage() {
             subtitle="Software Engineer"
             location="Toronto, Canada"
             bullets={[
-              "Built and shipped a tax-filing client portal and internal workflow system serving 14,000+ forms and 2,000+ clients",
+              "Built a tax-filing portal and workflow system used for 14,000+ online tax forms and 2,000+ clients",
             ]}
           />
 
@@ -85,7 +85,7 @@ export default function ExperiencePage() {
             subtitle="System Developer"
             location="Mississauga, Canada"
             bullets={[
-              "Architected a tournament and membership management system for 1,000+ members, reducing tournament setup time by 97%",
+              "Built a tournament and membership system and mobile app for 1,000+ members and cut tournament setup time by 97% through automation",
             ]}
             isLast
           />
