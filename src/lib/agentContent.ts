@@ -107,15 +107,11 @@ Awards: Viterbi Scholar Award, Director's Scholarship
 
 ### Skills
 
-Languages: JavaScript/TypeScript, Python, C++, Java, C#, Ruby, SQL, HTML/CSS
-Frameworks & Libraries: React, Next.js, Tailwind CSS, Node.js, Flask,
-FastAPI, PyTorch, Pandas, NumPy
-AI/ML: Machine Learning, Deep Neural Networks, Reinforcement Learning,
-Agentic AI, RAG, LLMs
-AI Tools: Azure OpenAI API, Ollama, ChromaDB, Prompt Engineering,
-Tool-Calling Agents, MCP
-Cloud & Tools: AWS, Azure, Supabase, PostgreSQL, Docker, Kubernetes, Celery,
-Redis, Vercel, Git
+Languages: JavaScript/TypeScript, Python, C/C++, Ruby, Java, C#, SQL, HTML/CSS
+Frameworks: React, Next.js, Node.js, FastAPI, Flask, Rails, GraphQL, Electron, PyTorch, Pandas, NumPy
+AI/ML: Reinforcement Learning (PPO/MARL), RAG, Agentic AI, XGBoost, sentence-transformers, ChromaDB
+Tools: AWS, Azure, PostgreSQL, Docker, Kubernetes, Redis, Sidekiq, Supabase, Vercel, Git, GitHub Actions, Playwright
+Full-Stack: REST APIs, SSE, OAuth/JWT, IPC, CI/CD
 
 ---
 

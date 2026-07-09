@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 const skillGroups = [
-  { category: "Languages", skills: ["JavaScript/TypeScript", "Python", "C++", "Java", "C#", "Ruby", "SQL", "HTML/CSS"] },
-  { category: "Frameworks & Libraries", skills: ["React", "Next.js", "Tailwind CSS", "Node.js", "Flask", "FastAPI", "PyTorch", "Pandas", "NumPy"] },
-  { category: "AI/ML", skills: ["Machine Learning", "Deep Neural Networks", "Reinforcement Learning", "Agentic AI", "RAG", "LLMs"] },
-  { category: "AI Tools", skills: ["Azure OpenAI API", "Ollama", "ChromaDB", "Prompt Engineering", "Tool-Calling Agents", "MCP"] },
-  { category: "Cloud & Tools", skills: ["AWS", "Azure", "Supabase", "PostgreSQL", "Docker", "Kubernetes", "Celery", "Redis", "Vercel", "Git"] },
+  { category: "Languages", skills: ["JavaScript/TypeScript", "Python", "C/C++", "Ruby", "Java", "C#", "SQL", "HTML/CSS"] },
+  { category: "Frameworks", skills: ["React", "Next.js", "Node.js", "FastAPI", "Flask", "Rails", "GraphQL", "Electron", "PyTorch", "Pandas", "NumPy"] },
+  { category: "AI/ML", skills: ["Reinforcement Learning (PPO/MARL)", "RAG", "Agentic AI", "XGBoost", "sentence-transformers", "ChromaDB"] },
+  { category: "Tools", skills: ["AWS", "Azure", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Sidekiq", "Supabase", "Vercel", "Git", "GitHub Actions", "Playwright"] },
+  { category: "Full-Stack", skills: ["REST APIs", "SSE", "OAuth/JWT", "IPC", "CI/CD"] },
 ];
 
 export default function ExperiencePage() {
