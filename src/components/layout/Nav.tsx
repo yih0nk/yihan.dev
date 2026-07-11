@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import SiteViewCounter from "@/components/ui/SiteViewCounter";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -60,6 +61,9 @@ export default function Nav() {
                 </NavLink>
               </li>
             ))}
+            <li>
+              <SiteViewCounter />
+            </li>
           </ul>
 
           {/* Mobile hamburger */}
@@ -121,6 +125,15 @@ export default function Nav() {
                   </Link>
                 </motion.li>
               ))}
+              <motion.li
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.2 }}
+                className="[&_span]:text-gray-500 [&_span]:text-sm"
+              >
+                <SiteViewCounter />
+              </motion.li>
             </ul>
           </motion.div>
         )}
