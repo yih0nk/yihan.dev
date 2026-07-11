@@ -35,7 +35,7 @@ export default async function CategoryPage({
 
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 py-20">
         <Link
           href="/blog"
           className="text-xs text-gray-400 hover:text-black transition-colors mb-8 inline-block"

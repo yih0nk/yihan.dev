@@ -15,7 +15,7 @@ export default function WelcomePage() {
 
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 py-20">
         <p
           className="text-xs uppercase tracking-widest text-gray-400 mb-6"
           style={{ fontFamily: "var(--font-mono)" }}
