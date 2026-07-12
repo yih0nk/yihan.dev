@@ -11,9 +11,14 @@ export default function SiteViewCounter() {
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/api/views", { method: "POST" })
+    const alreadyCounted = sessionStorage.getItem("site_visited");
+    const method = alreadyCounted ? "GET" : "POST";
+    fetch("/api/views", { method })
       .then((r) => r.json())
-      .then((d) => setViews(d.views))
+      .then((d) => {
+        setViews(d.views);
+        if (!alreadyCounted) sessionStorage.setItem("site_visited", "1");
+      })
       .catch(() => {});
   }, []);
 

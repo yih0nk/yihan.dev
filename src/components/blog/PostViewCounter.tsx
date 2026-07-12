@@ -6,9 +6,15 @@ export default function PostViewCounter({ slug }: { slug: string }) {
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch(`/api/views/blog/${slug}`, { method: "POST" })
+    const key = `post_visited:${slug}`;
+    const alreadyCounted = sessionStorage.getItem(key);
+    const method = alreadyCounted ? "GET" : "POST";
+    fetch(`/api/views/blog/${slug}`, { method })
       .then((r) => r.json())
-      .then((d) => setViews(d.views))
+      .then((d) => {
+        setViews(d.views);
+        if (!alreadyCounted) sessionStorage.setItem(key, "1");
+      })
       .catch(() => {});
   }, [slug]);
 
