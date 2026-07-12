@@ -60,16 +60,6 @@ export default function ExperiencePage() {
           />
 
           <TimelineItem
-            period="Jan 2026 — Present"
-            title="AdminifAI"
-            subtitle="Software Engineering Intern"
-            location="Remote"
-            bullets={[
-              "Built end-to-end data migration system and async validation pipeline for a multi-tenant salon SaaS platform",
-            ]}
-          />
-
-          <TimelineItem
             period="Jun 2025 — Aug 2025"
             title="Triple J Canada Consulting Inc."
             subtitle="Software Engineer"
