@@ -12,6 +12,7 @@ export interface PostMeta {
   date: string;
   excerpt: string;
   category: PostCategory | "welcome";
+  image?: string;
 }
 
 export interface Post extends PostMeta {
@@ -35,6 +36,7 @@ export function getPostsByCategory(category: PostCategory): PostMeta[] {
         date: data.date ? String(data.date) : "",
         excerpt: data.excerpt ?? "",
         category,
+        image: data.image,
       };
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -51,6 +53,7 @@ export function getPost(category: PostCategory, slug: string): Post | null {
     date: data.date ? String(data.date) : "",
     excerpt: data.excerpt ?? "",
     category,
+    image: data.image,
     content,
   };
 }
@@ -66,6 +69,7 @@ export function getWelcomePost(): Post | null {
     date: data.date ? String(data.date) : "",
     excerpt: data.excerpt ?? "",
     category: "welcome",
+    image: data.image,
     content,
   };
 }

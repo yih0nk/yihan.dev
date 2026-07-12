@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import PageTransition from "@/components/layout/PageTransition";
 import PostViewCounter from "@/components/blog/PostViewCounter";
@@ -53,6 +54,17 @@ export default async function PostPage({
               day: "numeric",
             })}
           </p>
+        )}
+        {post.image && (
+          <div className="relative w-full aspect-[16/9] mb-12 overflow-hidden rounded-sm">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
         )}
         <article className="prose prose-sm prose-gray max-w-none">
           <MDXRemote source={post.content} />
