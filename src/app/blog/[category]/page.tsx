@@ -7,10 +7,10 @@ import { getPostsByCategory, type PostCategory } from "@/lib/mdx";
 const VALID_CATEGORIES: PostCategory[] = ["life", "music", "film", "tech"];
 
 const CATEGORY_DESCRIPTIONS: Record<PostCategory, string> = {
-  life: "the personal stuff",
-  music: "playing, listening, feeling",
-  film: "things i watched and thought about",
-  tech: "building things",
+  life: "living and figuring it out",
+  music: "notes records and everything in between",
+  film: "what i watched and what stayed with me",
+  tech: "code projects and rabbit holes",
 };
 
 export async function generateMetadata({

@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 };
 
 const CATEGORIES = [
-  { slug: "life", label: "life", description: "the personal stuff" },
-  { slug: "music", label: "music", description: "playing, listening, feeling" },
-  { slug: "film", label: "film", description: "things i watched and thought about" },
-  { slug: "tech", label: "tech", description: "building things" },
+  { slug: "life", label: "life", description: "living and figuring it out" },
+  { slug: "music", label: "music", description: "notes records and everything in between" },
+  { slug: "film", label: "film", description: "what i watched and what stayed with me" },
+  { slug: "tech", label: "tech", description: "code projects and rabbit holes" },
 ] as const;
 
 export default function BlogPage() {
