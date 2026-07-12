@@ -42,7 +42,7 @@ export default function BlogPage() {
             </span>
           </div>
           <h2
-            className="text-xl mb-2 lowercase group-hover:underline underline-offset-4"
+            className="text-xl mb-2 lowercase"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             welcome to my thought dumps.
@@ -61,7 +61,7 @@ export default function BlogPage() {
               className="group border border-gray-200 rounded-sm p-6 hover:border-black transition-colors duration-200"
             >
               <h2
-                className="text-2xl mb-2 lowercase group-hover:underline underline-offset-4"
+                className="text-2xl mb-2 lowercase"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 {cat.label}.
