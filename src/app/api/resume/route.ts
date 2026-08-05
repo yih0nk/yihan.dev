@@ -36,6 +36,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json(
+      { error: "Resume storage is not connected." },
+      { status: 503 }
+    );
+  }
+
   // Newest upload under resume/ wins, so re-uploading replaces the live file.
   let file: Response;
   try {
@@ -46,7 +53,7 @@ export async function POST(req: Request) {
 
     if (!newest) {
       return NextResponse.json(
-        { error: "Resume is not available right now." },
+        { error: "Resume has not been uploaded yet." },
         { status: 503 }
       );
     }
