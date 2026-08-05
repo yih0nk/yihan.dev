@@ -37,24 +37,23 @@ export default function AboutPage() {
 
           <div className="space-y-5 text-gray-700 leading-relaxed">
             <p>
-              I&apos;m Yihan — a student at USC studying Computer Engineering and
-              Computer Science, currently splitting my time between coursework and
-              building things that probably should&apos;ve taken twice as long.
+              I&apos;m Yihan, a computer engineering and CS student at USC. Most
+              of my week goes to making software act on its own: fine-tuning
+              models to someone&apos;s taste, testing whether AI systems behave
+              the way they&apos;re supposed to, and documenting the many ways they
+              don&apos;t, and wiring up retrieval across hundreds of thousands of
+              records that all insist they&apos;re relevant.
             </p>
             <p>
-              I like building real things. I&apos;ve shipped a tax-filing portal
-              for 2,000+ clients, a chess club management system for 1,000+
-              members, and a cafe operations platform that won a traction award.
-              Lately I&apos;ve been going deep on agentic AI and reinforcement
-              learning — systems that don&apos;t just respond, but act, adapt,
-              and learn.
+              The rest of my time is less structured. Fifteen years of piano, a
+              few of tenor sax, some photography, and more movies than a person
+              can reasonably defend. I also play badminton with a level of
+              competitiveness the sport did not ask for and cannot contain.
             </p>
             <p>
-              I am multifaceted. I draw and paint, play piano and tenor saxophone,
-              shoot photos when the light&apos;s right, and play badminton
-              competitively enough to take it personally when I lose.
+              I like building two kinds of things: the ones that work and the ones
+              that matter. Occasionally the same thing.
             </p>
-            <p>I build things that work and things that matter. Ideally both.</p>
           </div>
         </div>
 
