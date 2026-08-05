@@ -42,24 +42,19 @@ Contact: yihanhon@usc.edu · github.com/yih0nk · linkedin.com/in/yihan-hon
 
 ## Summary
 
-hey, i'm yihan. developer. artist. musician. building things that move —
-pixels, data, and sometimes robots.
+I'm Yihan, a computer engineering and CS student at USC. Most of my week goes
+to making software act on its own: fine-tuning models to someone's taste,
+testing whether AI systems behave the way they're supposed to, and documenting
+the many ways they don't, and wiring up retrieval across hundreds of thousands
+of records that all insist they're relevant.
 
-I'm a student at USC studying Computer Engineering and Computer Science,
-currently splitting my time between coursework and building things that
-probably should've taken twice as long.
+The rest of my time is less structured. Fifteen years of piano, a few of tenor
+sax, some photography, and more movies than a person can reasonably defend. I
+also play badminton with a level of competitiveness the sport did not ask for
+and cannot contain.
 
-I like building real things. I've shipped a tax-filing portal for 2,000+
-clients, a chess club management system for 1,000+ members, and a cafe
-operations platform that won a traction award. Lately I've been going deep on
-agentic AI and reinforcement learning — systems that don't just respond, but
-act, adapt, and learn.
-
-I am multifaceted. I draw and paint, play piano and tenor saxophone, shoot
-photos when the light's right, and play badminton competitively enough to
-take it personally when I lose.
-
-I build things that work and things that matter. Ideally both.
+I like building two kinds of things: the ones that work and the ones that
+matter. Occasionally the same thing.
 
 ---
 
@@ -67,7 +62,7 @@ I build things that work and things that matter. Ideally both.
 
 - Based in: Los Angeles, CA (via Beijing, Montreal, and Toronto)
 - Studying: USC — Computer Engineering & Computer Science
-- Awards: Viterbi Scholar Award, Director's Scholarship
+- Awards: Viterbi Scholar Award, Director's Scholarship, 2× Dean's List
 - Instruments: piano (15 yrs), tenor sax (3 yrs)
 - Sport: badminton — retired competitive doubles player, provincial gold
   (Ontario)
@@ -78,17 +73,13 @@ I build things that work and things that matter. Ideally both.
 ## Experience
 
 - July AI — Software Engineering Intern (May 2026 – Present, San Francisco, CA)
-  Contributing to the core product, a macOS app, building full-stack features
-  end-to-end.
+  Building the next infrastructure layer between human judgement and AI.
 - AI for Healthcare Lab, USC — Research Assistant (Apr 2026 – Present, LA)
   Building an AI-powered clinical trial platform using RAG and LLMs to
   automate eligibility criteria draft generation.
-- FORTIS Lab & SIAS Lab, USC — Research Assistant (Jan 2026 – Present, LA)
+- SIAS Lab, USC — Research Assistant (Jan 2026 – Jun 2026, LA)
   Building a multi-agent RL framework for competitive autonomous vehicle
   fleet pricing and routing (Python, PyTorch, SUMO).
-- AdminifAI — Software Engineering Intern (Jan 2026 – Present, Remote)
-  Built an end-to-end data migration system and async validation pipeline
-  for a multi-tenant salon SaaS platform.
 - Triple J Canada Consulting Inc. — Software Engineer (Jun 2025 – Aug 2025,
   Toronto, Canada)
   Built and shipped a tax-filing client portal and internal workflow system
@@ -103,14 +94,14 @@ I build things that work and things that matter. Ideally both.
 University of Southern California, Viterbi School of Engineering
 B.S. Computer Engineering and Computer Science — Aug 2025 – May 2028
 Los Angeles, CA
-Awards: Viterbi Scholar Award, Director's Scholarship
+Awards: Viterbi Scholar Award, Director's Scholarship, 2× Dean's List
 
 ### Skills
 
-Languages: JavaScript/TypeScript, Python, C/C++, Ruby, Java, C#, SQL, HTML/CSS
+Languages: JavaScript/TypeScript, Python, C/C++, Go, Ruby, Java, C#, SQL, HTML/CSS
 Frameworks: React, Next.js, Node.js, FastAPI, Flask, Rails, GraphQL, Electron, PyTorch, Pandas, NumPy
-AI/ML: Reinforcement Learning (PPO/MARL), RAG, Agentic AI, XGBoost, sentence-transformers, ChromaDB
-Tools: AWS, Azure, PostgreSQL, Docker, Kubernetes, Redis, Sidekiq, Supabase, Vercel, Git, GitHub Actions, Playwright
+AI/ML: LoRA Fine-Tuning, Reinforcement Learning (PPO/MARL), RAG, LLM-as-Judge Evaluation, Agentic AI, Hugging Face, SciNCL, XGBoost, ChromaDB, Prompt Caching
+Tools: AWS, Azure, SLURM, PostgreSQL, Docker, Kubernetes, Redis, Sidekiq, Supabase, Vercel, Git, GitHub Actions, Playwright
 Full-Stack: REST APIs, SSE, OAuth/JWT, IPC, CI/CD
 
 ---
