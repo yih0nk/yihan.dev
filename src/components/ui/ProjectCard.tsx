@@ -34,7 +34,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             {project.title}
           </h3>
 
-          <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+          <p className="text-sm text-gray-500 mb-4 leading-relaxed line-clamp-2">
             {project.tagline}
           </p>
 

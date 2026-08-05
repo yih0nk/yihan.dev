@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="ui-monospace, 'Source Code Pro', 'SFMono-Regular', Menlo, monospace">
+  <defs>
+    <marker id="ah" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#111"/>
+    </marker>
+    <style>
+      .box  { fill:#fff; stroke:#111; stroke-width:1.5; }
+      .hub  { fill:#f4f4f5; stroke:#111; stroke-width:1.5; }
+      .dark { fill:#111; }
+      .t    { fill:#111; font-size:13px; }
+      .tb   { fill:#111; font-size:13px; font-weight:700; }
+      .tw   { fill:#fff; font-size:13px; font-weight:700; }
+      .sub  { fill:#8a8a8a; font-size:10.5px; }
+      .lbl  { fill:#9a9a9a; font-size:10px; }
+      .c    { stroke:#111; stroke-width:1.5; fill:none; }
+      .bus  { stroke:#c4c4c4; stroke-width:1.5; fill:none; }
+    </style>
+  </defs>
+
+  <rect width="800" height="450" fill="#fff"/>
+
+  <!-- title -->
+  <text x="40" y="46" class="tb" font-size="19">hivemind</text>
+  <text x="40" y="65" class="sub" font-size="11">kubernetes operator · prometheus alert → llm root-cause pull request</text>
+
+  <!-- ingress: prometheus -> alertmanager -> operator -->
+  <rect class="box" x="40"  y="86" width="132" height="40" rx="5"/>
+  <text x="106" y="111" class="t" text-anchor="middle">Prometheus</text>
+
+  <line class="c" x1="172" y1="106" x2="230" y2="106" marker-end="url(#ah)"/>
+  <text x="201" y="97" class="lbl" text-anchor="middle">alert</text>
+
+  <rect class="box" x="232" y="86" width="144" height="40" rx="5"/>
+  <text x="304" y="111" class="t" text-anchor="middle">Alertmanager</text>
+
+  <polyline class="c" points="376,106 400,106 400,140" marker-end="url(#ah)"/>
+  <text x="454" y="101" class="lbl" text-anchor="middle">POST /webhook</text>
+
+  <!-- operator hub -->
+  <rect class="hub" x="300" y="140" width="200" height="54" rx="5"/>
+  <text x="400" y="163" class="tb" text-anchor="middle">Hivemind Operator</text>
+  <text x="400" y="181" class="sub" text-anchor="middle">IncidentTriage CR · reconciler</text>
+
+  <!-- fan-out bus to 3 agents -->
+  <line class="c" x1="400" y1="194" x2="400" y2="214"/>
+  <polyline class="bus" points="160,214 640,214"/>
+  <line class="bus" x1="160" y1="214" x2="160" y2="236" marker-end="url(#ah)"/>
+  <line class="c"   x1="400" y1="214" x2="400" y2="236" marker-end="url(#ah)"/>
+  <line class="bus" x1="640" y1="214" x2="640" y2="236" marker-end="url(#ah)"/>
+  <text x="668" y="210" class="lbl" text-anchor="start">errgroup</text>
+
+  <rect class="box" x="72"  y="236" width="176" height="50" rx="5"/>
+  <text x="160" y="259" class="t" text-anchor="middle">log triage</text>
+  <text x="160" y="276" class="sub" text-anchor="middle">pod logs</text>
+
+  <rect class="box" x="300" y="236" width="200" height="50" rx="5"/>
+  <text x="400" y="259" class="t" text-anchor="middle">metrics correlator</text>
+  <text x="400" y="276" class="sub" text-anchor="middle">Prometheus query</text>
+
+  <rect class="box" x="552" y="236" width="176" height="50" rx="5"/>
+  <text x="640" y="259" class="t" text-anchor="middle">runbook lookup</text>
+  <text x="640" y="276" class="sub" text-anchor="middle">ConfigMap</text>
+
+  <!-- merge bus to synthesizer -->
+  <line class="bus" x1="160" y1="286" x2="160" y2="310"/>
+  <line class="bus" x1="400" y1="286" x2="400" y2="310"/>
+  <line class="bus" x1="640" y1="286" x2="640" y2="310"/>
+  <polyline class="bus" points="160,310 640,310"/>
+  <line class="c" x1="400" y1="310" x2="400" y2="332" marker-end="url(#ah)"/>
+
+  <!-- synthesizer + llm -->
+  <rect class="hub" x="300" y="332" width="200" height="46" rx="5"/>
+  <text x="400" y="360" class="tb" text-anchor="middle">synthesizer</text>
+
+  <line class="c" x1="500" y1="352" x2="556" y2="352" marker-end="url(#ah)"/>
+  <line class="c" x1="556" y1="360" x2="500" y2="360" marker-end="url(#ah)"/>
+  <rect class="box" x="558" y="332" width="180" height="46" rx="5"/>
+  <text x="648" y="354" class="t" text-anchor="middle">Ollama / Groq</text>
+  <text x="648" y="370" class="sub" text-anchor="middle">OpenAI-compatible</text>
+
+  <!-- github PR -->
+  <line class="c" x1="400" y1="378" x2="400" y2="398" marker-end="url(#ah)"/>
+  <rect class="dark" x="286" y="400" width="228" height="38" rx="5"/>
+  <text x="400" y="424" class="tw" text-anchor="middle">GitHub PR · root-cause report</text>
+</svg>
