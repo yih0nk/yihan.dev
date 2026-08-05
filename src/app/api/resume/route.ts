@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { list } from "@vercel/blob";
+import { get, list } from "@vercel/blob";
 
 /**
  * Password-gated résumé download.
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   }
 
   // Newest upload under resume/ wins, so re-uploading replaces the live file.
-  let file: Response;
+  let stream: ReadableStream | null = null;
   try {
     // List everything, so a PDF dropped in from the Vercel dashboard (which
     // lands at the root) works just as well as a scripted resume/ upload.
@@ -64,7 +64,14 @@ export async function POST(req: Request) {
       );
     }
 
-    file = await fetch(newest.url, { cache: "no-store" });
+    // Read through the SDK rather than fetching blob.url directly: dashboard
+    // uploads default to private, whose URL is not publicly fetchable, and
+    // list() does not report the access level. Try private, then public.
+    const result =
+      (await get(newest.pathname, { access: "private" }).catch(() => null)) ??
+      (await get(newest.pathname, { access: "public" }).catch(() => null));
+
+    stream = result?.stream ?? null;
   } catch {
     // Missing/invalid BLOB_READ_WRITE_TOKEN, or Blob unreachable.
     return NextResponse.json(
@@ -73,14 +80,14 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!file.ok) {
+  if (!stream) {
     return NextResponse.json(
-      { error: "Resume is not available right now." },
+      { error: "Resume could not be read from storage." },
       { status: 502 }
     );
   }
 
-  return new NextResponse(file.body, {
+  return new NextResponse(stream, {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": 'inline; filename="Yihan_Hong_Resume.pdf"',
