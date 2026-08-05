@@ -3,3 +3,7 @@ node_modules/
 .env*.local
 website-content.md
 website-spec.md
+
+# Personal documents — the résumé is served from Vercel Blob, never committed.
+# This repo is public; keep the PDF out of it.
+private/

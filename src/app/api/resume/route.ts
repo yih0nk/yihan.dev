@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
-import path from "path";
+import { list } from "@vercel/blob";
 
 /**
- * Password-gated resume download.
+ * Password-gated résumé download.
  *
- * The check runs server-side and the PDF lives outside /public, so the file is
- * never served from a guessable static URL and the password never ships to the
- * browser. The password itself comes from RESUME_PASSWORD (set in .env.local
- * locally, and in the Vercel project env for production) so it stays out of
- * this public repo.
+ * The PDF lives in Vercel Blob, never in this repo (which is public). On a
+ * correct password the server looks the blob up with the read/write token,
+ * fetches it, and streams the bytes back — the blob URL itself is never sent
+ * to the browser, so there is no link to share around or scrape.
  *
- * Note: this is a soft gate. The PDF is committed to a public repo, so someone
- * determined can still find it on GitHub — it stops casual access, not a
- * motivated reader.
+ * Env required (set in .env.local locally and in the Vercel project):
+ *   RESUME_PASSWORD         the password to unlock the file
+ *   BLOB_READ_WRITE_TOKEN   provided automatically by Vercel once a Blob
+ *                           store is linked; needed locally for `vercel env pull`
  */
+const BLOB_PREFIX = "resume/";
+
 export async function POST(req: Request) {
   const expected = process.env.RESUME_PASSWORD;
   if (!expected) {
@@ -32,15 +33,41 @@ export async function POST(req: Request) {
   }
 
   if (password !== expected) {
-    // Constant-ish response; no hint about which part was wrong.
     return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
   }
 
-  const file = await readFile(
-    path.join(process.cwd(), "private", "Yihan_Hong_Resume.pdf")
-  );
+  // Newest upload under resume/ wins, so re-uploading replaces the live file.
+  let file: Response;
+  try {
+    const { blobs } = await list({ prefix: BLOB_PREFIX });
+    const newest = blobs
+      .filter((b) => b.pathname.toLowerCase().endsWith(".pdf"))
+      .sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt))[0];
 
-  return new NextResponse(new Uint8Array(file), {
+    if (!newest) {
+      return NextResponse.json(
+        { error: "Resume is not available right now." },
+        { status: 503 }
+      );
+    }
+
+    file = await fetch(newest.url, { cache: "no-store" });
+  } catch {
+    // Missing/invalid BLOB_READ_WRITE_TOKEN, or Blob unreachable.
+    return NextResponse.json(
+      { error: "Resume is not available right now." },
+      { status: 503 }
+    );
+  }
+
+  if (!file.ok) {
+    return NextResponse.json(
+      { error: "Resume is not available right now." },
+      { status: 502 }
+    );
+  }
+
+  return new NextResponse(file.body, {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": 'inline; filename="Yihan_Hong_Resume.pdf"',
