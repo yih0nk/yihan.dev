@@ -15,8 +15,8 @@ const links = [
 
 export default function ContactPage() {
   return (
-    <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+    <PageTransition className="flex-1 flex flex-col">
+      <div className="w-full max-w-[800px] mx-auto px-6 py-20 flex-1 flex flex-col justify-center">
         <h1
           className="text-4xl md:text-5xl mb-6 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
@@ -29,7 +29,7 @@ export default function ContactPage() {
           hi — I&apos;d love to hear from you.
         </p>
 
-        <ul className="space-y-6 mb-20">
+        <ul className="space-y-6">
           {links.map((l) => (
             <li key={l.label}>
               <Link
