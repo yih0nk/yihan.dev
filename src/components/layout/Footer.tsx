@@ -1,9 +1,10 @@
 import Link from "next/link";
 
 const SOCIAL_LINKS = [
+  { href: "/resume", label: "resume" },
   { href: "https://github.com/yih0nk", label: "github" },
   { href: "https://linkedin.com/in/yihan-hon", label: "linkedin" },
-  { href: "mailto:yihan@usc.edu", label: "email" },
+  { href: "mailto:yihanhon@usc.edu", label: "email" },
 ];
 
 export default function Footer() {
