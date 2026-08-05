@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageTransition from "@/components/layout/PageTransition";
 import TimelineItem from "@/components/ui/TimelineItem";
 import HandDrawnDivider from "@/components/ui/HandDrawnDivider";
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
 };
 
 const skillGroups = [
-  { category: "Languages", skills: ["JavaScript/TypeScript", "Python", "C/C++", "Ruby", "Java", "C#", "SQL", "HTML/CSS"] },
+  { category: "Languages", skills: ["JavaScript/TypeScript", "Python", "C/C++", "Go", "Ruby", "Java", "C#", "SQL", "HTML/CSS"] },
   { category: "Frameworks", skills: ["React", "Next.js", "Node.js", "FastAPI", "Flask", "Rails", "GraphQL", "Electron", "PyTorch", "Pandas", "NumPy"] },
-  { category: "AI/ML", skills: ["Reinforcement Learning (PPO/MARL)", "RAG", "Agentic AI", "XGBoost", "sentence-transformers", "ChromaDB"] },
-  { category: "Tools", skills: ["AWS", "Azure", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Sidekiq", "Supabase", "Vercel", "Git", "GitHub Actions", "Playwright"] },
+  { category: "AI/ML", skills: ["LoRA Fine-Tuning", "Reinforcement Learning (PPO/MARL)", "RAG", "LLM-as-Judge Evaluation", "Agentic AI", "Hugging Face", "SciNCL", "XGBoost", "ChromaDB", "Prompt Caching"] },
+  { category: "Tools", skills: ["AWS", "Azure", "SLURM", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Sidekiq", "Supabase", "Vercel", "Git", "GitHub Actions", "Playwright"] },
   { category: "Full-Stack", skills: ["REST APIs", "SSE", "OAuth/JWT", "IPC", "CI/CD"] },
 ];
 
@@ -21,11 +22,19 @@ export default function ExperiencePage() {
     <PageTransition>
       <div className="max-w-[1100px] mx-auto px-6 py-20">
         <h1
-          className="text-4xl md:text-5xl mb-14 lowercase"
+          className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           experience.
         </h1>
+
+        <Link
+          href="/resume"
+          className="inline-block mb-14 text-sm text-gray-500 hover:text-black underline underline-offset-4 transition-colors"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          view resume →
+        </Link>
 
         <section className="mb-10">
 
@@ -50,8 +59,8 @@ export default function ExperiencePage() {
           />
 
           <TimelineItem
-            period="Jan 2026 — Present"
-            title="FORTIS Lab & SIAS Lab, University of Southern California"
+            period="Jan 2026 — Jun 2026"
+            title="SIAS Lab, University of Southern California"
             subtitle="Research Assistant"
             location="Los Angeles, CA"
             bullets={[
@@ -92,11 +101,15 @@ export default function ExperiencePage() {
             subtitle="B.S. Computer Engineering and Computer Science"
             location="Los Angeles, CA"
             bullets={[
-              "Viterbi Scholar Award · Director's Scholarship",
-              "Object Oriented Programming",
-              "Discrete Methods in Computer Science",
-              "Data Structures & Object-Oriented Design",
-              "Introduction to Embedded Systems",
+              "Viterbi Scholar Award · Director's Scholarship · 2× Dean's List",
+              "Algorithms",
+              "Linear Algebra",
+              "Data Structures",
+              "Discrete Mathematics",
+              "Object-Oriented Programming",
+              "Principles of Software Development",
+              "Calculus III",
+              "Embedded Systems",
             ]}
             isLast
           />
