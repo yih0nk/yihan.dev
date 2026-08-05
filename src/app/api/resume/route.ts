@@ -46,10 +46,16 @@ export async function POST(req: Request) {
   // Newest upload under resume/ wins, so re-uploading replaces the live file.
   let file: Response;
   try {
-    const { blobs } = await list({ prefix: BLOB_PREFIX });
-    const newest = blobs
+    // List everything, so a PDF dropped in from the Vercel dashboard (which
+    // lands at the root) works just as well as a scripted resume/ upload.
+    const { blobs } = await list();
+    const pdfs = blobs
       .filter((b) => b.pathname.toLowerCase().endsWith(".pdf"))
-      .sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt))[0];
+      .sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt));
+
+    // Prefer anything filed under resume/, otherwise take the newest PDF.
+    const newest =
+      pdfs.find((b) => b.pathname.startsWith(BLOB_PREFIX)) ?? pdfs[0];
 
     if (!newest) {
       return NextResponse.json(
