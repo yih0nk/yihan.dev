@@ -27,23 +27,33 @@ export default function VinylCompact({
   reduced,
   size = 188,
   art = null,
+  progress = 0,
 }: {
   index: number
   reduced: boolean
   size?: number
   /** Album art URL, or null to leave the label its authored colour. */
   art?: string | null
+  /** 0..1 through the track. Positions the stylus; 0 parks it at the lead-in. */
+  progress?: number
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Read inside the loop so a track change never re-initialises the canvas.
   const targetRef = useRef<[number, number, number]>(TRACKS[0].label)
   const artRef = useRef<HTMLImageElement | null>(null)
+  // Read inside the loop, like the label colour: a position tick must not tear
+  // down and rebuild the canvas twice a second.
+  const progressRef = useRef(0)
   /** Bumped when a cover finishes loading, to force a repaint while parked. */
   const [artLoaded, setArtLoaded] = useState(0)
 
   useEffect(() => {
     targetRef.current = TRACKS[index]?.label ?? TRACKS[0].label
   }, [index])
+
+  useEffect(() => {
+    progressRef.current = Number.isFinite(progress) ? Math.max(0, Math.min(1, progress)) : 0
+  }, [progress])
 
   /**
    * Load the cover out of band. The draw loop reads `artRef` and does not care
@@ -124,6 +134,7 @@ export default function VinylCompact({
     const rgb: [number, number, number] = [...(TRACKS[index]?.label ?? TRACKS[0].label)]
     const started = performance.now()
     let last = started
+    let armEase = progressRef.current
 
     /**
      * The loop is gated on the record actually being watchable. An unconditional
@@ -183,6 +194,10 @@ export default function VinylCompact({
 
       // 33 1/3 rpm = 0.5556 rev/s, taken from wall clock
       const spin = reduced ? -0.35 : ((now - started) / 1000) * 0.5556 * TAU
+
+      // The arm chases the reported position instead of snapping to it, so a
+      // re-sync after a seek reads as the arm being moved rather than teleporting.
+      armEase += (progressRef.current - armEase) * (1 - Math.exp(-dt * 2.6))
 
       ctx.clearRect(0, 0, W, H)
 
@@ -322,11 +337,32 @@ export default function VinylCompact({
 
       ctx.restore()
 
-      // tonearm — one tapered line coming in from the upper right
+      /**
+       * The tonearm, tracking inward as the track plays.
+       *
+       * The stylus sits on a radius that runs from the lead-in at the rim to
+       * the run-out groove beside the label, and the arm is then SOLVED to
+       * reach it — law of cosines against the fixed pivot — rather than having
+       * both ends interpolated independently. Interpolating the tip is the
+       * obvious shortcut and it looks wrong immediately: the arm changes length
+       * as it sweeps, which no tonearm does.
+       *
+       * `armEase` lags the raw position slightly so a poll that re-syncs by a
+       * couple of seconds glides rather than jumping.
+       */
+      const stylusR = R * (0.92 - 0.46 * armEase)
       const pvx = cx + R * 1.02
       const pvy = cy - R * 0.94
-      const tipx = cx + R * 0.30
-      const tipy = cy - R * 0.16
+      const armLen = R * 1.30
+      const pc = Math.hypot(cx - pvx, cy - pvy)
+      const basePhi = Math.atan2(cy - pvy, cx - pvx)
+      const cosD = Math.max(
+        -1,
+        Math.min(1, (armLen * armLen + pc * pc - stylusR * stylusR) / (2 * armLen * pc))
+      )
+      const phi = basePhi - Math.acos(cosD)
+      const tipx = pvx + Math.cos(phi) * armLen
+      const tipy = pvy + Math.sin(phi) * armLen
       ctx.lineCap = 'round'
       ctx.strokeStyle = 'rgba(12,14,18,0.13)'
       ctx.lineWidth = 3.2 * dpr

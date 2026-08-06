@@ -14,6 +14,7 @@ import {
   relativeTime,
   useContributions,
   useLatestPost,
+  useElapsed,
   useReducedMotion,
   useSpotify,
 } from './live'
@@ -162,6 +163,14 @@ function resolveMemory(): Memory {
 
 const LABEL = 'text-[12px] uppercase leading-none tracking-[0.2em]'
 
+/** ms -> m:ss. Hours would be a podcast, and this is a record. */
+function clock(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000))
+  const m = Math.floor(total / 60)
+  const sec = total % 60
+  return `${m}:${sec < 10 ? '0' : ''}${sec}`
+}
+
 export default function AboutComposed({ font }: { font: string }) {
   const still = useReducedMotion()
 
@@ -193,6 +202,11 @@ export default function AboutComposed({ font }: { font: string }) {
     return () => window.clearTimeout(id)
   }, [idx, live])
   const track = live ?? TRACKS[idx]
+
+  // Position within the track, extrapolated between polls. Zero for the
+  // hardcoded rotation, which has no position to report.
+  const elapsedMs = useElapsed(live)
+  const progress = live?.durationMs ? elapsedMs / live.durationMs : 0
 
   // ── the live readouts ─────────────────────────────────────────────────────
   const { days, total } = useContributions(SPAN)
@@ -348,7 +362,13 @@ export default function AboutComposed({ font }: { font: string }) {
               line as "last wrote" and "commits" across the gutter, and centring
               it against a 148px disc pushed it low. */}
           <div className="flex items-start gap-6 md:col-span-5">
-            <VinylCompact index={idx} reduced={still} size={148} art={live?.image ?? null} />
+            <VinylCompact
+                index={idx}
+                reduced={still}
+                size={148}
+                art={live?.image ?? null}
+                progress={progress}
+              />
             <div className="min-w-0">
               <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
                 {live && !live.isPlaying ? 'last played' : 'now playing'}
@@ -365,11 +385,16 @@ export default function AboutComposed({ font }: { font: string }) {
                   {track.artist}
                 </p>
               </div>
+              {/* Elapsed against length once there is a real track to measure;
+                  the hardcoded rotation has no position, so it keeps the speed,
+                  which is the only true thing it can say about itself. */}
               <span
-                className="mt-3 block text-[12px] tracking-[0.2em] uppercase"
+                className="mt-3 block text-[12px] tracking-[0.2em] uppercase tabular-nums"
                 style={{ fontFamily: MONO, color: MUTED }}
               >
-                33 1/3 rpm
+                {live?.durationMs
+                  ? `${clock(elapsedMs)} / ${clock(live.durationMs)}`
+                  : '33 1/3 rpm'}
               </span>
             </div>
           </div>

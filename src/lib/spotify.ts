@@ -30,6 +30,10 @@ export interface NowPlaying {
   image: string | null;
   /** False when nothing is playing and this is the last thing that did. */
   isPlaying: boolean;
+  /** Position within the track, ms. Zero for a recently-played fallback. */
+  progressMs: number;
+  /** Track length, ms. Zero when Spotify does not report one. */
+  durationMs: number;
 }
 
 function credentials() {
@@ -76,7 +80,7 @@ async function accessToken(): Promise<string | null> {
 }
 
 /** Narrow one track object without trusting its shape. */
-function readTrack(raw: unknown, isPlaying: boolean): NowPlaying | null {
+function readTrack(raw: unknown, isPlaying: boolean, progressMs = 0): NowPlaying | null {
   if (typeof raw !== "object" || raw === null) return null;
   const t = raw as Record<string, unknown>;
 
@@ -101,6 +105,9 @@ function readTrack(raw: unknown, isPlaying: boolean): NowPlaying | null {
     ? (t.external_urls as { spotify?: unknown })
     : {};
 
+  const durationMs =
+    typeof t.duration_ms === "number" && Number.isFinite(t.duration_ms) ? t.duration_ms : 0;
+
   return {
     title,
     artist: artist || "unknown",
@@ -108,6 +115,10 @@ function readTrack(raw: unknown, isPlaying: boolean): NowPlaying | null {
     url: typeof urls.spotify === "string" ? urls.spotify : "https://open.spotify.com",
     image,
     isPlaying,
+    // Never let a stale or oversized position run past the end of the track —
+    // the tonearm's position is derived from this and would swing off the disc.
+    progressMs: durationMs ? Math.max(0, Math.min(progressMs, durationMs)) : Math.max(0, progressMs),
+    durationMs,
   };
 }
 
@@ -126,8 +137,16 @@ export async function getNowPlaying(): Promise<NowPlaying | null> {
 
   const live = await fetch(NOW_PLAYING_URL, { headers, cache: "no-store" });
   if (live.status === 200) {
-    const json = (await live.json()) as { item?: unknown; is_playing?: unknown };
-    const track = readTrack(json.item, json.is_playing === true);
+    const json = (await live.json()) as {
+      item?: unknown;
+      is_playing?: unknown;
+      progress_ms?: unknown;
+    };
+    const progress =
+      typeof json.progress_ms === "number" && Number.isFinite(json.progress_ms)
+        ? json.progress_ms
+        : 0;
+    const track = readTrack(json.item, json.is_playing === true, progress);
     if (track) return track;
   }
 

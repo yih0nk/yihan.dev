@@ -181,6 +181,12 @@ export interface SpotifyTrack {
   isPlaying: boolean
   /** Album art, drawn onto the record's label. Null when Spotify has none. */
   image: string | null
+  /** Position when this answer was received, ms. */
+  progressMs: number
+  /** Track length, ms. Zero when Spotify does not report one. */
+  durationMs: number
+  /** `performance.now()` at the moment it arrived, so the client can extrapolate. */
+  receivedAt: number
 }
 
 /**
@@ -188,8 +194,13 @@ export interface SpotifyTrack {
  *
  * Returns null both while in flight and forever after if the integration is not
  * set up, so the caller can simply fall back to the hardcoded rotation without
- * distinguishing "not yet" from "never". Polls at the same 60s the route caches
- * at — polling faster only re-reads the same cached answer.
+ * distinguishing "not yet" from "never".
+ *
+ * Polls every 10s. The position between polls is extrapolated locally by
+ * `useElapsed` rather than fetched — a progress bar that needed a network round
+ * trip per frame would be absurd, and Spotify's own position only changes at
+ * one millisecond per millisecond. Each poll re-syncs, which is what makes
+ * pausing, seeking and track changes correct themselves within one interval.
  */
 export function useSpotify(): SpotifyTrack | null {
   const [track, setTrack] = useState<SpotifyTrack | null>(null)
@@ -208,14 +219,19 @@ export function useSpotify(): SpotifyTrack | null {
           if (body.configured !== true) return
           const t = body.track
           if (typeof t !== 'object' || t === null) return
-          const { title, artist, url, isPlaying, image } = t as Record<string, unknown>
+          const { title, artist, url, isPlaying, image, progressMs, durationMs } =
+            t as Record<string, unknown>
           if (typeof title !== 'string' || !title.trim()) return
+          const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0)
           setTrack({
             title: title.trim(),
             artist: typeof artist === 'string' ? artist : '',
             url: typeof url === 'string' ? url : 'https://open.spotify.com',
             isPlaying: isPlaying === true,
             image: typeof image === 'string' && image ? image : null,
+            progressMs: num(progressMs),
+            durationMs: num(durationMs),
+            receivedAt: performance.now(),
           })
         })
         .catch(() => {
@@ -224,7 +240,7 @@ export function useSpotify(): SpotifyTrack | null {
     }
 
     load()
-    const id = window.setInterval(load, 60_000)
+    const id = window.setInterval(load, 10_000)
     return () => {
       alive = false
       controller.abort()
@@ -268,4 +284,30 @@ export function useLatestPost() {
   }, [])
 
   return { post, settled }
+}
+
+/**
+ * The live position, extrapolated between polls.
+ *
+ * Ticks on a timer rather than rAF: this drives a text readout and a tonearm
+ * angle, neither of which needs 60fps, and a 500ms tick is two orders of
+ * magnitude cheaper. The record's own canvas loop is where per-frame work
+ * belongs.
+ *
+ * A paused track does not advance — `isPlaying` is false and the position is
+ * frozen wherever the last poll left it, which is what Spotify itself reports.
+ */
+export function useElapsed(track: SpotifyTrack | null): number {
+  const [now, setNow] = useState(() => performance.now())
+
+  useEffect(() => {
+    if (!track || !track.isPlaying) return
+    const id = window.setInterval(() => setNow(performance.now()), 500)
+    return () => window.clearInterval(id)
+  }, [track])
+
+  if (!track) return 0
+  if (!track.isPlaying) return track.progressMs
+  const elapsed = track.progressMs + Math.max(0, now - track.receivedAt)
+  return track.durationMs ? Math.min(elapsed, track.durationMs) : elapsed
 }

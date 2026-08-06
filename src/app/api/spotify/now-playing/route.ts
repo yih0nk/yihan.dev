@@ -21,7 +21,14 @@ export async function GET() {
     const track = await getNowPlaying();
     return Response.json(
       { configured: true, track },
-      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } },
+      {
+        headers: {
+          // 5s, not 60. The client interpolates the position between polls, so
+          // a cached progress_ms is wrong by exactly the age of the cache — and
+          // the interpolation would then jump backwards on every re-sync.
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+        },
+      },
     );
   } catch {
     // A Spotify outage should degrade to the rotation, never to a broken page.
