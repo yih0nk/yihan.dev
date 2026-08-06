@@ -15,6 +15,20 @@ export interface PostMeta {
   image?: string;
 }
 
+/**
+ * `draft: true` in a post's frontmatter keeps it out of every listing.
+ *
+ * This exists because new-post.mdx is a reusable template that lives in the
+ * content tree permanently, and getPostsByCategory globs the directory — so
+ * without a flag the placeholder ("your title here.", body "write here.") was
+ * showing up on /blog/tech and in /llms.txt as though it were a real post.
+ *
+ * The flag is checked in ONE place, here, so anything that lists posts inherits
+ * it: /blog, the category pages, /llms.txt, /agent.md, and the homepage's
+ * "last wrote". A draft is still reachable by its direct URL, which is what
+ * makes it useful for previewing something before it ships.
+ */
+
 export interface Post extends PostMeta {
   content: string;
 }
@@ -37,8 +51,10 @@ export function getPostsByCategory(category: PostCategory): PostMeta[] {
         excerpt: data.excerpt ?? "",
         category,
         image: data.image,
+        draft: data.draft === true,
       };
     })
+    .filter((p) => !p.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
