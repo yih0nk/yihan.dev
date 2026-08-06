@@ -10,3 +10,6 @@ private/
 # OS + build artifacts
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Working notes — useful locally, not repo content.
+docs/

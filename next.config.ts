@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
       // 308 rather than 307: permanent, and GET.
       { source: "/agent.md", destination: "/llms.txt", permanent: true },
       { source: "/agent.txt", destination: "/llms.txt", permanent: true },
+      // /hobbies became /play; /about and /contact were folded into the
+      // homepage and the footer respectively. Anything already linking to the
+      // old paths lands somewhere sensible rather than on a 404.
+      { source: "/hobbies", destination: "/play", permanent: true },
+      { source: "/about", destination: "/", permanent: true },
+      { source: "/contact", destination: "/", permanent: true },
     ];
   },
 };

@@ -37,22 +37,23 @@ import { REEL_SETTLED } from "@/components/home/reelEvent";
  */
 
 /**
- * /about and /contact are not here.
+ * /about and /contact are gone, not merely unlinked.
  *
- * The homepage now opens with the photograph, the intro and the closing line,
- * which is everything /about had to say and says it first — a nav entry leading
- * to a second, weaker telling of the same thing is a dead end with a label on
- * it. /contact was five links, and all five live in the footer of every page,
- * so a whole route existed to hold what the bottom of the screen already holds.
+ * The homepage opens with the photograph, the intro and the closing line, which
+ * is everything /about had to say and says it first — the route was a second,
+ * weaker telling of the same thing. /contact was five links, and all five sit
+ * in the footer of every page, so a whole route existed to hold what the bottom
+ * of the screen already holds.
  *
- * Both routes still resolve; nothing links to them (verified by grep), and they
- * can be deleted outright once their content has been folded or discarded.
+ * /hobbies is /play. "Hobbies" is what you call someone else's interests; the
+ * page is about piano, sax, painting, photographs and badminton, and none of
+ * those are a hobby to the person doing them.
  */
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/experience", label: "Experience" },
-  { href: "/hobbies", label: "Hobbies" },
+  { href: "/play", label: "Play" },
   { href: "/blog", label: "Blog" },
 ];
 

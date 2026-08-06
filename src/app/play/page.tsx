@@ -5,7 +5,7 @@ import HandDrawnDivider from "@/components/ui/HandDrawnDivider";
 import AudioPlayer from "@/components/ui/AudioPlayer";
 
 export const metadata: Metadata = {
-  title: "Hobbies",
+  title: "Play",
   description: "What Yihan does when not coding — music, art, photography, badminton.",
 };
 
@@ -18,7 +18,7 @@ const artImages = [
   "/images/IMG_9513.jpg",
 ];
 
-export default function HobbiesPage() {
+export default function PlayPage() {
   return (
     <PageTransition>
       <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
@@ -26,7 +26,7 @@ export default function HobbiesPage() {
           className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
-          hobbies.
+          play.
         </h1>
         <p className="text-muted mb-16 leading-relaxed lowercase">
           I write code from 9 to 5 (okay, 9 to 2 AM). Here&apos;s what I do

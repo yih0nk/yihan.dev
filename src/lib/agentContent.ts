@@ -146,13 +146,12 @@ Now plays recreationally.
 
 ## Site Map
 
-- / — home
-- /about — bio and quick facts
+- / — home, bio, and what is playing right now
 - /projects — full project list
 - /experience — education, work history, skills
-- /hobbies — music, art, photography, badminton
+- /play — music, art, photography, badminton
 - /blog — writing
-- /contact — contact links
+- /resume — password-gated
 
 ---
 
