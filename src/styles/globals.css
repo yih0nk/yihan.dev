@@ -1,18 +1,6 @@
-/* Fonts are NOT loaded here.
-
-   Instrument Serif and Source Code Pro are self-hosted through next/font in
-   src/app/fonts.ts, which downloads them at build time and serves them from
-   this domain. The two that still come from a third party — General Sans, and
-   Space Grotesk/Caveat for PianoHero — are <link> tags in layout.tsx.
-
-   They used to be `@import url(...)` rules at the top of this file, and they
-   silently stopped working: the rules survive into the compiled output, but
-   the browser parses zero import rules from it, so General Sans never loaded
-   on any page except /preview (which injects its own <link> for the font
-   switcher, which is why it looked fine there). Verified with
-   `document.fonts.load('16px "General Sans"')` returning zero matched faces.
-   A <link> in the head is explicit, preconnectable, and cannot be swallowed by
-   the CSS pipeline. */
+/* All three faces are self-hosted through next/font — see src/app/fonts.ts,
+   which serves them from this domain. There is no third-party font origin on
+   the critical path any more. */
 
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
@@ -41,7 +29,7 @@
   --color-accent: #2f6bff;
 
   --font-display: var(--font-display-face), Georgia, serif;
-  --font-body: "General Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-body-face), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* the scale, so text-* stops drifting to 36px and 20px */

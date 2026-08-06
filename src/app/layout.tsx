@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { display, mono } from "./fonts";
+import { body, display, mono } from "./fonts";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/next"
@@ -29,18 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable}`}>
-      <head>
-        {/* The two faces that are not yet self-hosted. As <link>, not as a CSS
-            @import — see the note at the top of globals.css for why that broke.
-            This is the last third-party font origin; it goes when
-            public/fonts/ has the General Sans file (see fonts.ts). */}
-        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600&display=swap"
-        />
-      </head>
+    <html lang="en" className={`${display.variable} ${mono.variable} ${body.variable}`}>
       <body className="flex flex-col min-h-screen">
         <Nav />
         <main className="flex flex-1 flex-col">{children}</main>

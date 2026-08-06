@@ -1,4 +1,5 @@
 import { Instrument_Serif, Source_Code_Pro } from "next/font/google";
+import localFont from "next/font/local";
 
 /**
  * The three faces.
@@ -15,19 +16,12 @@ import { Instrument_Serif, Source_Code_Pro } from "next/font/google";
  * the preload hints and a size-adjusted fallback, which is what stops the page
  * reflowing when the real face lands.
  *
- * GENERAL SANS IS NOT HERE YET. It is Fontshare-only, so there is no
- * next/font/google entry and the file has to live in the repo. It cannot be
- * loaded conditionally either — next/font requires a module-scope const with
- * statically analysable arguments, so "use the local file if it exists" is not
- * expressible. Until the file lands it stays on the Fontshare @import in
- * globals.css, which is one third-party origin instead of two.
+ * General Sans is Fontshare-only, so there is no next/font/google entry and the
+ * file lives in the repo — the 40KB variable woff2 from the archive's WEB/
+ * folder, which covers 200-700 in one file rather than five static weights.
  *
- * To finish the job:
- *   1. https://www.fontshare.com/fonts/general-sans -> download (free for
- *      commercial use), take `GeneralSans-Variable.woff2` from the archive.
- *   2. Put it at `public/fonts/GeneralSans-Variable.woff2`.
- *   3. Uncomment the block below and drop the Fontshare @import from
- *      globals.css.
+ * That is the last third-party font origin gone. Nothing on this site now waits
+ * on a DNS lookup to somebody else's CDN before it can paint text.
  */
 
 /**
@@ -55,15 +49,11 @@ export const mono = Source_Code_Pro({
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
-// Step 3 — swap this in once the file from step 2 is in place, and add
-// `body.variable` alongside the other two in layout.tsx.
-//
-// import localFont from "next/font/local";
-//
-// export const body = localFont({
-//   src: "../../public/fonts/GeneralSans-Variable.woff2",
-//   weight: "200 700",
-//   display: "swap",
-//   variable: "--font-body-face",
-//   fallback: ["ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
-// });
+export const body = localFont({
+  src: "../../public/fonts/GeneralSans-Variable.woff2",
+  // The variable axis, so one file answers every weight the site asks for.
+  weight: "200 700",
+  display: "swap",
+  variable: "--font-body-face",
+  fallback: ["ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+});
