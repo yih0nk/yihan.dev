@@ -26,8 +26,8 @@ export default function SiteViewCounter() {
 
   return (
     <span
-      className="text-xs text-gray-400 tabular-nums select-none"
-      style={{ fontFamily: "var(--font-mono)" }}
+      className="text-[12px] tabular-nums select-none"
+      style={{ fontFamily: "var(--font-mono)", color: "var(--color-muted)" }}
       title={`${views.toLocaleString()} total site visits`}
     >
       {formatViews(views)} visits
