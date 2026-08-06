@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 
-# AI agents: fetch /agent.md for a structured, plain-text version of this
-# entire site (no CSS/animation to parse). /agent.txt serves identical
-# content as text/plain if your client prefers that.
+# The résumé is password-gated; there is nothing behind it worth indexing.
+Disallow: /resume
+
+# AI agents: fetch /llms.txt — it is the index and the full plain-text
+# rendering of this site in one file, with no CSS or animation to parse.
