@@ -385,14 +385,17 @@ export default function AboutComposed({ font }: { font: string }) {
                   {track.artist}
                 </p>
               </div>
-              {/* Elapsed against length once there is a real track to measure;
-                  the hardcoded rotation has no position, so it keeps the speed,
-                  which is the only true thing it can say about itself. */}
+              {/* The clock only runs while something is actually playing.
+                  A paused or last-played track reports position 0, and
+                  "0:00 / 2:50" then reads as a stalled player rather than as
+                  nothing happening — it is a number that looks live and is not.
+                  Everything else falls back to the speed, which is the one true
+                  thing a stationary record can say about itself. */}
               <span
                 className="mt-3 block text-[12px] tracking-[0.2em] uppercase tabular-nums"
                 style={{ fontFamily: MONO, color: MUTED }}
               >
-                {live?.durationMs
+                {live?.isPlaying && live.durationMs
                   ? `${clock(elapsedMs)} / ${clock(live.durationMs)}`
                   : '33 1/3 rpm'}
               </span>
