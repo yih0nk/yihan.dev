@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 export default function ResumePage() {
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+      <div className="max-w-[800px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <h1
           className="text-4xl md:text-5xl mb-6 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           resume.
         </h1>
-        <p className="text-gray-600 leading-relaxed mb-10 max-w-md">
+        <p className="text-ink-soft leading-relaxed mb-10 max-w-md">
           This one&apos;s behind a password. If you need it and don&apos;t have
           it, just{" "}
           <a

@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <h1
           className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           projects.
         </h1>
-        <p className="text-gray-500 mb-14 leading-relaxed max-w-lg lowercase">
+        <p className="text-muted mb-14 leading-relaxed max-w-lg lowercase">
           Things I&apos;ve built, broken, and rebuilt. I gravitate toward systems
           that move data in interesting ways — pipelines, agents, simulations.
           Here are a few I&apos;m proud of.

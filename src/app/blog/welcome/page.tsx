@@ -16,9 +16,9 @@ export default function WelcomePage() {
 
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <p
-          className="text-xs uppercase tracking-widest text-gray-400 mb-6"
+          className="text-xs uppercase tracking-widest text-muted mb-6"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           start here
@@ -30,7 +30,7 @@ export default function WelcomePage() {
           {post.title}
         </h1>
         {post.date && (
-          <p className="text-sm text-gray-400 mb-12" style={{ fontFamily: "var(--font-mono)" }}>
+          <p className="text-sm text-muted mb-12" style={{ fontFamily: "var(--font-mono)" }}>
             {new Date(post.date).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",

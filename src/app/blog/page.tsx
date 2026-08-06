@@ -17,14 +17,14 @@ const CATEGORIES = [
 export default function BlogPage() {
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <h1
           className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           blog.
         </h1>
-        <p className="text-gray-400 mb-16 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
+        <p className="text-muted mb-16 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
           unfiltered. sporadic. mine.
         </p>
 
@@ -35,7 +35,7 @@ export default function BlogPage() {
         >
           <div className="flex items-center gap-2 mb-3">
             <span
-              className="text-[10px] uppercase tracking-widest text-gray-400"
+              className="text-[10px] uppercase tracking-widest text-muted"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               start here
@@ -47,7 +47,7 @@ export default function BlogPage() {
           >
             welcome to my thought dumps.
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             what this is, what it isn&apos;t, and why i&apos;m writing.
           </p>
         </Link>
@@ -66,7 +66,7 @@ export default function BlogPage() {
               >
                 {cat.label}.
               </h2>
-              <p className="text-sm text-gray-500">{cat.description}</p>
+              <p className="text-sm text-muted">{cat.description}</p>
             </Link>
           ))}
         </div>

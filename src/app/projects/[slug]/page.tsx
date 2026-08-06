@@ -31,11 +31,11 @@ export default async function ProjectDetailPage({
 
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+      <div className="max-w-[800px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         {/* Back */}
         <Link
           href="/projects"
-          className="text-xs text-gray-400 hover:text-black transition-colors mb-10 inline-flex items-center gap-1"
+          className="text-xs text-muted hover:text-black transition-colors mb-10 inline-flex items-center gap-1"
         >
           ← all projects
         </Link>
@@ -53,7 +53,7 @@ export default async function ProjectDetailPage({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-300 text-xs tracking-widest uppercase">
+              <span className="text-muted text-xs tracking-widest uppercase">
                 screenshot / demo — coming soon
               </span>
             </div>
@@ -87,12 +87,12 @@ export default async function ProjectDetailPage({
           )}
         </div>
 
-        <p className="text-lg text-gray-500 mb-6 leading-relaxed">
+        <p className="text-lg text-muted mb-6 leading-relaxed">
           {project.tagline}
         </p>
 
         {/* Description */}
-        <div className="space-y-5 text-gray-700 leading-relaxed mb-12">
+        <div className="space-y-5 text-ink-soft leading-relaxed mb-12">
           {project.description.map((para, i) => (
             <p key={i}>{para}</p>
           ))}
@@ -101,14 +101,14 @@ export default async function ProjectDetailPage({
         {/* Tags */}
         {project.tags.length > 0 && (
           <div>
-            <h2 className="text-xs tracking-widest uppercase text-gray-400 mb-4">
+            <h2 className="text-xs tracking-widest uppercase text-muted mb-4">
               tech
             </h2>
             <ul className="flex flex-wrap gap-2">
               {project.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="text-sm border border-gray-200 px-3 py-1 text-gray-600"
+                  className="text-sm border border-gray-200 px-3 py-1 text-ink-soft"
                 >
                   {tag}
                 </li>

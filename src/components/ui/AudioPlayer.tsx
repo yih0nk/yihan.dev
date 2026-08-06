@@ -99,7 +99,7 @@ export default function AudioPlayer({ tracks }: AudioPlayerProps) {
             {/* Track label + progress bar */}
             <div className="flex-1 flex flex-col gap-1.5">
               {track.label && (
-                <span className="text-xs text-gray-500">{track.label}</span>
+                <span className="text-xs text-muted">{track.label}</span>
               )}
               {/* Scrubable progress bar */}
               <div

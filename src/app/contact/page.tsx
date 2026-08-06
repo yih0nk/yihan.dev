@@ -10,13 +10,14 @@ export const metadata: Metadata = {
 const links = [
   { icon: "✉️", label: "email", href: "mailto:yihanhon@usc.edu", display: "yihanhon@usc.edu" },
   { icon: "🐱", label: "github", href: "https://github.com/yih0nk", display: "github.com/yih0nk" },
+  { icon: "𝕏", label: "x", href: "https://x.com/yihanhon", display: "x.com/yihanhon" },
   { icon: "💼", label: "linkedin", href: "https://linkedin.com/in/yihan-hon", display: "linkedin.com/in/yihan-hon" },
 ];
 
 export default function ContactPage() {
   return (
     <PageTransition className="flex-1 flex flex-col">
-      <div className="w-full max-w-[800px] mx-auto px-6 py-20 flex-1 flex flex-col justify-center">
+      <div className="w-full max-w-[800px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20 flex-1 flex flex-col justify-center">
         <h1
           className="text-4xl md:text-5xl mb-6 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
@@ -24,7 +25,7 @@ export default function ContactPage() {
           let&apos;s talk.
         </h1>
 
-        <p className="text-gray-600 leading-relaxed mb-12 max-w-md lowercase">
+        <p className="text-ink-soft leading-relaxed mb-12 max-w-md lowercase">
           Whether it&apos;s about an internship, a project idea, or just to say
           hi — I&apos;d love to hear from you.
         </p>
@@ -40,9 +41,9 @@ export default function ContactPage() {
               >
                 <span className="text-xl">{l.icon}</span>
                 <span className="flex flex-col">
-                  <span className="text-xs text-gray-400 uppercase tracking-wider">{l.label}</span>
+                  <span className="text-xs text-muted uppercase tracking-wider">{l.label}</span>
                   <span
-                    className="text-sm text-gray-700 group-hover:text-black group-hover:underline underline-offset-4 transition-colors"
+                    className="text-sm text-ink-soft group-hover:text-black group-hover:underline underline-offset-4 transition-colors"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {l.display}

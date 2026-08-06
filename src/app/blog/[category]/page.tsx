@@ -35,10 +35,10 @@ export default async function CategoryPage({
 
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <Link
           href="/blog"
-          className="text-xs text-gray-400 hover:text-black transition-colors mb-8 inline-block"
+          className="text-xs text-muted hover:text-black transition-colors mb-8 inline-block"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           ← blog
@@ -49,12 +49,12 @@ export default async function CategoryPage({
         >
           {cat}.
         </h1>
-        <p className="text-gray-400 text-sm mb-16" style={{ fontFamily: "var(--font-mono)" }}>
+        <p className="text-muted text-sm mb-16" style={{ fontFamily: "var(--font-mono)" }}>
           {CATEGORY_DESCRIPTIONS[cat]}
         </p>
 
         {posts.length === 0 ? (
-          <p className="text-gray-400 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
+          <p className="text-muted text-sm" style={{ fontFamily: "var(--font-mono)" }}>
             nothing here yet. check back soon.
           </p>
         ) : (
@@ -66,7 +66,7 @@ export default async function CategoryPage({
                   className="group block"
                 >
                   <p
-                    className="text-xs text-gray-400 mb-1"
+                    className="text-xs text-muted mb-1"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {post.date
@@ -84,7 +84,7 @@ export default async function CategoryPage({
                     {post.title}
                   </h2>
                   {post.excerpt && (
-                    <p className="text-sm text-gray-500">{post.excerpt}</p>
+                    <p className="text-sm text-muted">{post.excerpt}</p>
                   )}
                 </Link>
               </li>

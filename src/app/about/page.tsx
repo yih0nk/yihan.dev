@@ -20,7 +20,7 @@ const facts = [
 export default function AboutPage() {
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 py-20">
+      <div className="max-w-[800px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <h1
           className="text-4xl md:text-5xl mb-12 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
@@ -35,7 +35,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="space-y-5 text-gray-700 leading-relaxed">
+          <div className="space-y-5 text-ink-soft leading-relaxed">
             <p>
               I&apos;m Yihan, a computer engineering and CS student at USC. Most
               of my week goes to making software act on its own: fine-tuning
@@ -60,13 +60,13 @@ export default function AboutPage() {
         <HandDrawnDivider />
 
         <div className="mt-12">
-          <h2 className="text-xs tracking-widest uppercase text-gray-400 mb-6">
+          <h2 className="text-xs tracking-widest uppercase text-muted mb-6">
             quick facts
           </h2>
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {facts.map((f) => (
               <div key={f.label} className="border border-gray-100 p-4">
-                <dt className="text-xs text-gray-400 mb-1 uppercase tracking-wider">
+                <dt className="text-xs text-muted mb-1 uppercase tracking-wider">
                   {f.label}
                 </dt>
                 <dd className="text-sm font-medium">{f.value}</dd>

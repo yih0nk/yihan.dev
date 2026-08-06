@@ -48,7 +48,7 @@ export default function ResumeGate() {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-gray-500 underline underline-offset-4 hover:text-black"
+            className="text-sm text-muted underline underline-offset-4 hover:text-black"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             open in new tab
@@ -59,7 +59,7 @@ export default function ResumeGate() {
           type="application/pdf"
           className="w-full h-[820px] border border-gray-200"
         >
-          <p className="p-4 text-sm text-gray-500">
+          <p className="p-4 text-sm text-muted">
             Your browser can&apos;t display PDFs inline — use the download link
             above.
           </p>
@@ -72,7 +72,7 @@ export default function ResumeGate() {
     <form onSubmit={submit} className="max-w-sm">
       <label
         htmlFor="resume-password"
-        className="block text-xs text-gray-400 uppercase tracking-wider mb-2"
+        className="block text-xs text-muted uppercase tracking-wider mb-2"
       >
         password
       </label>

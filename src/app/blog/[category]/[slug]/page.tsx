@@ -32,10 +32,10 @@ export default async function PostPage({
 
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <Link
           href={`/blog/${category}`}
-          className="text-xs text-gray-400 hover:text-black transition-colors mb-8 inline-block"
+          className="text-xs text-muted hover:text-black transition-colors mb-8 inline-block"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           ← {category}
@@ -47,7 +47,7 @@ export default async function PostPage({
           {post.title}
         </h1>
         {post.date && (
-          <p className="text-sm text-gray-400 mb-12" style={{ fontFamily: "var(--font-mono)" }}>
+          <p className="text-sm text-muted mb-12" style={{ fontFamily: "var(--font-mono)" }}>
             {new Date(post.date).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",

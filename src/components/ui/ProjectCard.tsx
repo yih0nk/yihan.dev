@@ -19,7 +19,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-gray-300 text-xs tracking-widest uppercase font-mono">
+              <span className="text-muted text-xs tracking-widest uppercase font-mono">
                 {project.title}
               </span>
             </div>
@@ -34,7 +34,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             {project.title}
           </h3>
 
-          <p className="text-sm text-gray-500 mb-4 leading-relaxed line-clamp-2">
+          <p className="text-sm text-muted mb-4 leading-relaxed line-clamp-2">
             {project.tagline}
           </p>
 
@@ -43,7 +43,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               {project.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="text-xs border border-gray-200 px-2 py-0.5 text-gray-500"
+                  className="text-xs border border-gray-200 px-2 py-0.5 text-muted"
                 >
                   {tag}
                 </li>

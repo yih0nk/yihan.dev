@@ -26,7 +26,7 @@ export default function TimelineItem({
       <div className="absolute left-0 top-1.5 w-3.5 h-3.5 border-2 border-black bg-white rounded-full" />
 
       <div className="pb-6">
-        <p className="text-xs text-gray-400 mb-1 font-mono tracking-wide">
+        <p className="text-xs text-muted mb-1 font-mono tracking-wide">
           {period}
         </p>
         <h3
@@ -36,16 +36,16 @@ export default function TimelineItem({
           {title}
         </h3>
         {subtitle && (
-          <p className="text-sm text-gray-600 mt-0.5">{subtitle}</p>
+          <p className="text-sm text-ink-soft mt-0.5">{subtitle}</p>
         )}
         {location && (
-          <p className="text-xs text-gray-400 mt-0.5">{location}</p>
+          <p className="text-xs text-muted mt-0.5">{location}</p>
         )}
         {bullets && bullets.length > 0 && (
           <ul className="mt-3 space-y-1">
             {bullets.map((b, i) => (
-              <li key={i} className="text-sm text-gray-600 flex gap-2">
-                <span className="text-gray-300 select-none">—</span>
+              <li key={i} className="text-sm text-ink-soft flex gap-2">
+                <span className="text-muted select-none">—</span>
                 <span>{b}</span>
               </li>
             ))}

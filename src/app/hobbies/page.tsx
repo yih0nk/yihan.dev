@@ -21,14 +21,14 @@ const artImages = [
 export default function HobbiesPage() {
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 py-20">
+      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
         <h1
           className="text-4xl md:text-5xl mb-4 lowercase"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           hobbies.
         </h1>
-        <p className="text-gray-500 mb-16 leading-relaxed lowercase">
+        <p className="text-muted mb-16 leading-relaxed lowercase">
           I write code from 9 to 5 (okay, 9 to 2 AM). Here&apos;s what I do
           with the other hours.
         </p>
@@ -38,7 +38,7 @@ export default function HobbiesPage() {
           <h2 className="text-2xl mb-6" style={{ fontFamily: "var(--font-mono)" }}>
             keys &amp; reeds
           </h2>
-          <div className="text-gray-600 leading-relaxed space-y-4 mb-6">
+          <div className="text-ink-soft leading-relaxed space-y-4 mb-6">
             <p>
               I play piano and tenor saxophone — two instruments that have almost
               nothing in common except that they both sound terrible when
@@ -55,11 +55,11 @@ export default function HobbiesPage() {
               R&amp;B, Soul, and Classical. Some favourites: Matt Maltese, The
               1975, Radiohead, Sade, and MF Doom.
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted">
               Piano: 15 years and counting &nbsp;·&nbsp; Sax: 3 years and counting
             </p>
           </div>
-          <p className="text-gray-500 text-sm mb-4">and here are some not so perfect tunes.</p>
+          <p className="text-muted text-sm mb-4">and here are some not so perfect tunes.</p>
 
           <AudioPlayer
             tracks={[
@@ -77,7 +77,7 @@ export default function HobbiesPage() {
           <h2 className="text-2xl mb-6" style={{ fontFamily: "var(--font-mono)" }}>
             ink &amp; paint
           </h2>
-          <div className="text-gray-600 leading-relaxed space-y-4 mb-8">
+          <div className="text-ink-soft leading-relaxed space-y-4 mb-8">
             <p>
               I do oil painting and pencil/ink sketching. Oil painting is slow
               and deliberate — mixing colors, building layers, waiting for things
@@ -109,7 +109,7 @@ export default function HobbiesPage() {
           <h2 className="text-2xl mb-6" style={{ fontFamily: "var(--font-mono)" }}>
             light &amp; frame
           </h2>
-          <div className="text-gray-600 leading-relaxed space-y-4 mb-8">
+          <div className="text-ink-soft leading-relaxed space-y-4 mb-8">
             <p>
               Photography is how I practice seeing. It&apos;s the same muscle as
               design — noticing composition, contrast, the way light falls on
@@ -138,7 +138,7 @@ export default function HobbiesPage() {
           <h2 className="text-2xl mb-6" style={{ fontFamily: "var(--font-mono)" }}>
             smash &amp; clear
           </h2>
-          <div className="text-gray-600 leading-relaxed space-y-4">
+          <div className="text-ink-soft leading-relaxed space-y-4">
             <p>
               I play badminton competitively. And by &quot;competitively&quot; I mean I
               will absolutely celebrate a good smash like I just won the Olympics,
