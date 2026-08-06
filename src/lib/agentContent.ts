@@ -1,7 +1,7 @@
 import { projects } from "@/lib/projects";
 
 /**
- * Single source of truth for the /agent.md and /agent.txt routes.
+ * Body of the /llms.txt document.
  * Pulls project data live from projects.ts; the rest mirrors the copy
  * actually rendered on each page (see src/app/*\/page.tsx) so it can't
  * drift silently the way a hand-maintained static file would.
@@ -44,11 +44,11 @@ Contact: yihanhon@usc.edu · github.com/yih0nk · linkedin.com/in/yihan-hon
 
 I'm Yihan, a computer engineering and CS student at USC. Most of my week goes
 to making software act on its own: fine-tuning models to someone's taste,
-testing whether AI systems behave the way they're supposed to, and documenting
-the many ways they don't, and wiring up retrieval across hundreds of thousands
+testing whether AI systems behave the way they're supposed to (and documenting
+the many ways they don't), and wiring up retrieval across hundreds of thousands
 of records that all insist they're relevant.
 
-The rest of my time is less structured. Fifteen years of piano, a few of tenor
+The rest of my time is less structured. Fifteen years of piano, three of tenor
 sax, some photography, and more movies than a person can reasonably defend. I
 also play badminton with a level of competitiveness the sport did not ask for
 and cannot contain.
