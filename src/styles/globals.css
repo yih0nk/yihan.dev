@@ -1,25 +1,93 @@
-/* Google Fonts import must come first */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Caveat:wght@700&display=swap");
+/* Fonts are NOT loaded here.
+
+   Instrument Serif and Source Code Pro are self-hosted through next/font in
+   src/app/fonts.ts, which downloads them at build time and serves them from
+   this domain. The two that still come from a third party — General Sans, and
+   Space Grotesk/Caveat for PianoHero — are <link> tags in layout.tsx.
+
+   They used to be `@import url(...)` rules at the top of this file, and they
+   silently stopped working: the rules survive into the compiled output, but
+   the browser parses zero import rules from it, so General Sans never loaded
+   on any page except /preview (which injects its own <link> for the font
+   switcher, which is why it looked fine there). Verified with
+   `document.fonts.load('16px "General Sans"')` returning zero matched faces.
+   A <link> in the head is explicit, preconnectable, and cannot be swallowed by
+   the CSS pipeline. */
 
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/**
+ * The design tokens, as Tailwind v4 theme variables.
+ *
+ * src/styles/tokens.ts is the source of truth and these MUST be kept in step
+ * with it — the TS module is what components import directly, this block is
+ * what makes the same values reachable from a class name. Tailwind v4 generates
+ * utilities from `@theme`, so `--color-ink` here yields `text-ink`, `bg-ink`,
+ * `border-ink`, and so on. That is the whole point: before this existed the
+ * palette was reachable only by typing the hex again, and it had been typed
+ * again in eight files.
+ *
+ * Naming is by ROLE, never by appearance. `muted` can be re-pointed for dark
+ * mode; `gray-mid` cannot.
+ */
+@theme {
+  --color-bg: #f7f8f9;
+  --color-surface: #eceef0;
+  --color-ink: #14161a;
+  --color-ink-soft: #3a3d44;
+  --color-muted: #5c626d;
+  --color-hairline: rgba(20, 22, 26, 0.1);
+  --color-accent: #2f6bff;
+
+  --font-display: var(--font-display-face), Georgia, serif;
+  --font-body: "General Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* the scale, so text-* stops drifting to 36px and 20px */
+  --text-12: 12px;
+  --text-14: 14px;
+  --text-16: 16px;
+  --text-18: 18px;
+  --text-24: 24px;
+  --text-32: 32px;
+  --text-48: 48px;
+  --text-72: 72px;
+  --text-112: 112px;
+
+  --radius-token: 3px;
+
+  --ease-token: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @layer base {
   :root {
-    --color-black: #000000;
-    --color-white: #ffffff;
-    --color-gray-dark: #333333;
-    --color-gray-mid: #666666;
-    --color-gray-light: #cccccc;
+    /* Legacy names. Still referenced by the pages that have not been converted
+       yet; they are pointed at token values so those pages drift toward the new
+       system rather than away from it, and they go when the last consumer does. */
+    --color-black: #14161a;
+    --color-white: #f7f8f9;
+    --color-gray-dark: #3a3d44;
+    --color-gray-mid: #5c626d;
+    --color-gray-light: rgba(20, 22, 26, 0.18);
 
-    --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
-    --font-mono: "Source Code Pro", "Courier New", monospace;
+    --font-sans: var(--font-body);
+
+    /* The nav is fixed and does NOT offset the document — see layout.tsx. Every
+       page that wants to start below it clears this height itself, so a
+       full-bleed page (the homepage's reel) can run underneath instead of
+       having 64px of dead space forced on it. One variable, so changing the
+       bar's height moves every page with it. */
+    --nav-h: 4rem;
   }
 
   html {
-    font-family: var(--font-sans);
-    background-color: var(--color-white);
-    color: var(--color-black);
+    font-family: var(--font-body);
+    /* The page ground is the token page colour. It used to be #ffffff, which
+       meant the new homepage painted #eceef0 over a white document and any
+       overscroll or short page showed white underneath it. */
+    background-color: var(--color-bg);
+    color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-y: scroll;
@@ -30,8 +98,8 @@
   }
 
   ::selection {
-    background: var(--color-black);
-    color: var(--color-white);
+    background: var(--color-ink);
+    color: var(--color-bg);
   }
 
   /* Scrollbar */
@@ -39,13 +107,13 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-white);
+    background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
     background: var(--color-gray-light);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-gray-mid);
+    background: var(--color-muted);
   }
 }
 
