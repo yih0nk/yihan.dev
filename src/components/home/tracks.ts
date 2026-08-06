@@ -1,24 +1,11 @@
-export interface Track {
-  title: string
-  artist: string
-  /** label stock colour, rgb */
-  label: [number, number, number]
-}
-
 /**
- * Hardcoded on purpose — there is no Spotify call behind this.
+ * The record's resting label colour.
  *
- * If it is ever wired to the real thing, the shape below is what the fetch has
- * to produce, and `label` should come from the album art's dominant colour
- * rather than being authored by hand.
+ * There used to be a five-track rotation here that cycled every nine seconds
+ * while Spotify was unconfigured. Spotify is configured now, so the only thing
+ * that rotation could do was show a fake track for the half-second before the
+ * real one arrived — and on every refresh you would see somebody else's song
+ * under "now playing", which is the one thing a now-playing widget must never
+ * do. A neutral label is honest about knowing nothing yet.
  */
-export const TRACKS: Track[] = [
-  { title: 'As the World Caves In', artist: 'Matt Maltese', label: [189, 90, 60] },
-  { title: 'Robbers', artist: 'The 1975', label: [219, 214, 203] },
-  { title: 'Weird Fishes / Arpeggi', artist: 'Radiohead', label: [62, 92, 124] },
-  { title: 'Smooth Operator', artist: 'Sade', label: [185, 148, 71] },
-  { title: 'Doomsday', artist: 'MF DOOM', label: [76, 106, 86] },
-]
-
-export const HOLD_MS = 9000
-export const FADE_MS = 420
+export const RESTING_LABEL: [number, number, number] = [176, 178, 184]

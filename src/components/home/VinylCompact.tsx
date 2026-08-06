@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { COLORS } from '@/styles/tokens'
-import { TRACKS } from './tracks'
+import { RESTING_LABEL } from './tracks'
 
 /**
  * The record at small size.
@@ -23,13 +23,14 @@ const BG = COLORS.bg
 const TAU = Math.PI * 2
 
 export default function VinylCompact({
-  index,
+  label,
   reduced,
   size = 188,
   art = null,
   progress = 0,
 }: {
-  index: number
+  /** Label colour, rgb. Defaults to the resting grey when nothing is known. */
+  label?: [number, number, number]
   reduced: boolean
   size?: number
   /** Album art URL, or null to leave the label its authored colour. */
@@ -39,7 +40,7 @@ export default function VinylCompact({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Read inside the loop so a track change never re-initialises the canvas.
-  const targetRef = useRef<[number, number, number]>(TRACKS[0].label)
+  const targetRef = useRef<[number, number, number]>(label ?? RESTING_LABEL)
   const artRef = useRef<HTMLImageElement | null>(null)
   // Read inside the loop, like the label colour: a position tick must not tear
   // down and rebuild the canvas twice a second.
@@ -48,8 +49,8 @@ export default function VinylCompact({
   const [artLoaded, setArtLoaded] = useState(0)
 
   useEffect(() => {
-    targetRef.current = TRACKS[index]?.label ?? TRACKS[0].label
-  }, [index])
+    targetRef.current = label ?? RESTING_LABEL
+  }, [label])
 
   useEffect(() => {
     progressRef.current = Number.isFinite(progress) ? Math.max(0, Math.min(1, progress)) : 0
@@ -131,7 +132,7 @@ export default function VinylCompact({
       draw(performance.now())
     }
 
-    const rgb: [number, number, number] = [...(TRACKS[index]?.label ?? TRACKS[0].label)]
+    const rgb: [number, number, number] = [...(label ?? RESTING_LABEL)]
     const started = performance.now()
     let last = started
     let armEase = progressRef.current

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react
 
 import { COLORS, FONTS } from '@/styles/tokens'
 import VinylCompact from './VinylCompact'
-import { HOLD_MS, TRACKS } from './tracks'
 import {
   CELL_EDGE,
   RAMP,
@@ -191,17 +190,10 @@ export default function AboutComposed({ font }: { font: string }) {
   }, [])
 
   // ── the record ────────────────────────────────────────────────────────────
-  // The hardcoded rotation is the floor, not the plan: it keeps turning until
-  // Spotify is configured, and stops the moment a real track arrives. Nothing
-  // in the layout changes between the two, so there is no shift when it does.
+  // Only ever the real thing. There is no placeholder track: the record turns
+  // with a resting label until Spotify answers, and the type below it stays
+  // empty in space already reserved for it, so nothing moves when it lands.
   const live = useSpotify()
-  const [idx, setIdx] = useState(0)
-  useEffect(() => {
-    if (live) return // a real answer; stop cycling placeholders
-    const id = window.setTimeout(() => setIdx((i) => (i + 1) % TRACKS.length), HOLD_MS)
-    return () => window.clearTimeout(id)
-  }, [idx, live])
-  const track = live ?? TRACKS[idx]
 
   // Position within the track, extrapolated between polls. Zero for the
   // hardcoded rotation, which has no position to report.
@@ -363,7 +355,6 @@ export default function AboutComposed({ font }: { font: string }) {
               it against a 148px disc pushed it low. */}
           <div className="flex items-start gap-6 md:col-span-5">
             <VinylCompact
-                index={idx}
                 reduced={still}
                 size={148}
                 art={live?.image ?? null}
@@ -379,10 +370,10 @@ export default function AboutComposed({ font }: { font: string }) {
                   className="text-[20px] leading-[1.2] text-balance"
                   style={{ fontFamily: font, color: INK }}
                 >
-                  {track.title}
+                  {live?.title ?? ''}
                 </p>
                 <p className="mt-1.5 text-[16px]" style={{ fontFamily: BODY, color: MUTED }}>
-                  {track.artist}
+                  {live?.artist ?? ''}
                 </p>
               </div>
               {/* The clock only runs while something is actually playing.
