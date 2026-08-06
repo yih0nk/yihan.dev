@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { COLORS } from '@/styles/tokens'
 import { TRACKS } from './tracks'
 
@@ -26,18 +26,60 @@ export default function VinylCompact({
   index,
   reduced,
   size = 188,
+  art = null,
 }: {
   index: number
   reduced: boolean
   size?: number
+  /** Album art URL, or null to leave the label its authored colour. */
+  art?: string | null
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Read inside the loop so a track change never re-initialises the canvas.
   const targetRef = useRef<[number, number, number]>(TRACKS[0].label)
+  const artRef = useRef<HTMLImageElement | null>(null)
+  /** Bumped when a cover finishes loading, to force a repaint while parked. */
+  const [artLoaded, setArtLoaded] = useState(0)
 
   useEffect(() => {
     targetRef.current = TRACKS[index]?.label ?? TRACKS[0].label
   }, [index])
+
+  /**
+   * Load the cover out of band. The draw loop reads `artRef` and does not care
+   * how it got there, so a slow or failed image simply leaves the label its
+   * colour — a missing cover is a supported state, not an error to render.
+   *
+   * `setArtLoaded` exists purely to repaint: the loop stops when the record is
+   * off-screen or the tab is hidden, so an image that finishes loading in that
+   * window would otherwise never reach the canvas.
+   */
+  useEffect(() => {
+    if (!art) {
+      artRef.current = null
+      setArtLoaded((n) => n + 1)
+      return
+    }
+    let alive = true
+    const img = new Image()
+    img.decoding = 'async'
+    img.onload = () => {
+      if (!alive) return
+      artRef.current = img
+      setArtLoaded((n) => n + 1)
+    }
+    img.onerror = () => {
+      if (!alive) return
+      artRef.current = null
+      setArtLoaded((n) => n + 1)
+    }
+    img.src = art
+    return () => {
+      alive = false
+      img.onload = null
+      img.onerror = null
+    }
+  }, [art])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -210,7 +252,9 @@ export default function VinylCompact({
       ctx.lineWidth = dpr
       ctx.stroke()
 
-      // label
+      // label — the authored colour is the base, and stays the whole label when
+      // there is no art: the hardcoded rotation has no cover to show, and a
+      // real cover has not necessarily arrived yet.
       const cr = Math.round(rgb[0])
       const cg = Math.round(rgb[1])
       const cb = Math.round(rgb[2])
@@ -218,6 +262,41 @@ export default function VinylCompact({
       ctx.arc(0, 0, LR, 0, TAU)
       ctx.fillStyle = `rgb(${cr},${cg},${cb})`
       ctx.fill()
+
+      /**
+       * The cover, clipped to the label and turning with the record.
+       *
+       * Inside its own save/restore with the rotation applied, so the artwork
+       * turns with the disc the way a real label does — drawing it outside the
+       * rotation would leave a still picture on a spinning record, which is the
+       * one thing that would make the whole object read as fake.
+       *
+       * The canvas is knowingly tainted by this: the image is cross-origin from
+       * Spotify's CDN and `crossOrigin` is deliberately NOT set, because
+       * requesting CORS would fail closed if the CDN ever stopped sending the
+       * header, and nothing here reads pixels back — there is no getImageData
+       * in this component, so tainting costs nothing.
+       */
+      const cover = artRef.current
+      if (cover) {
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(0, 0, LR, 0, TAU)
+        ctx.clip()
+        ctx.rotate(spin)
+        // cover-fit, cropped from the centre
+        const iw = cover.naturalWidth
+        const ih = cover.naturalHeight
+        if (iw && ih) {
+          const side = LR * 2
+          const sc = Math.max(side / iw, side / ih)
+          const dw = iw * sc
+          const dh = ih * sc
+          ctx.drawImage(cover, -dw / 2, -dh / 2, dw, dh)
+        }
+        ctx.restore()
+      }
+
       const paper = ctx.createRadialGradient(-LR * 0.3, -LR * 0.34, LR * 0.05, 0, 0, LR)
       paper.addColorStop(0, 'rgba(255,255,255,0.16)')
       paper.addColorStop(0.7, 'rgba(255,255,255,0)')
@@ -279,6 +358,8 @@ export default function VinylCompact({
     // Wiring happens last: `build` paints immediately and both `build` and
     // `tick` close over `draw`, which is only initialised at the end of this
     // effect body. Calling any of them above this line would hit its dead zone.
+    // `artLoaded` is in the dependency list, so a cover arriving while the loop
+    // is parked still reaches the canvas through this one paint.
     const sizer = new ResizeObserver(build)
     sizer.observe(canvas)
     build()
@@ -296,7 +377,7 @@ export default function VinylCompact({
     // `index` is read through targetRef inside the loop; it is listed only so the
     // initial colour matches when the component mounts mid-rotation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced])
+  }, [reduced, artLoaded])
 
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>

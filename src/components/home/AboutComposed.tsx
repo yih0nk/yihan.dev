@@ -348,7 +348,7 @@ export default function AboutComposed({ font }: { font: string }) {
               line as "last wrote" and "commits" across the gutter, and centring
               it against a 148px disc pushed it low. */}
           <div className="flex items-start gap-6 md:col-span-5">
-            <VinylCompact index={idx} reduced={still} size={148} />
+            <VinylCompact index={idx} reduced={still} size={148} art={live?.image ?? null} />
             <div className="min-w-0">
               <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
                 {live && !live.isPlaying ? 'last played' : 'now playing'}

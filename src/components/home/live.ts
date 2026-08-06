@@ -179,6 +179,8 @@ export interface SpotifyTrack {
   artist: string
   url: string
   isPlaying: boolean
+  /** Album art, drawn onto the record's label. Null when Spotify has none. */
+  image: string | null
 }
 
 /**
@@ -206,13 +208,14 @@ export function useSpotify(): SpotifyTrack | null {
           if (body.configured !== true) return
           const t = body.track
           if (typeof t !== 'object' || t === null) return
-          const { title, artist, url, isPlaying } = t as Record<string, unknown>
+          const { title, artist, url, isPlaying, image } = t as Record<string, unknown>
           if (typeof title !== 'string' || !title.trim()) return
           setTrack({
             title: title.trim(),
             artist: typeof artist === 'string' ? artist : '',
             url: typeof url === 'string' ? url : 'https://open.spotify.com',
             isPlaying: isPlaying === true,
+            image: typeof image === 'string' && image ? image : null,
           })
         })
         .catch(() => {
