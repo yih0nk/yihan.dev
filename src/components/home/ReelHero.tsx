@@ -47,11 +47,13 @@ import { REEL_SETTLED } from './reelEvent'
  *   dense end of the ramp. Outside: a whisper capped at 0.055 alpha that falls
  *   off toward every edge. The name has to read from across the room; the field
  *   is texture, not content.
- * - Photos, when present, are converted once to a duotone between page and ink
- *   through a 256-entry LUT, so five differently-graded shots read as one roll
- *   and the per-frame cost stays a single `drawImage`. Missing files are not an
- *   error state: `onerror` leaves the slot null and the typographic frame — which
- *   is a finished design in its own right — stands in.
+ * - Photos, when present, are graded once through a 256-entry LUT — a gentle
+ *   S-curve and 12% desaturation, enough that five shots from five cameras sit
+ *   together — so the per-frame cost stays a single `drawImage`. It is NOT a
+ *   duotone: an earlier version was, and it was dropped because these frames are
+ *   photographs whose colour is load-bearing. Missing files are not an error
+ *   state: `onerror` leaves the slot null and the typographic frame — which is a
+ *   finished design in its own right — stands in.
  * - The churn field is separable: per-column / per-row / per-diagonal tables are
  *   rebuilt once per frame, so the inner loop over a few thousand cells is
  *   trig-free.
