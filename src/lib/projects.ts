@@ -9,7 +9,6 @@ export interface Project {
   tagline: string;
   description: string[];
   tags: string[];
-  featured: boolean;
   image?: string;       // path relative to /public, e.g. "/images/projects/aiep.png"
   links?: ProjectLink[];
 }
@@ -37,7 +36,6 @@ export const projects: Project[] = [
       "Browser Agent",
       "Demand Forecasting",
     ],
-    featured: true,
     image: "/images/projects/trove.jpg",
     links: [{ label: "Live Site", href: "https://usetrove.org" }],
   },
@@ -62,7 +60,6 @@ export const projects: Project[] = [
       "Open Source",
       "PyPI",
     ],
-    featured: true,
     image: "/images/projects/cotter.svg",
     links: [
       { label: "Website", href: "https://cotter-website.vercel.app" },
@@ -90,7 +87,6 @@ export const projects: Project[] = [
       "Operator Pattern",
       "Ollama / Groq",
     ],
-    featured: true,
     image: "/images/projects/hivemind.svg",
     links: [{ label: "GitHub", href: "https://github.com/yih0nk/hivemind" }],
   },
@@ -115,7 +111,6 @@ export const projects: Project[] = [
       "FastAPI",
       "NLP",
     ],
-    featured: true,
     image: "/images/projects/isi-logo.jpg",
   },
   {
@@ -138,7 +133,6 @@ export const projects: Project[] = [
       "Traffic Simulation",
       "Real TLC Data",
     ],
-    featured: true,
     image: "/images/projects/robotaxi.png",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/sias-project" },
@@ -163,7 +157,6 @@ export const projects: Project[] = [
       "I2C",
       "Reinforcement Learning",
     ],
-    featured: true,
     image: "/images/projects/rocket.png",
     links: [
       { label: "GitHub", href: "https://github.com/uscmakers/Rocket" },
@@ -189,7 +182,6 @@ export const projects: Project[] = [
       "Tool Calling",
       "Agent Architecture",
     ],
-    featured: true,
     image: "/images/projects/aiep.png",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/AiEP" },
@@ -205,7 +197,6 @@ export const projects: Project[] = [
       "The site serves as the central hub for the organization's pitch competitions, executive recruitment, and community engagement across Canada.",
     ],
     tags: ["Python", "Flask", "HTML/CSS", "JavaScript", "SQLAlchemy", "Full-Stack"],
-    featured: true,
     image: "/images/projects/solvexchange.png",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/SolveXchange-Website" },
@@ -216,8 +207,4 @@ export const projects: Project[] = [
 
 export function getProject(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
-}
-
-export function getFeaturedProjects(): Project[] {
-  return projects.filter((p) => p.featured);
 }
