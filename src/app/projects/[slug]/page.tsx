@@ -4,6 +4,32 @@ import Link from "next/link";
 import Image from "next/image";
 import PageTransition from "@/components/layout/PageTransition";
 import { getProject, projects } from "@/lib/projects";
+import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
+
+/**
+ * A project, set on the same system as the index it comes from.
+ *
+ * This page used to open with a back link, then a bordered screenshot, then the
+ * title — so the first thing on a page about a project was a piece of chrome and
+ * the second was a picture, and the name of the thing came third. It also set
+ * that name at 48px in the mono face, which is the metadata face; Instrument
+ * Serif appeared nowhere on it. Thirteen elements carried a border and the stack
+ * was nineteen bordered pills, which made the loudest thing on the page the
+ * least important information on it.
+ *
+ * The order now matches the index: a mono rule with the entry's number in it,
+ * the title in the display face, the summary, the links, and only then the
+ * picture. Hierarchy is size and space; the only rules are hairlines.
+ *
+ * Everything runs the container's full 1052px — rule, title, picture, prose and
+ * stack on one edge. The prose was set to the 68ch reading measure for a while
+ * and it read as a narrow column stranded beside a wide picture; one width down
+ * the page is the calmer page.
+ *
+ * The cost is measured and real: full lines run 102 to 114 characters against
+ * the ~68 that is comfortable to read. It holds here because no project runs
+ * past three paragraphs. If one ever does, this is the first thing to revisit.
+ */
 
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -29,92 +55,132 @@ export default async function ProjectDetailPage({
   const project = getProject(slug);
   if (!project) notFound();
 
+  const n = projects.findIndex((p) => p.slug === slug) + 1;
+  const pad = (v: number) => String(v).padStart(2, "0");
+
   return (
     <PageTransition>
-      <div className="max-w-[800px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
-        {/* Back */}
-        <Link
-          href="/projects"
-          className="text-xs text-muted hover:text-black transition-colors mb-10 inline-flex items-center gap-1"
+      <div className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)] pb-24 md:pb-32`}>
+        {/* The index's header rule, carrying the way back and the entry number. */}
+        <div
+          className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
+          style={{
+            fontFamily: FONTS.mono,
+            color: COLORS.muted,
+            borderColor: COLORS.hairline,
+          }}
         >
-          ← all projects
-        </Link>
-
-        {/* Image */}
-        <div className="w-full aspect-video bg-gray-50 border border-gray-100 overflow-hidden mt-6 mb-10">
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={project.title}
-              width={800}
-              height={450}
-              unoptimized
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <span className="text-muted text-xs tracking-widest uppercase">
-                screenshot / demo — coming soon
-              </span>
-            </div>
-          )}
+          <Link href="/projects" className="hover:underline underline-offset-4">
+            ← index
+          </Link>
+          <span>
+            {pad(n)} / {pad(projects.length)}
+          </span>
         </div>
 
-        {/* Title + Links */}
-        <div className="flex items-start justify-between gap-4 mb-4">
+        <header className="mt-10 md:mt-14">
           <h1
-            className="text-4xl md:text-5xl"
-            style={{ fontFamily: "var(--font-mono)" }}
+            className="text-5xl leading-[0.95] tracking-[-0.02em] md:text-7xl"
+            style={{ fontFamily: FONTS.display }}
           >
             {project.title}
           </h1>
 
+          <p
+            className="mt-5 max-w-[54ch] text-base leading-relaxed md:mt-6 md:text-lg"
+            style={{ fontFamily: FONTS.body, color: COLORS.muted }}
+          >
+            {project.tagline}
+          </p>
+
+          {/*
+            Links were bordered buttons that inverted to solid black on hover.
+            One accent, interaction only — so they are text, and the accent is
+            the only thing marking them.
+          */}
           {project.links && project.links.length > 0 && (
-            <div className="flex flex-wrap gap-3 shrink-0 pt-2">
+            <ul className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2">
               {project.links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition-colors"
-                  style={{ fontFamily: "var(--font-mono)" }}
-                >
-                  {link.label}
-                </a>
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-baseline gap-1.5 text-[12px] tracking-[0.08em] underline-offset-4 hover:underline"
+                    style={{ fontFamily: FONTS.mono, color: COLORS.accent }}
+                  >
+                    {link.label.toLowerCase()}
+                    <span aria-hidden>→</span>
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
+        </header>
 
-        <p className="text-lg text-muted mb-6 leading-relaxed">
-          {project.tagline}
-        </p>
+        {/*
+          The picture sits between the standfirst and the prose, and it is no
+          longer in a box: a border around a screenshot that already has its own
+          edges is an outline drawn on an outline. A hairline above and below
+          places it in the column instead.
+        */}
+        {/*
+          The picture runs the full frame. The prose stays at the 68ch reading
+          measure inside it, so the page is a narrow column with one wide band
+          in it rather than one uniform width throughout.
 
-        {/* Description */}
-        <div className="space-y-5 text-ink-soft leading-relaxed mb-12">
+          Two of the six sources are 696x696 and 676x336, and at this width they
+          are being upscaled — on a retina screen the band is 2104 device px.
+          They are also the two that are an institutional logo rather than the
+          work, so the fix is new images, not a narrower layout.
+        */}
+        {project.image && (
+          <figure
+            className="mt-12 border-y py-px md:mt-16"
+            style={{ borderColor: COLORS.hairline }}
+          >
+            <Image
+              src={project.image}
+              alt={`${project.title} — screenshot`}
+              width={1100}
+              height={619}
+              sizes="(min-width: 1100px) 1052px, 100vw"
+              className="h-auto w-full"
+            />
+          </figure>
+        )}
+
+        <div
+          className="mt-12 space-y-6 text-base leading-relaxed md:mt-16 md:text-lg"
+          style={{ fontFamily: FONTS.body, color: COLORS.inkSoft }}
+        >
           {project.description.map((para, i) => (
             <p key={i}>{para}</p>
           ))}
         </div>
 
-        {/* Tags */}
+        {/*
+          The stack was nineteen bordered pills. It is metadata about the entry,
+          so it is set as metadata: one mono line, separated rather than boxed.
+        */}
         {project.tags.length > 0 && (
-          <div>
-            <h2 className="text-xs tracking-widest uppercase text-muted mb-4">
-              tech
+          <section
+            className="mt-16 border-t pt-6 md:mt-20"
+            style={{ borderColor: COLORS.hairline }}
+          >
+            <h2
+              className="text-[12px] uppercase tracking-[0.18em]"
+              style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
+            >
+              stack
             </h2>
-            <ul className="flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="text-sm border border-gray-200 px-3 py-1 text-ink-soft"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <p
+              className="mt-4 text-[14px] leading-loose tracking-[0.02em]"
+              style={{ fontFamily: FONTS.mono, color: COLORS.inkSoft }}
+            >
+              {project.tags.join("  ·  ")}
+            </p>
+          </section>
         )}
       </div>
     </PageTransition>

@@ -15,22 +15,22 @@ import { COLORS, FONTS, LAYOUT, MOTION } from '@/styles/tokens'
  *
  * There is no featured block. One project blown up to full width with a cover
  * image made the page two designs stapled together — and picking a favourite is
- * a claim the index does not need to make. Eight equal rows say the same thing
- * more calmly.
+ * a claim the index does not need to make. Equal rows say the same thing more
+ * calmly.
  *
  * There is no per-row technology tag either. One tag drawn from an array of ten
  * reads as "this is the stack", which is false for every project here; the
  * summary line already says what the thing is.
  *
  * ── the row grid ────────────────────────────────────────────────────────────
- * On md+ every row shares one 12-column frame so the four columns line up down
- * the page like a printed index:
+ * On md+ every row shares one 12-column frame so the columns line up down the
+ * page like a printed index:
  *
- *   1        │ 4              │ 5                          │ 2
- *   01       │ Trove          │ Cafe operations — live …   │ xgboost  →
+ *   1        │ 4              │ 6                          │ 1
+ *   01       │ Trove          │ Cafe operations — live …   │ →
  *
- * Below md the grid collapses and each entry stacks (number, title, line,
- * tag), which is the same reading order, just folded.
+ * Below md the grid collapses and each entry stacks (number, title, line),
+ * which is the same reading order, just folded.
  *
  * ── why this page never renders `project.tagline` ───────────────────────────
  * Two reasons. Index lines want ~10 words, and the stored taglines run to full
@@ -144,7 +144,7 @@ function IndexRow({
         style={{ borderColor: COLORS.hairline }}
       >
         <span
-          className="block text-[11px] tracking-[0.14em] md:col-span-1"
+          className="block text-[12px] tracking-[0.14em] md:col-span-1"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
         >
           {String(n).padStart(2, '0')}
@@ -164,7 +164,7 @@ function IndexRow({
         {/* The spacer keeps the four columns aligned when a project has no entry. */}
         {line ? (
           <p
-            className="max-w-[52ch] text-[15px] leading-relaxed md:col-span-6 md:text-base"
+            className="max-w-[52ch] text-base leading-relaxed md:col-span-6"
             style={{ fontFamily: FONTS.body, color: COLORS.muted }}
           >
             {line}
@@ -197,7 +197,7 @@ export default function ProjectsIndex() {
       */}
       <header className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)]`}>
         <div
-          className="flex items-baseline justify-between gap-6 border-b pb-3 text-[11px] uppercase tracking-[0.18em]"
+          className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
         >
           <span>index</span>
@@ -251,7 +251,7 @@ export default function ProjectsIndex() {
             href={GITHUB}
             target="_blank"
             rel="noreferrer"
-            className="flex items-baseline gap-2 text-[11px] tracking-[0.08em] underline-offset-4 hover:underline"
+            className="flex items-baseline gap-2 text-[12px] tracking-[0.08em] underline-offset-4 hover:underline"
             style={{ fontFamily: FONTS.mono, color: COLORS.accent }}
           >
             github.com/yih0nk
