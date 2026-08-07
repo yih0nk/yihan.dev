@@ -9,7 +9,7 @@ export interface Project {
   tagline: string;
   description: string[];
   tags: string[];
-  image?: string;       // path relative to /public, e.g. "/images/projects/aiep.png"
+  image?: string;       // path relative to /public, e.g. "/images/projects/trove.jpg"
   links?: ProjectLink[];
 }
 
@@ -160,47 +160,6 @@ export const projects: Project[] = [
     image: "/images/projects/rocket.png",
     links: [
       { label: "GitHub", href: "https://github.com/uscmakers/Rocket" },
-    ],
-  },
-  {
-    slug: "aiep",
-    title: "AiEP",
-    tagline:
-      "An AI agent that turns IEPs into personalized worksheets in seconds — so teachers can teach instead of paperwork.",
-    description: [
-      "Special education teachers spend hours translating Individualized Education Programs (IEPs) into lesson materials. AiEP automates this — upload an IEP, and the agent extracts goals, objectives, and accommodations, then generates classroom-ready personalized worksheets tailored to each student's needs.",
-      "The agent uses structured tool-calling to work step by step: parse the IEP once per student, select relevant accommodations, align to grade-level targets, plan activities, and assemble worksheets from modular HTML components. This avoids context overload and produces more reliable output than a single prompt.",
-      "Built at the SEP × Microsoft for Startups hackathon. Won the competition. Stack: Next.js, TypeScript, OpenAI, Supabase, SQL, and Azure.",
-    ],
-    tags: [
-      "Next.js",
-      "TypeScript",
-      "OpenAI",
-      "Supabase",
-      "SQL",
-      "Azure",
-      "Tool Calling",
-      "Agent Architecture",
-    ],
-    image: "/images/projects/aiep.png",
-    links: [
-      { label: "GitHub", href: "https://github.com/yih0nk/AiEP" },
-    ],
-  },
-  {
-    slug: "solvexchange",
-    title: "SolveXchange",
-    tagline:
-      "Lead developer for a national NGO platform that empowers students to solve community problems through business pitch competitions.",
-    description: [
-      "SolveXchange is a student-run nonprofit that gives young people a platform to develop and pitch solutions to local community issues. As lead developer, I built and maintain the full web platform — landing pages, a community forum for sharing ideas, resource pages, user authentication, and competition infrastructure.",
-      "The site serves as the central hub for the organization's pitch competitions, executive recruitment, and community engagement across Canada.",
-    ],
-    tags: ["Python", "Flask", "HTML/CSS", "JavaScript", "SQLAlchemy", "Full-Stack"],
-    image: "/images/projects/solvexchange.png",
-    links: [
-      { label: "GitHub", href: "https://github.com/yih0nk/SolveXchange-Website" },
-      { label: "Live Site", href: "https://www.solvexchange.org" },
     ],
   },
 ];

@@ -71,12 +71,6 @@ const INDEX: Record<string, IndexEntry> = {
   'rocket-robot': {
     line: 'A walking robot built from scratch, taught to move in simulation.',
   },
-  aiep: {
-    line: 'Turns an IEP into classroom-ready worksheets, step by step.',
-  },
-  solvexchange: {
-    line: 'The web platform behind a national student pitch nonprofit.',
-  },
 }
 
 const EASE = MOTION.ease
