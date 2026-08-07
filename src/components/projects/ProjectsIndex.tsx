@@ -34,14 +34,11 @@ import { COLORS, FONTS, LAYOUT, MOTION } from '@/styles/tokens'
  *
  * ── why this page never renders `project.tagline` ───────────────────────────
  * Two reasons. Index lines want ~10 words, and the stored taglines run to full
- * sentences; and the résumé is password-gated, so the quantitative figures that
- * live in the data (the clinical-trials tagline carries a trial count, others
- * carry accuracy figures) must never reach a public page. `INDEX` below is the
- * only source of rendered prose — for the featured block as well as the rows —
- * and there is deliberately no fallback to `tagline`, so a project added to the
- * data without an entry here renders no line at all rather than leaking one.
- * The classifying tag is in every case one already carried in that project's
- * own `tags` array.
+ * sentences; and the résumé is password-gated, so the quantitative figures the
+ * taglines carry — accuracy figures, dataset counts — must never reach a public
+ * page. `INDEX` below is the only source of rendered prose, and there is
+ * deliberately no fallback to `tagline`, so a project added to the data without
+ * an entry here renders no line at all rather than leaking one.
  */
 
 
@@ -61,9 +58,6 @@ const INDEX: Record<string, IndexEntry> = {
   },
   hivemind: {
     line: 'A Prometheus alert becomes a root-caused pull request.',
-  },
-  'ai-clinical-trials': {
-    line: 'Retrieval-grounded drafting of clinical trial eligibility criteria.',
   },
   'robotaxi-simulation': {
     line: 'Two ride-hailing fleets learn pricing on a real Manhattan network.',

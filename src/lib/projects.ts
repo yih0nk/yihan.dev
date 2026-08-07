@@ -91,29 +91,6 @@ export const projects: Project[] = [
     links: [{ label: "GitHub", href: "https://github.com/yih0nk/hivemind" }],
   },
   {
-    slug: "ai-clinical-trials",
-    title: "AI for Clinical Trials",
-    tagline:
-      "Automating clinical-trial eligibility criteria with retrieval-augmented generation over a 267K-trial dataset.",
-    description: [
-      "A research project at USC's AI for Healthcare Lab that reduces the manual effort of writing inclusion and exclusion criteria for clinical trials. I built a retrieval pipeline over the 267K-trial EC-RAFT clinical-trials dataset, embedding and indexing it with SciNCL in ChromaDB via SLURM jobs on USC's CARC HPC cluster for top-k semantic search.",
-      "On top of retrieval, a RAG system grounds an EC-RAFT generator (Llama-3.1-8B) on the retrieved trials to draft structured inclusion and exclusion criteria. It is served through a FastAPI app with a clinician input form, a JSON generation endpoint, and tests.",
-    ],
-    tags: [
-      "Python",
-      "SciNCL",
-      "ChromaDB",
-      "RAG",
-      "Llama 3.1-8B",
-      "EC-RAFT",
-      "SLURM",
-      "CARC HPC",
-      "FastAPI",
-      "NLP",
-    ],
-    image: "/images/projects/isi-logo.jpg",
-  },
-  {
     slug: "robotaxi-simulation",
     title: "Multi Agent RL Simulation",
     tagline:
@@ -133,7 +110,6 @@ export const projects: Project[] = [
       "Traffic Simulation",
       "Real TLC Data",
     ],
-    image: "/images/projects/robotaxi.png",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/sias-project" },
     ],
