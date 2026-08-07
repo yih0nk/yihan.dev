@@ -93,19 +93,35 @@ const MAX_CELLS = 14000
 const MASK_MAX_W = 1600 // cap the offscreen raster; it is only a coverage mask
 const PHOTO_MAX = 1400 // cap the duotone buffer
 
+/**
+ * The page and ink colours are needed here as component channels — for the
+ * duotone LUT — and as `rgba()` strings. Both used to be typed out as literals
+ * alongside `COLORS.bg`, which meant moving the page colour silently left four
+ * copies of the old one behind in the canvas. They are derived now, so the
+ * token is the only place either value is written.
+ */
+const hexToRgb = (hex: string): [number, number, number] => {
+  const h = hex.replace('#', '')
+  const full = h.length === 3 ? h.replace(/./g, (c) => c + c) : h
+  const n = parseInt(full, 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
 // One fixed look. No palette prop, no theme switch.
 const BG = COLORS.bg
-const BG_RGB = '247,248,249' // the same colour as COLORS.bg, pre-split for rgba()
 const INK = COLORS.ink
 const MUTED = COLORS.muted
 const HAIRLINE = COLORS.hairline
 const ACCENT = COLORS.accent
 const BASE = '#161b21' // film base
 const BASE_EDGE = '#0c1015'
-const SLUG = '#f2f4f6' // unexposed frame interior
 
-const INK_RGB: [number, number, number] = [20, 22, 26]
-const PAGE_RGB: [number, number, number] = [247, 248, 249]
+const INK_RGB = hexToRgb(COLORS.ink)
+const PAGE_RGB = hexToRgb(COLORS.bg)
+/** The same colour as `BG`, pre-split so the draw loop can build rgba() cheaply. */
+const BG_RGB = PAGE_RGB.join(',')
+/** Unexposed frame interior — a shade off the page, so it reads as stock. */
+const SLUG = COLORS.surface
 
 const pad2 = (n: number) => (n < 10 ? `0${n}` : String(n))
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n)
@@ -897,8 +913,8 @@ export default function ReelHero({ font }: { font: string }) {
       }
 
       const onPhoto = !!duo
-      const numFill = focus ? ACCENT : onPhoto ? 'rgba(247,248,249,0.66)' : 'rgba(107,114,128,0.9)'
-      const tickFill = onPhoto ? 'rgba(247,248,249,0.4)' : 'rgba(20,22,26,0.22)'
+      const numFill = focus ? ACCENT : onPhoto ? `rgba(${BG_RGB},0.66)` : 'rgba(107,114,128,0.9)'
+      const tickFill = onPhoto ? `rgba(${BG_RGB},0.4)` : 'rgba(20,22,26,0.22)'
 
       // corner ticks — a frame, not a card
       const ti = fw * 0.038

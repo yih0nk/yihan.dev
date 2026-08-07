@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
+import { COLORS } from '@/styles/tokens'
+
 /**
  * Toolbar-free preview of the new homepage.
  *
@@ -72,7 +74,7 @@ export default function PreviewPage() {
   return (
     <div
       className="fixed inset-0 z-[9999] overflow-y-auto"
-      style={{ background: '#f7f8f9', ['--font-body' as string]: body }}
+      style={{ background: COLORS.bg, ['--font-body' as string]: body }}
     >
       <Home font={FONT} />
 

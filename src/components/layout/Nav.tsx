@@ -116,7 +116,7 @@ export default function Nav() {
         )}
         style={
           scrolled
-            ? { backgroundColor: "rgba(247,248,249,0.95)", borderBottom: `1px solid ${COLORS.hairline}` }
+            ? { backgroundColor: `color-mix(in srgb, ${COLORS.bg} 95%, transparent)`, borderBottom: `1px solid ${COLORS.hairline}` }
             : undefined
         }
       >

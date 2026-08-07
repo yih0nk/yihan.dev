@@ -20,8 +20,8 @@
  * mode; `gray-mid` cannot.
  */
 @theme {
-  --color-bg: #f7f8f9;
-  --color-surface: #eceef0;
+  --color-bg: #ffffff;
+  --color-surface: #f4f5f7;
   --color-ink: #14161a;
   --color-ink-soft: #3a3d44;
   --color-muted: #5c626d;
@@ -54,7 +54,7 @@
        yet; they are pointed at token values so those pages drift toward the new
        system rather than away from it, and they go when the last consumer does. */
     --color-black: #14161a;
-    --color-white: #f7f8f9;
+    --color-white: #ffffff;
     --color-gray-dark: #3a3d44;
     --color-gray-mid: #5c626d;
     --color-gray-light: rgba(20, 22, 26, 0.18);
@@ -71,9 +71,9 @@
 
   html {
     font-family: var(--font-body);
-    /* The page ground is the token page colour. It used to be #ffffff, which
-       meant the new homepage painted #eceef0 over a white document and any
-       overscroll or short page showed white underneath it. */
+    /* The page ground is the token page colour, so overscroll and short pages
+       show the same colour as the content above them. That mattered more when
+       the two differed; it still holds the invariant if `bg` moves again. */
     background-color: var(--color-bg);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;

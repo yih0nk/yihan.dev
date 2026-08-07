@@ -20,14 +20,17 @@ export const FONTS = {
 
 export const COLORS = {
   /**
-   * Near-white, with just enough cool in it to stay paper rather than screen.
-   * Was #eceef0, which read as grey against the photographs. Everything moved
-   * one step lighter and the old page colour became `surface`, so the raised /
-   * inset relationship still holds — surface must stay DARKER than bg here,
-   * since the page is light.
+   * White. It was #f7f8f9 — a cool near-white chosen to read as paper rather
+   * than screen — and across a full viewport that tint read as dim grey rather
+   * than as paper. The page is now actually white and the tint survives only
+   * where it does work: `surface`, the hairline, and the muted greys.
+   *
+   * `surface` must stay DARKER than `bg` here, since the page is light. It moved
+   * up with the page (#eceef0 → #f4f5f7) because a 4.7% step that read as a
+   * gentle inset against off-white reads as a hard grey block against white.
    */
-  bg: '#f7f8f9',
-  surface: '#eceef0',
+  bg: '#ffffff',
+  surface: '#f4f5f7',
   ink: '#14161a',
   inkSoft: '#3a3d44',
   /**
