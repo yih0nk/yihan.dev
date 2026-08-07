@@ -187,19 +187,21 @@ function IndexRow({
   )
 }
 
-export default function ProjectsIndexPrototype() {
+export default function ProjectsIndex() {
   const [hovered, setHovered] = useState<string | null>(null)
 
 
   return (
-    <div
-      className="w-full overflow-x-clip"
-      style={{ backgroundColor: COLORS.bg, color: COLORS.ink }}
-    >
+    <div className="w-full overflow-x-clip">
       <style>{REDUCED_MOTION_CSS}</style>
 
-      {/* ── header ─────────────────────────────────────────────────────── */}
-      <header className={`${LAYOUT.container} pt-24 md:pt-32`}>
+      {/*
+        The nav is fixed and does not offset the document, so this clears it
+        itself — the same `--nav-h` + 5rem every other page uses. Standing alone
+        above the chrome as a preview, a flat pt-24 was enough; under the real
+        nav it would have left the index rule 32px from the bar.
+      */}
+      <header className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)]`}>
         <div
           className="flex items-baseline justify-between gap-6 border-b pb-3 text-[11px] uppercase tracking-[0.18em]"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}

@@ -1,35 +1,27 @@
 import type { Metadata } from "next";
 import PageTransition from "@/components/layout/PageTransition";
-import ProjectCard from "@/components/ui/ProjectCard";
-import { projects } from "@/lib/projects";
+import ProjectsIndex from "@/components/projects/ProjectsIndex";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Things Yihan has built — AI agents, traffic simulations, SaaS platforms, and more.",
+  description:
+    "Systems Yihan built to answer a question he could not look up — agents, reinforcement learning, and the infrastructure underneath them.",
 };
 
+/**
+ * This page was eight identical bordered tiles in a two-column grid — every
+ * card measured 514x488, every title set at 20px in the mono face, and all of
+ * the hierarchy came from the boxes rather than from size or space. The index
+ * that replaced it is the same eight projects with the ornament removed.
+ *
+ * `ProjectsIndex` is a client component, so the metadata above has to be
+ * exported from here; this file stays a server component and does nothing but
+ * hold it.
+ */
 export default function ProjectsPage() {
   return (
     <PageTransition>
-      <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
-        <h1
-          className="text-4xl md:text-5xl mb-4 lowercase"
-          style={{ fontFamily: "var(--font-mono)" }}
-        >
-          projects.
-        </h1>
-        <p className="text-muted mb-14 leading-relaxed max-w-lg lowercase">
-          Things I&apos;ve built, broken, and rebuilt. I gravitate toward systems
-          that move data in interesting ways — pipelines, agents, simulations.
-          Here are a few I&apos;m proud of.
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
-      </div>
+      <ProjectsIndex />
     </PageTransition>
   );
 }
