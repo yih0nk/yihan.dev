@@ -472,6 +472,21 @@ export default function ReelHero({ font }: { font: string }) {
     // --- scrub state ---------------------------------------------------------
     let pos = -0.55 // frame units; starts off-head so the reel threads itself
     let vel = 0
+    /**
+     * The one-shot entry glide.
+     *
+     * `pos` starts off-head so the strip threads in, but the force that actually
+     * pulled it to the first frame was the out-of-range clamp below — a spring
+     * tuned at stiffness 70 to stop an over-scroll dead, not to stage an
+     * entrance. It covered 90% of the travel in 375ms and read as a jump rather
+     * than as film being fed. Swapping the snap spring alone did nothing (375ms
+     * → 392ms); the clamp dominates, so threading softens both.
+     *
+     * It is a mount-only state: it clears the moment the strip arrives, or the
+     * moment the visitor touches anything, and never comes back. After that the
+     * clamp is stiff again, which is what over-scroll wants.
+     */
+    let threading = true
     let dragging = false
     let lastX = 0
     let lastMoveT = 0
@@ -538,6 +553,7 @@ export default function ReelHero({ font }: { font: string }) {
     const interact = () => {
       idleFrom = performance.now()
       auto = false
+      threading = false // a visitor who grabs the strip outranks the entrance
       if (touchedOnce) return
       touchedOnce = true
       setTouched(true)
@@ -700,21 +716,33 @@ export default function ReelHero({ font }: { font: string }) {
       const target = snapTo !== null ? snapTo : STOPS[stopIndex(pos)]
       const engage = snapTo !== null ? 1 : 1 - Math.min(1, Math.abs(vel) / 2.2)
       // the idle drift is a much softer spring than a snap: it glides over a
-      // couple of seconds instead of yanking the strip out from under a reader
-      const stiff = auto ? 10 : 34
-      const damp = auto ? 5.4 : 8.5
+      // couple of seconds instead of yanking the strip out from under a reader.
+      // the entry glide borrows the same softness — see `threading`.
+      const stiff = auto || threading ? 10 : 34
+      const damp = auto || threading ? 5.4 : 8.5
       vel += (target - pos) * stiff * engage * h
       vel *= Math.exp(-damp * engage * h)
 
       if (pos < 0) {
-        vel += -pos * 70 * h
-        vel *= Math.exp(-11 * h)
+        // Threading is the only time the strip legitimately sits off-head, so it
+        // is the only time this clamp is an entrance rather than a backstop.
+        vel += -pos * (threading ? 16 : 70) * h
+        vel *= Math.exp(-(threading ? 5.5 : 11) * h)
       } else if (pos > NAME_POS) {
         vel += (NAME_POS - pos) * 70 * h
         vel *= Math.exp(-11 * h)
       }
 
       pos += vel * h
+
+      // Arrived. The idle countdown starts here rather than at mount: six
+      // seconds is meant to be six seconds of a visitor sitting still, and
+      // charging the entrance against it would resolve the name that much
+      // sooner for the passive visitor the timer exists to serve.
+      if (threading && pos >= -0.004) {
+        threading = false
+        idleFrom = performance.now()
+      }
 
       if (snapTo !== null && Math.abs(pos - snapTo) < 0.004 && Math.abs(vel) < 0.05) {
         pos = snapTo
