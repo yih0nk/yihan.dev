@@ -67,7 +67,7 @@ export const ROLES: Role[] = [
     org: "Mississauga Chess Club",
     title: "System Developer",
     location: "Mississauga, Canada",
-    from: [2023, 10],
+    from: [2025, 2],
     to: [2025, 6],
     line: "Built a tournament and membership system and mobile app for 1,000+ members, and cut tournament setup time by 97%.",
   },
