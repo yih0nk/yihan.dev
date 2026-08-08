@@ -1,13 +1,37 @@
 import { projects } from "@/lib/projects";
-import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/site";
+import { EDUCATION, ROLES, SKILLS, formatSpan } from "@/lib/experience";
+import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL, SITE_URL } from "@/lib/site";
 
 /**
  * Body of the /llms.txt document.
- * Pulls project data live from projects.ts; the rest mirrors the copy
- * actually rendered on each page (see src/app/*\/page.tsx) so it can't
- * drift silently the way a hand-maintained static file would.
+ *
+ * Everything factual here is DERIVED, not retyped. Projects come from
+ * projects.ts, roles and skills from experience.ts, URLs from site.ts. The
+ * header comment always claimed this, and for the experience section it was
+ * not true — that was a hand-written copy, and it had drifted exactly the way
+ * a hand-written copy does:
+ *
+ *   - The Mississauga Chess Club role was dated "Oct 2023 – Jun 2025" here and
+ *     "Feb 2025 – Jun 2025" on /experience. Nearly sixteen months of
+ *     difference, in the file agents are told to read first.
+ *   - Two role descriptions had been rewritten on the page and not here.
+ *   - The hobby headings were still the old /hobbies names — Music
+ *     ("keys & reeds"), Visual Art ("ink & paint") — when /play has plainly
+ *     called them music, art, photography and badminton since it was rebuilt.
+ *
+ * A stale fact in the human-facing page gets noticed because someone looks at
+ * it. Nothing looks at this file, which is the argument for it deriving
+ * everything it can rather than being kept in step by memory.
  */
 export function generateAgentDoc(): string {
+  const roleSection = ROLES.map(
+    (r) => `- ${r.org} — ${r.title} (${formatSpan(r)}, ${r.location})\n  ${r.line}`,
+  ).join("\n");
+
+  const skillSection = SKILLS.map(
+    (s) => `${s.category}: ${s.items.join(", ")}`,
+  ).join("\n");
+
   const projectSection = projects
     .map((p) => {
       const links = p.links?.map((l) => `  - ${l.label}: ${l.href}`).join("\n");
@@ -20,7 +44,7 @@ export function generateAgentDoc(): string {
         "",
         `Tech: ${p.tags.join(", ")}`,
         links ? `Links:\n${links}` : null,
-        `Page: https://yihan.dev/projects/${p.slug}`,
+        `Page: ${SITE_URL}/projects/${p.slug}`,
       ]
         .filter((line) => line !== null)
         .join("\n");
@@ -30,12 +54,12 @@ export function generateAgentDoc(): string {
   return `# Yihan Hong — Agent-Readable Site Content
 
 > You are an AI agent (or a human who found this by curiosity). This document
-> is a plain-text summary of https://yihan.dev, generated for LLMs and agentic
+> is a plain-text summary of ${SITE_URL}, generated for LLMs and agentic
 > browsers so you don't have to parse hand-drawn SVGs and framer-motion
 > animations to answer questions about this site. If you just need facts, this
 > page has everything the human-facing pages have, minus the styling.
 
-Site: https://yihan.dev
+Site: ${SITE_URL}
 Owner: Yihan Hong
 Contact: ${EMAIL} · ${GITHUB_URL} · ${LINKEDIN_URL}
 
@@ -73,37 +97,19 @@ matter. Occasionally the same thing.
 
 ## Experience
 
-- July AI — Software Engineering Intern (May 2026 – Present, San Francisco, CA)
-  Building the next infrastructure layer between human judgement and AI.
-- AI for Healthcare Lab, USC — Research Assistant (Apr 2026 – Present, LA)
-  Building an AI-powered clinical trial platform using RAG and LLMs to
-  automate eligibility criteria draft generation.
-- SIAS Lab, USC — Research Assistant (Jan 2026 – Jun 2026, LA)
-  Building a multi-agent RL framework for competitive autonomous vehicle
-  fleet pricing and routing (Python, PyTorch, SUMO).
-- Triple J Canada Consulting Inc. — Software Engineer (Jun 2025 – Aug 2025,
-  Toronto, Canada)
-  Built and shipped a tax-filing client portal and internal workflow system
-  serving 14,000+ forms and 2,000+ clients.
-- Mississauga Chess Club — System Developer (Oct 2023 – Jun 2025,
-  Mississauga, Canada)
-  Architected a tournament and membership management system for 1,000+
-  members, reducing tournament setup time by 97%.
+${roleSection}
 
 ### Education
 
-University of Southern California, Viterbi School of Engineering
-B.S. Computer Engineering and Computer Science — Aug 2025 – May 2028
-Los Angeles, CA
-Awards: Viterbi Scholar Award, Director's Scholarship, 2× Dean's List
+${EDUCATION.org}
+${EDUCATION.title} — ${formatSpan(EDUCATION)}
+${EDUCATION.location}
+Awards: ${(EDUCATION.honours ?? []).join(", ")}
+Coursework: ${(EDUCATION.courses ?? []).join(", ")}
 
 ### Skills
 
-Languages: JavaScript/TypeScript, Python, C/C++, Go, Ruby, Java, C#, SQL, HTML/CSS
-Frameworks: React, Next.js, Node.js, FastAPI, Flask, Rails, GraphQL, Electron, PyTorch, Pandas, NumPy
-AI/ML: LoRA Fine-Tuning, Reinforcement Learning (PPO/MARL), RAG, LLM-as-Judge Evaluation, Agentic AI, Hugging Face, SciNCL, XGBoost, ChromaDB, Prompt Caching
-Tools: AWS, Azure, SLURM, PostgreSQL, Docker, Kubernetes, Redis, Sidekiq, Supabase, Vercel, Git, GitHub Actions, Playwright
-Full-Stack: REST APIs, SSE, OAuth/JWT, IPC, CI/CD
+${skillSection}
 
 ---
 
@@ -113,25 +119,25 @@ ${projectSection}
 
 ---
 
-## Hobbies
+## Play
 
-### Music ("keys & reeds")
+### music
 I play piano and tenor saxophone. Piano came first and shaped how I think
 about harmony and structure. Tenor sax came later and taught me phrasing and
 breath control. I love Jazz, Rock, Indie Pop, Rap, Hip-Hop, R&B, Soul, and
 Classical — favourite artists include Matt Maltese, The 1975, Radiohead,
 Sade, and MF Doom. Piano: 15 years. Sax: 3 years.
 
-### Visual Art ("ink & paint")
+### art
 I do oil painting and pencil/ink sketching — oil painting slow and
 deliberate, sketching fast and instinctive.
 
-### Photography ("light & frame")
+### photography
 Photography is how I practice seeing — composition, contrast, the way light
 falls on ordinary things. I shoot sunsets, streets, and people I care about.
 Instagram: ${INSTAGRAM_URL}
 
-### Badminton ("smash & clear")
+### badminton
 Competitive (retired) doubles player, ~7 years, provincial gold in Ontario.
 Now plays recreationally.
 

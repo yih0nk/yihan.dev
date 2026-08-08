@@ -1,5 +1,6 @@
 import { generateAgentDoc } from "@/lib/agentContent";
 import { getPostsByCategory, type PostCategory } from "@/lib/mdx";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * /llms.txt — the one plain-text entry point.
@@ -11,17 +12,29 @@ import { getPostsByCategory, type PostCategory } from "@/lib/mdx";
  * link sections — and the full plain-text rendering of the site underneath, so
  * a model that fetches this never needs a second request.
  *
- * /agent.md and /agent.txt 308 here (see next.config.ts). The visible entry
- * point is the button in the corner of every page, which points here too.
+ * /agent.md and /agent.txt 308 here (see next.config.ts). Discovery is by three
+ * routes and no longer by a button: the well-known path, `Sitemap:` and `Allow`
+ * in robots.txt, and a `<link rel="alternate" type="text/plain">` in the layout.
+ * The button the old note described here was deleted some time ago.
  *
- * CONTENT RULE: no quantitative résumé metrics, ever. The résumé at /resume is
- * password-gated and publishing the figures it protects would defeat the gate.
- * Naming a technique is fine; attaching a number to an outcome is not. That
- * rule is enforced upstream in projects.ts and agentContent.ts, which this
- * renders verbatim — so anything added there has to clear the same bar.
+ * CONTENT RULE: this file may say anything the public pages already say, and
+ * nothing they do not. That is the whole bar, and it is what keeps the two
+ * halves of the site from disagreeing.
+ *
+ * It previously read "no quantitative résumé metrics, ever", on the argument
+ * that /resume is password-gated and publishing its figures would defeat the
+ * gate. That rule was already dead on arrival: projects.ts names a 70% accuracy
+ * and a $500 award, experience.ts names 14,000+ forms and a 97% reduction, and
+ * every one of those renders on a public page that this file is supposed to
+ * mirror. Enforcing it here would not have protected anything — it would only
+ * have made llms.txt a less accurate account of a site that already says these
+ * numbers out loud.
+ *
+ * What stays out is the résumé's own contents, which are behind the gate and
+ * are not rendered on any public page.
  */
 
-const BASE = "https://yihan.dev";
+const BASE = SITE_URL;
 const CATEGORIES: PostCategory[] = ["tech", "life", "music", "film"];
 
 export const dynamic = "force-static";
@@ -84,6 +97,7 @@ function body(): string {
 - [Home](${BASE}/): who he is, what he is working on now
 - [Projects](${BASE}/projects): engineering work, written up as case studies
 - [Experience](${BASE}/experience): roles, education, skills
+- [Play](${BASE}/play): music, art, photography, badminton
 - [Blog](${BASE}/blog): writing on tech, life, music and film
 - [Résumé](${BASE}/resume): password-gated; do not index the contents
 
