@@ -73,8 +73,8 @@ export default function ExperiencePage() {
       {/* ── education ────────────────────────────────────────────────────── */}
       <section className="mt-20 md:mt-24">
         <h2
-          className="border-t pt-6 text-[12px] uppercase tracking-[0.18em]"
-          style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
+          className="border-t pt-8 text-[32px] leading-none tracking-[-0.01em]"
+          style={{ fontFamily: FONTS.display, color: COLORS.ink, borderColor: COLORS.hairline }}
         >
           education
         </h2>
@@ -152,8 +152,8 @@ export default function ExperiencePage() {
       {/* ── skills ───────────────────────────────────────────────────────── */}
       <section className="mt-20 md:mt-24">
         <h2
-          className="border-t pt-6 text-[12px] uppercase tracking-[0.18em]"
-          style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
+          className="border-t pt-8 text-[32px] leading-none tracking-[-0.01em]"
+          style={{ fontFamily: FONTS.display, color: COLORS.ink, borderColor: COLORS.hairline }}
         >
           skills
         </h2>
