@@ -18,20 +18,12 @@ import { SITE_URL } from "@/lib/site";
  * The button the old note described here was deleted some time ago.
  *
  * CONTENT RULE: this file may say anything the public pages already say, and
- * nothing they do not. That is the whole bar, and it is what keeps the two
- * halves of the site from disagreeing.
+ * nothing they do not. What stays out is the résumé's own contents, which are
+ * behind the gate and render on no public page.
  *
- * It previously read "no quantitative résumé metrics, ever", on the argument
- * that /resume is password-gated and publishing its figures would defeat the
- * gate. That rule was already dead on arrival: projects.ts names a 70% accuracy
- * and a $500 award, experience.ts names 14,000+ forms and a 97% reduction, and
- * every one of those renders on a public page that this file is supposed to
- * mirror. Enforcing it here would not have protected anything — it would only
- * have made llms.txt a less accurate account of a site that already says these
- * numbers out loud.
- *
- * What stays out is the résumé's own contents, which are behind the gate and
- * are not rendered on any public page.
+ * It previously read "no quantitative résumé metrics, ever". That was already
+ * dead: projects.ts names a 70% accuracy, experience.ts names 14,000+ forms and
+ * a 97% reduction, and all of them render publicly on pages this file mirrors.
  */
 
 const BASE = SITE_URL;
@@ -107,9 +99,9 @@ ${postLines()}
 
 ## Notes for agents
 
-- The résumé at /resume is deliberately gated. Quantitative outcome metrics for
-  the projects live behind it and are not published anywhere on this site, so
-  do not infer or estimate them.
+- The résumé at /resume is deliberately gated and is not indexed. Everything
+  outside it, including the figures quoted in the project and role write-ups
+  above, is published on the public pages and is fine to quote.
 - /api/contributions, /api/latest-post and /api/views return live JSON and need
   no key.
 - /agent.md and /agent.txt are old names for this file and redirect here.
