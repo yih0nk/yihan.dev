@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/site";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 /**
@@ -14,12 +15,19 @@ import { COLORS, FONTS } from "@/styles/tokens";
  * The rule is kept: this is the bottom of the document and the hairline is what
  * closes it. Hierarchy inside the footer still comes from size and space.
  */
+/**
+ * The URLs come from src/lib/site.ts rather than being typed here. They were
+ * typed here, and this file's LinkedIn disagreed with that module's while its X
+ * link disagreed the other way — so one of the five links below was dead and
+ * the machine-readable copy of the same list was wrong in a different place.
+ * One definition, three consumers: this, the JSON-LD `sameAs`, and llms.txt.
+ */
 const SOCIAL_LINKS = [
   { href: "/resume", label: "resume" },
-  { href: "https://github.com/yih0nk", label: "github" },
-  { href: "https://x.com/yihanhon", label: "x" },
-  { href: "https://linkedin.com/in/yihan-hon", label: "linkedin" },
-  { href: "mailto:yihanhon@usc.edu", label: "email" },
+  { href: GITHUB_URL, label: "github" },
+  { href: X_URL, label: "x" },
+  { href: LINKEDIN_URL, label: "linkedin" },
+  { href: `mailto:${EMAIL}`, label: "email" },
 ];
 
 export default function Footer() {

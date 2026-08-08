@@ -1,4 +1,5 @@
 import { projects } from "@/lib/projects";
+import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/site";
 
 /**
  * Body of the /llms.txt document.
@@ -36,7 +37,7 @@ export function generateAgentDoc(): string {
 
 Site: https://yihan.dev
 Owner: Yihan Hong
-Contact: yihanhon@usc.edu · github.com/yih0nk · linkedin.com/in/yihan-hon
+Contact: ${EMAIL} · ${GITHUB_URL} · ${LINKEDIN_URL}
 
 ---
 
@@ -128,7 +129,7 @@ deliberate, sketching fast and instinctive.
 ### Photography ("light & frame")
 Photography is how I practice seeing — composition, contrast, the way light
 falls on ordinary things. I shoot sunsets, streets, and people I care about.
-Instagram: https://www.instagram.com/yih0nk/
+Instagram: ${INSTAGRAM_URL}
 
 ### Badminton ("smash & clear")
 Competitive (retired) doubles player, ~7 years, provincial gold in Ontario.
@@ -138,9 +139,9 @@ Now plays recreationally.
 
 ## Contact
 
-- Email: yihanhon@usc.edu
-- GitHub: https://github.com/yih0nk
-- LinkedIn: https://linkedin.com/in/yihan-hon
+- Email: ${EMAIL}
+- GitHub: ${GITHUB_URL}
+- LinkedIn: ${LINKEDIN_URL}
 
 ---
 
