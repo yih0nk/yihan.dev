@@ -47,7 +47,7 @@ export default function ResumePage() {
           résumé
         </h1>
         <p
-          className="mt-5 max-w-[54ch] text-base leading-relaxed md:mt-6 md:text-lg"
+          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
           This one&apos;s behind a password. If you need it and don&apos;t have

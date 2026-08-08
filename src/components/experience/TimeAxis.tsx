@@ -265,7 +265,7 @@ export default function TimeAxis({
                 </div>
 
                 <p
-                  className="mt-3 max-w-[56ch] text-base leading-relaxed md:col-span-5 md:mt-0"
+                  className="mt-3 text-base leading-relaxed md:col-span-5 md:mt-0"
                   style={{ fontFamily: FONTS.body, color: COLORS.muted }}
                 >
                   {role.line}

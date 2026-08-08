@@ -308,7 +308,7 @@ export default function AboutComposed({ font }: { font: string }) {
             </div>
 
             <div
-              className="max-w-[62ch] space-y-5 text-[16px] leading-relaxed md:text-[18px]"
+              className="space-y-5 text-[16px] leading-relaxed md:text-[18px]"
               style={{ fontFamily: BODY, color: INK }}
             >
               <p>

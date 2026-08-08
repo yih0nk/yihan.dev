@@ -192,7 +192,7 @@ function IndexRow({
           */}
           {entry?.line && (
             <p
-              className="mt-3 max-w-[52ch] text-base leading-relaxed"
+              className="mt-3 text-base leading-relaxed"
               style={{ fontFamily: FONTS.body, color: COLORS.muted }}
             >
               {entry.line}
@@ -254,7 +254,7 @@ export default function ProjectsIndex() {
         </h1>
 
         <p
-          className="mt-5 max-w-[54ch] text-base leading-relaxed md:mt-6 md:text-lg"
+          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
           Systems I built to answer a question I could not look up — mostly agents,
@@ -284,7 +284,7 @@ export default function ProjectsIndex() {
           style={{ borderColor: COLORS.hairline }}
         >
           <p
-            className="max-w-[46ch] text-base leading-relaxed"
+            className="text-base leading-relaxed"
             style={{ fontFamily: FONTS.body, color: COLORS.muted }}
           >
             Smaller experiments and the things that never made it this far are

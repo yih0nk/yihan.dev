@@ -166,50 +166,50 @@ export default function PostList({
                 onFocus={() => setHovered(post.slug)}
                 onBlur={() => setHovered(null)}
               >
-                <div className="md:grid md:grid-cols-12 md:items-baseline md:gap-8">
-                  <div className="md:col-span-3">
-                    <span
-                      className="block text-[12px] tracking-[0.14em]"
-                      style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
-                    >
-                      {formatDate(post.date)}
-                    </span>
-                    <span
-                      className="mt-1 block text-[12px] uppercase tracking-[0.18em]"
-                      style={{ fontFamily: FONTS.mono, color: COLORS.muted, opacity: 0.7 }}
-                    >
-                      {post.category}
-                    </span>
-                  </div>
+                {/*
+                  The date and category sit ABOVE the title rather than in a
+                  left gutter. As a 3-of-12 column they took 271px off the
+                  measure and the excerpt could only ever fill the remaining
+                  781px — it looked capped even after every max-w came off,
+                  because the grid was the cap. Stacked, the title and the
+                  excerpt get the container's full 1052px, and the metadata
+                  reads as a dateline, which is what it is.
+                */}
+                <p
+                  className="text-[12px] tracking-[0.14em]"
+                  style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
+                >
+                  {formatDate(post.date)}
+                  <span aria-hidden>{'  ·  '}</span>
+                  <span className="uppercase tracking-[0.18em]">{post.category}</span>
+                </p>
 
-                  <div className="mt-3 md:col-span-9 md:mt-0">
-                    {/*
-                      Underline on hover rather than a colour change. The accent
-                      is doing too much work across the site — it already marks
-                      every outbound link and every active filter — and a title
-                      turning blue reads as "this is a link somewhere else"
-                      rather than "this is the thing you are about to open".
-                    */}
-                    <h3
-                      className="text-[32px] leading-none tracking-[-0.01em] underline-offset-[6px]"
-                      style={{
-                        fontFamily: FONTS.display,
-                        color: COLORS.ink,
-                        textDecoration: on ? 'underline' : 'none',
-                      }}
-                    >
-                      {post.title}
-                    </h3>
-                    {post.excerpt && (
-                      <p
-                        className="mt-3 max-w-[62ch] text-base leading-relaxed"
-                        style={{ fontFamily: FONTS.body, color: COLORS.muted }}
-                      >
-                        {post.excerpt}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                {/*
+                  Underline on hover rather than a colour change. The accent is
+                  doing too much work across the site — it already marks every
+                  outbound link and every active filter — and a title turning
+                  blue reads as "this is a link somewhere else" rather than
+                  "this is the thing you are about to open".
+                */}
+                <h3
+                  className="mt-3 text-[32px] leading-none tracking-[-0.01em] underline-offset-[6px]"
+                  style={{
+                    fontFamily: FONTS.display,
+                    color: COLORS.ink,
+                    textDecoration: on ? 'underline' : 'none',
+                  }}
+                >
+                  {post.title}
+                </h3>
+
+                {post.excerpt && (
+                  <p
+                    className="mt-3 text-base leading-relaxed"
+                    style={{ fontFamily: FONTS.body, color: COLORS.muted }}
+                  >
+                    {post.excerpt}
+                  </p>
+                )}
               </Link>
             </li>
           )

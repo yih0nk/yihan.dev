@@ -86,7 +86,7 @@ export default function BlogPage() {
           </h2>
           {welcome.excerpt && (
             <p
-              className="mt-3 max-w-[62ch] text-base leading-relaxed"
+              className="mt-3 text-base leading-relaxed"
               style={{ fontFamily: FONTS.body, color: COLORS.muted }}
             >
               {welcome.excerpt}

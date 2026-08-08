@@ -85,7 +85,7 @@ export default async function ProjectDetailPage({
         </h1>
 
         <p
-          className="mt-5 max-w-[54ch] text-base leading-relaxed md:mt-6 md:text-lg"
+          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
           {project.tagline}

@@ -75,8 +75,20 @@ export const LAYOUT = {
    * axis the nav and footer align to.
    */
   container: 'w-full max-w-[1100px] mx-auto px-6',
-  /** Long-form reading measure. */
-  prose: 'max-w-[68ch]',
+  /**
+   * REMOVED: there is no reading-measure token any more.
+   *
+   * Body copy was capped at 46–68ch on nine elements across six files, on the
+   * usual argument that ~68 characters is the comfortable line length. Every one
+   * of those caps left text stopping short of the edge the rule, the title and
+   * the pictures all align to, which read as an accidental indent rather than as
+   * a measure. One width down the page won, repeatedly and explicitly.
+   *
+   * The cost is real and worth stating: full lines now run 100–115 characters,
+   * against the ~68 that is comfortable. It holds because nothing on this site
+   * is longer than a few paragraphs. If a blog post ever runs long, this is the
+   * decision to revisit — reintroduce it there, not globally.
+   */
   /** Vertical rhythm between major sections. */
   section: 'py-24 md:py-32',
   radius: '3px',

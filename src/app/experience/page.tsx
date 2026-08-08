@@ -58,7 +58,7 @@ export default function ExperiencePage() {
           experience
         </h1>
         <p
-          className="mt-5 max-w-[54ch] text-base leading-relaxed md:mt-6 md:text-lg"
+          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
           Drawn to scale, so the overlaps are visible — since the start of 2026
@@ -138,7 +138,7 @@ export default function ExperiencePage() {
                   coursework
                 </h4>
                 <p
-                  className="mt-3 max-w-[68ch] text-[14px] leading-loose tracking-[0.02em]"
+                  className="mt-3 text-[14px] leading-loose tracking-[0.02em]"
                   style={{ fontFamily: FONTS.mono, color: COLORS.inkSoft }}
                 >
                   {EDUCATION.courses.join("  ·  ")}
