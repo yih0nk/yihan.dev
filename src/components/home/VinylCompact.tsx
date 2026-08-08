@@ -269,8 +269,7 @@ export default function VinylCompact({
       ctx.stroke()
 
       // label — the authored colour is the base, and stays the whole label when
-      // there is no art: the hardcoded rotation has no cover to show, and a
-      // real cover has not necessarily arrived yet.
+      // there is no art: nothing is playing, or a real cover has not arrived yet.
       const cr = Math.round(rgb[0])
       const cg = Math.round(rgb[1])
       const cb = Math.round(rgb[2])

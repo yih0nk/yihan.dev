@@ -192,18 +192,28 @@ export interface SpotifyTrack {
 /**
  * The real "now playing", when it is configured.
  *
- * Returns null both while in flight and forever after if the integration is not
- * set up, so the caller can simply fall back to the hardcoded rotation without
- * distinguishing "not yet" from "never".
- *
  * Polls every 10s. The position between polls is extrapolated locally by
  * `useElapsed` rather than fetched — a progress bar that needed a network round
  * trip per frame would be absurd, and Spotify's own position only changes at
  * one millisecond per millisecond. Each poll re-syncs, which is what makes
  * pausing, seeking and track changes correct themselves within one interval.
+ *
+ * RETURNS `settled` ALONGSIDE THE TRACK, the same shape `useLatestPost` returns,
+ * because the two sit in the same row and had different ideas about what "no
+ * answer yet" looks like. This one used to return a bare null, which the caller
+ * could not tell apart from "asked, and there is nothing" — so the block
+ * rendered its heading over an empty reserved box on every single load until
+ * the first poll came back, and stayed that way forever whenever Spotify could
+ * not answer. Its neighbour had already solved this by holding the column at
+ * opacity 0 until it knew.
+ *
+ * `settled` goes true on the FIRST completed poll, success or failure, and
+ * never goes back — the ten-second re-polls behind it must not make the column
+ * flicker once it has something to show.
  */
-export function useSpotify(): SpotifyTrack | null {
+export function useSpotify(): { track: SpotifyTrack | null; settled: boolean } {
   const [track, setTrack] = useState<SpotifyTrack | null>(null)
+  const [settled, setSettled] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -214,6 +224,10 @@ export function useSpotify(): SpotifyTrack | null {
         .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`http ${r.status}`))))
         .then((raw: unknown) => {
           if (!alive) return
+          // Every path below this line is an answer, including the ones that
+          // produce no track: a refresh token Spotify has stopped accepting
+          // returns `{configured: true, track: null}`, which is a settled "no".
+          setSettled(true)
           if (typeof raw !== 'object' || raw === null) return
           const body = raw as { configured?: unknown; track?: unknown }
           if (body.configured !== true) return
@@ -235,20 +249,29 @@ export function useSpotify(): SpotifyTrack | null {
           })
         })
         .catch(() => {
-          // Silence is the fallback. The rotation keeps playing.
+          // An aborted request is a unmount, not an answer — settling here would
+          // flash the column open on the way out.
+          if (alive && !controller.signal.aborted) setSettled(true)
         })
     }
 
     load()
     const id = window.setInterval(load, 10_000)
+    // Never let a hanging request strand the column in its blank reserved
+    // state, the same 4s backstop /api/latest-post gets.
+    const bail = window.setTimeout(() => {
+      if (alive) setSettled(true)
+    }, 4000)
+
     return () => {
       alive = false
       controller.abort()
       window.clearInterval(id)
+      window.clearTimeout(bail)
     }
   }, [])
 
-  return track
+  return { track, settled }
 }
 
 /** `settled` goes true once we know the answer — including "there isn't one". */

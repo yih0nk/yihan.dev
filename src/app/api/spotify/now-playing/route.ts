@@ -9,8 +9,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   if (!isConfigured()) {
-    // Not an error. The homepage falls back to its hardcoded rotation, and a
-    // 200 with a plain flag keeps that path off the client's error branch.
+    // Not an error, and a 200 with a plain flag keeps this off the client's
+    // error branch. There is no longer a hardcoded rotation to fall back to —
+    // it was deleted (see tracks.ts) because showing somebody else's song under
+    // "now playing" is the one thing this widget must not do. The homepage
+    // holds the readout hidden instead.
     return Response.json(
       { configured: false, track: null },
       { headers: { "Cache-Control": "public, s-maxage=300" } },
@@ -31,7 +34,7 @@ export async function GET() {
       },
     );
   } catch {
-    // A Spotify outage should degrade to the rotation, never to a broken page.
+    // A Spotify outage should degrade to a quiet readout, never a broken page.
     return Response.json(
       { configured: true, track: null },
       { headers: { "Cache-Control": "public, s-maxage=30" } },

@@ -191,12 +191,13 @@ export default function AboutComposed({ font }: { font: string }) {
 
   // ── the record ────────────────────────────────────────────────────────────
   // Only ever the real thing. There is no placeholder track: the record turns
-  // with a resting label until Spotify answers, and the type below it stays
-  // empty in space already reserved for it, so nothing moves when it lands.
-  const live = useSpotify()
+  // with a resting label until Spotify answers, and the type below it is held
+  // at opacity 0 in space already reserved for it, so nothing moves when it
+  // lands and nothing shows while there is nothing to say.
+  const { track: live, settled: liveSettled } = useSpotify()
 
-  // Position within the track, extrapolated between polls. Zero for the
-  // hardcoded rotation, which has no position to report.
+  // Position within the track, extrapolated between polls. Zero when there is
+  // no track, which has no position to report.
   const elapsedMs = useElapsed(live)
   const progress = live?.durationMs ? elapsedMs / live.durationMs : 0
 
@@ -364,8 +365,16 @@ export default function AboutComposed({ font }: { font: string }) {
               <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
                 {live && !live.isPlaying ? 'last played' : 'now playing'}
               </span>
-              {/* reserved height so a longer title never shifts the row */}
-              <div className="mt-4 min-h-[4.25rem]">
+              {/* Reserved height so a longer title never shifts the row, and
+                  held at opacity 0 until the first poll answers — exactly what
+                  the "last wrote" column beside it does. Without the gate this
+                  rendered its heading over two empty lines on every load until
+                  the fetch landed, and permanently whenever Spotify could not
+                  answer at all. */}
+              <div
+                className="mt-4 min-h-[4.25rem]"
+                style={{ opacity: liveSettled ? 1 : 0, transition: fade }}
+              >
                 <p
                   className="text-[20px] leading-[1.2] text-balance"
                   style={{ fontFamily: font, color: INK }}

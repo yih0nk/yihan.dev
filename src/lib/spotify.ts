@@ -12,9 +12,10 @@
  *   2. visit /api/spotify/login, approve, copy the refresh token it prints
  *   3. put it in SPOTIFY_REFRESH_TOKEN and restart
  *
- * Absent any of the three the module reports `configured: false` and the caller
- * falls back to the hardcoded rotation. A missing integration is not an error
- * state — the page should look deliberate, not broken.
+ * Absent any of the three the module reports `configured: false` and the
+ * homepage keeps its now-playing readout hidden rather than showing a heading
+ * over two empty lines. A missing integration is not an error state — the page
+ * should look deliberate, not broken.
  */
 
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
