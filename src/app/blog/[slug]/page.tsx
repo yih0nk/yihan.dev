@@ -5,7 +5,7 @@ import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import PostViewCounter from "@/components/blog/PostViewCounter";
-import { getAllPosts, getPostBySlug, getWelcomePost } from "@/lib/mdx";
+import { duplicateSlugs, getAllPosts, getPostBySlug, getWelcomePost } from "@/lib/mdx";
 import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
 /**
@@ -26,7 +26,32 @@ import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
  * did not match the site. One width down the page is the call.
  */
 
+/**
+ * THIS IS ALSO THE SLUG-COLLISION GATE. It runs once per build, over every post
+ * on disk, which makes it the only place the check costs nothing to run.
+ *
+ * Slugs went global when the category left the URL. Two files with the same
+ * name in different category folders now claim one address, and nothing about
+ * that is visible at runtime: `getPostBySlug` walks CATEGORIES in order and
+ * returns whichever it reaches first, so one post renders, the other is
+ * unreachable, and the site looks completely healthy. Worse, "first" depends on
+ * directory read order — a case-insensitive filesystem can resolve it one way
+ * locally and the other way on the build machine.
+ *
+ * So it throws. A build that fails with both filenames in the message costs a
+ * minute; a post that silently does not exist costs however long it takes
+ * someone to notice, which for a blog is indefinitely.
+ */
 export async function generateStaticParams() {
+  const collisions = duplicateSlugs();
+  if (collisions.length > 0) {
+    throw new Error(
+      `Duplicate blog slugs: ${collisions.join(", ")}. ` +
+        `Post URLs are flat (/blog/<slug>), so a slug may be claimed by only one ` +
+        `file across src/content/blog and its category directories. Rename one.`,
+    );
+  }
+
   const welcome = getWelcomePost();
   return [
     ...(welcome ? [{ slug: "welcome" }] : []),
