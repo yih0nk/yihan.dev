@@ -237,8 +237,8 @@ export default function ProjectsIndex() {
             className="max-w-[46ch] text-[15px] leading-relaxed md:text-base"
             style={{ fontFamily: FONTS.body, color: COLORS.muted }}
           >
-            Smaller experiments, forks, and the things that never made it this far
-            are all on GitHub.
+            Smaller experiments and the things that never made it this far are
+            all on GitHub.
           </p>
 
           <a
