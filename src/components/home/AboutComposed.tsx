@@ -254,8 +254,13 @@ export default function AboutComposed({ font }: { font: string }) {
                 the caption, which is what makes the two columns end together. */}
             <div
               className="relative aspect-[4/5] w-full overflow-hidden rounded-[3px] md:aspect-auto md:min-h-[420px] md:flex-1"
+              // The placeholder tint was a flat 4% black, which is a lighter
+              // square on a white page and a darker one on a dark page — the
+              // wrong direction. Mixed out of `ink` it inverts with the theme.
+              // The drop shadow keeps its own black: a shadow is cast light,
+              // not page colour, and a pale one reads as a glow.
               style={{
-                backgroundColor: 'rgba(20,22,26,0.04)',
+                backgroundColor: `color-mix(in srgb, ${COLORS.ink} 4%, transparent)`,
                 boxShadow: '0 1px 2px rgba(20,22,26,0.07), 0 18px 40px -22px rgba(20,22,26,0.45)',
               }}
             >

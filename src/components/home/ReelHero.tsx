@@ -137,6 +137,7 @@ export default function ReelHero({ font }: { font: string }) {
     const SLUG = theme.surface
     const BG_RGB = hexToRgb(theme.bg).join(',')
     const INK_RGB = hexToRgb(theme.ink).join(',')
+    const MUTED_RGB = hexToRgb(theme.muted).join(',')
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -880,7 +881,7 @@ export default function ReelHero({ font }: { font: string }) {
           if (qa <= 0) continue
           let style = styleCache[qa]
           if (style === undefined) {
-            style = `rgba(20,22,26,${(qa / QA).toFixed(3)})`
+            style = `rgba(${INK_RGB},${(qa / QA).toFixed(3)})`
             styleCache[qa] = style
           }
           if (style !== lastStyle) {
@@ -904,7 +905,7 @@ export default function ReelHero({ font }: { font: string }) {
       if (sa > 0.01 && subSize > 0) {
         ctx.textAlign = 'center'
         ctx.textBaseline = 'alphabetic'
-        ctx.fillStyle = `rgba(92,98,109,${(sa * 0.95).toFixed(3)})`
+        ctx.fillStyle = `rgba(${MUTED_RGB},${(sa * 0.95).toFixed(3)})`
         ctx.font = `${subSize}px ${font}`
         ctx.fillText(TAGLINE, W / 2, regTop + subY)
       }

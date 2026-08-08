@@ -124,3 +124,38 @@
   }
 }
 
+/**
+ * Blog prose, on the token palette.
+ *
+ * @tailwindcss/typography sets sixteen of its own variables on `.prose`, all
+ * fixed greys with no theme behind them — headings, bold, links, code and
+ * quotes are all oklch(20.5%), which is near-black on a near-black page. The
+ * post page setting `color` inline only fixed the body text, because that is
+ * the one of the sixteen an inherited colour can reach; every heading and every
+ * bold word in a post stayed invisible in dark mode.
+ *
+ * UNLAYERED ON PURPOSE. The plugin's rules sit in a cascade layer, and
+ * unlayered CSS beats layered CSS regardless of specificity, so this needs no
+ * `!important` and no selector games.
+ *
+ * `pre` keeps the plugin's own dark block in both themes: a code block reads as
+ * a terminal, and inverting it to a light box in light mode is a different
+ * decision from making the page legible.
+ */
+.prose {
+  --tw-prose-body: var(--color-ink-soft);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-lead: var(--color-muted);
+  --tw-prose-links: var(--color-ink);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-counters: var(--color-muted);
+  --tw-prose-bullets: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  --tw-prose-hr: var(--color-hairline);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-hairline);
+  --tw-prose-captions: var(--color-muted);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-th-borders: var(--color-hairline);
+  --tw-prose-td-borders: var(--color-hairline);
+}
+
