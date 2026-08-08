@@ -69,7 +69,7 @@ export default async function ProjectDetailPage({
         }}
       >
         <Link href="/projects" className="hover:underline underline-offset-4">
-          ← index
+          ← projects
         </Link>
         <span>
           {pad(n)} / {pad(projects.length)}
