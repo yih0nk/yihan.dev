@@ -4,7 +4,7 @@ import { getAllPosts, getPostBySlug, getWelcomePost } from "@/lib/mdx";
 import { formatPostDate } from "@/lib/blogMeta";
 import { OG_FONT, ogFonts } from "@/lib/og/fonts";
 import { SITE_NAME } from "@/lib/site";
-import { COLORS } from "@/styles/tokens";
+import { COLORS_LIGHT } from "@/styles/tokens";
 
 /**
  * The share card for one post, at /blog/<slug>/opengraph-image.
@@ -82,7 +82,7 @@ export default async function Image({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: COLORS.bg,
+          backgroundColor: COLORS_LIGHT.bg,
           padding: "64px 72px",
           fontFamily: OG_FONT.body,
         }}
@@ -92,13 +92,13 @@ export default async function Image({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
-            borderBottom: `1px solid ${COLORS.hairline}`,
+            borderBottom: `1px solid ${COLORS_LIGHT.hairline}`,
             paddingBottom: 18,
             fontFamily: OG_FONT.mono,
             fontSize: 19,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: COLORS.muted,
+            color: COLORS_LIGHT.muted,
           }}
         >
           <div style={{ display: "flex" }}>yihan.dev/blog</div>
@@ -112,7 +112,7 @@ export default async function Image({
             fontSize: titleSize(title),
             lineHeight: 1.04,
             letterSpacing: "-0.02em",
-            color: COLORS.ink,
+            color: COLORS_LIGHT.ink,
           }}
         >
           {title}
@@ -126,7 +126,7 @@ export default async function Image({
             fontFamily: OG_FONT.mono,
             fontSize: 21,
             letterSpacing: "0.14em",
-            color: COLORS.muted,
+            color: COLORS_LIGHT.muted,
           }}
         >
           <div style={{ display: "flex" }}>{meta}</div>

@@ -18,7 +18,12 @@ export const FONTS = {
   mono: '"Source Code Pro", ui-monospace, SFMono-Regular, Menlo, monospace',
 } as const
 
-export const COLORS = {
+/**
+ * The literal palettes. NOT what a component imports — see `COLORS` below.
+ * Reach for these only where a real colour string is required: a canvas 2d
+ * context, an SVG data: URI, and Satori rendering the share cards.
+ */
+export const COLORS_LIGHT = {
   /**
    * White. It was #f7f8f9 — a cool near-white chosen to read as paper rather
    * than screen — and across a full viewport that tint read as dim grey rather
@@ -44,7 +49,11 @@ export const COLORS = {
   accent: '#2f6bff',
 } as const
 
-/** Dark counterparts — same roles, so components can switch on one variable. */
+/**
+ * Dark counterparts, same roles. `surface` is LIGHTER than `bg` here, the
+ * inverse of the light palette — which is why these are named by role: a token
+ * called `gray-100` would have to mean two different things.
+ */
 export const COLORS_DARK = {
   bg: '#111315',
   surface: '#191b1e',
@@ -54,6 +63,36 @@ export const COLORS_DARK = {
   hairline: 'rgba(233,234,236,0.12)',
   accent: '#6b93ff',
 } as const
+
+/**
+ * WHAT COMPONENTS IMPORT. CSS variable references, not hex — which is what
+ * makes ~120 inline `style={{ color: COLORS.ink }}` call sites theme-aware
+ * without touching any of them. The variables are declared in globals.css.
+ *
+ * THREE PLACES CANNOT USE THESE, none of which resolve CSS variables:
+ *
+ *   - A canvas 2d context. `ctx.fillStyle = 'var(--color-ink)'` is not an
+ *     error, it is silently ignored and the previous fill is kept.
+ *   - A colour inside an SVG data: URI — a separate document.
+ *   - Satori, for the OG cards, which use COLORS_LIGHT: a share card is a PNG
+ *     with no viewer theme, so it is deliberately one fixed design.
+ *
+ * The first two read resolved values through `useThemeColors`.
+ */
+export const COLORS = {
+  bg: 'var(--color-bg)',
+  surface: 'var(--color-surface)',
+  ink: 'var(--color-ink)',
+  inkSoft: 'var(--color-ink-soft)',
+  muted: 'var(--color-muted)',
+  hairline: 'var(--color-hairline)',
+  accent: 'var(--color-accent)',
+} as const
+
+/** The two themes, and the attribute that selects one. */
+export type Theme = 'light' | 'dark'
+export const THEME_ATTR = 'data-theme'
+export const THEME_KEY = 'theme'
 
 /**
  * Type scale, in px. Display sizes are the top four.

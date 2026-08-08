@@ -6,27 +6,29 @@
 @plugin "@tailwindcss/typography";
 
 /**
- * The design tokens, as Tailwind v4 theme variables.
+ * The design tokens, as Tailwind v4 theme variables. Kept in step with
+ * src/styles/tokens.ts — that module is what components import, this block is
+ * what makes the same values reachable from a class name (`--color-ink` yields
+ * `text-ink`, `bg-ink`, and so on).
  *
- * src/styles/tokens.ts is the source of truth and these MUST be kept in step
- * with it — the TS module is what components import directly, this block is
- * what makes the same values reachable from a class name. Tailwind v4 generates
- * utilities from `@theme`, so `--color-ink` here yields `text-ink`, `bg-ink`,
- * `border-ink`, and so on. That is the whole point: before this existed the
- * palette was reachable only by typing the hex again, and it had been typed
- * again in eight files.
+ * Naming is by ROLE, never appearance, which is what made dark mode a change to
+ * this block rather than to every component.
  *
- * Naming is by ROLE, never by appearance. `muted` can be re-pointed for dark
- * mode; `gray-mid` cannot.
+ * Both themes live in ONE declaration per token via `light-dark()`. The obvious
+ * alternative — overrides under `:root[data-theme=dark]` — needs the dark
+ * palette written twice, since a `@media (prefers-color-scheme)` query cannot
+ * be folded into a selector list. `light-dark()` resolves against the used
+ * `color-scheme`, so the whole switch is the three rules below, and a reader
+ * with no stored choice and no JavaScript still gets their system theme.
  */
 @theme {
-  --color-bg: #ffffff;
-  --color-surface: #f4f5f7;
-  --color-ink: #14161a;
-  --color-ink-soft: #3a3d44;
-  --color-muted: #5c626d;
-  --color-hairline: rgba(20, 22, 26, 0.1);
-  --color-accent: #2f6bff;
+  --color-bg: light-dark(#ffffff, #111315);
+  --color-surface: light-dark(#f4f5f7, #191b1e);
+  --color-ink: light-dark(#14161a, #e9eaec);
+  --color-ink-soft: light-dark(#3a3d44, #c2c5ca);
+  --color-muted: light-dark(#5c626d, #8b9098);
+  --color-hairline: light-dark(rgba(20, 22, 26, 0.1), rgba(233, 234, 236, 0.12));
+  --color-accent: light-dark(#2f6bff, #6b93ff);
 
   --font-display: var(--font-display-face), Georgia, serif;
   --font-body: var(--font-body-face), ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -49,16 +51,22 @@
 }
 
 @layer base {
+  /**
+   * The entire theme switch. `light dark` is the unset state: it follows the
+   * system and makes native UI (form controls, scrollbar) match. The attribute
+   * arrives from the inline script in layout.tsx, before first paint.
+   */
   :root {
-    /* Legacy names. Still referenced by the pages that have not been converted
-       yet; they are pointed at token values so those pages drift toward the new
-       system rather than away from it, and they go when the last consumer does. */
-    --color-black: #14161a;
-    --color-white: #ffffff;
-    --color-gray-dark: #3a3d44;
-    --color-gray-mid: #5c626d;
-    --color-gray-light: rgba(20, 22, 26, 0.18);
+    color-scheme: light dark;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
 
+  :root {
     --font-sans: var(--font-body);
 
     /* The nav is fixed and does NOT offset the document — see layout.tsx. Every
@@ -97,8 +105,10 @@
   ::-webkit-scrollbar-track {
     background: var(--color-bg);
   }
+  /* Was rgba(20,22,26,0.18), a light-only value that left the thumb near-black
+     on a dark page. Same 18%, mixed out of `ink`, so it inverts. */
   ::-webkit-scrollbar-thumb {
-    background: var(--color-gray-light);
+    background: color-mix(in srgb, var(--color-ink) 18%, transparent);
   }
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-muted);
@@ -106,56 +116,11 @@
 }
 
 @layer utilities {
-  .font-mono-display {
-    font-family: var(--font-mono);
-  }
-
+  /* sketch-hover, hover-wobble, btn-grain, content-width and font-mono-display
+     were deleted: all from the old hand-drawn look, none with a consumer left,
+     and the last things referencing the legacy light-only `--color-*` names. */
   .text-balance {
     text-wrap: balance;
-  }
-
-  /* Sketch hover border effect */
-  .sketch-hover {
-    position: relative;
-    transition: all 0.2s ease;
-  }
-  .sketch-hover::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border: 2px solid transparent;
-    border-radius: 2px;
-    transition: all 0.2s ease;
-  }
-  .sketch-hover:hover::after {
-    border-color: var(--color-black);
-    border-radius: 3px;
-    transform: rotate(-0.5deg) skew(-0.3deg);
-  }
-
-  /* Wobble animation on hover */
-  @keyframes wobble {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-1deg); }
-    75% { transform: rotate(1deg); }
-  }
-
-  .hover-wobble:hover {
-    animation: wobble 0.4s ease;
-  }
-
-  .btn-grain {
-    background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size: 3px 3px;
-  }
-  .btn-grain:hover {
-    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-  }
-
-  /* Page content max width */
-  .content-width {
-    max-width: 800px;
-    margin-inline: auto;
   }
 }
 

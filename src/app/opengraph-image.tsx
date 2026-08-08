@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { OG_FONT, ogFonts } from "@/lib/og/fonts";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
-import { COLORS } from "@/styles/tokens";
+import { COLORS_LIGHT } from "@/styles/tokens";
 
 /**
  * The default share card, at /opengraph-image.
@@ -38,7 +38,7 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: COLORS.bg,
+          backgroundColor: COLORS_LIGHT.bg,
           padding: "64px 72px",
           fontFamily: OG_FONT.body,
         }}
@@ -50,13 +50,13 @@ export default async function Image() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
-            borderBottom: `1px solid ${COLORS.hairline}`,
+            borderBottom: `1px solid ${COLORS_LIGHT.hairline}`,
             paddingBottom: 18,
             fontFamily: OG_FONT.mono,
             fontSize: 19,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: COLORS.muted,
+            color: COLORS_LIGHT.muted,
           }}
         >
           <div style={{ display: "flex" }}>yihan.dev</div>
@@ -71,7 +71,7 @@ export default async function Image() {
               fontSize: 150,
               lineHeight: 1,
               letterSpacing: "-0.02em",
-              color: COLORS.ink,
+              color: COLORS_LIGHT.ink,
             }}
           >
             {SITE_NAME}
@@ -86,7 +86,7 @@ export default async function Image() {
               maxWidth: 900,
               fontSize: 31,
               lineHeight: 1.45,
-              color: COLORS.muted,
+              color: COLORS_LIGHT.muted,
             }}
           >
             {SITE_DESCRIPTION.split("—")[1]?.trim() ?? SITE_DESCRIPTION}
@@ -101,7 +101,7 @@ export default async function Image() {
               display: "flex",
               width: 64,
               height: 3,
-              backgroundColor: COLORS.accent,
+              backgroundColor: COLORS_LIGHT.accent,
             }}
           />
         </div>

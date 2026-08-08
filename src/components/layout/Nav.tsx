@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import SiteViewCounter from "@/components/ui/SiteViewCounter";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { REEL_SETTLED } from "@/components/home/reelEvent";
 
@@ -141,27 +142,37 @@ export default function Nav() {
             <li>
               <SiteViewCounter />
             </li>
+            <li className="flex items-center">
+              <ThemeToggle />
+            </li>
           </ul>
 
-          <button
-            className="z-50 flex flex-col gap-1.5 p-2 md:hidden"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-          >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className={cn(
-                  "block h-0.5 w-6 transition-all duration-200",
-                  menuOpen && i === 0 && "translate-y-2 rotate-45",
-                  menuOpen && i === 1 && "opacity-0",
-                  menuOpen && i === 2 && "-translate-y-2 -rotate-45",
-                )}
-                style={{ backgroundColor: menuOpen ? COLORS.bg : COLORS.ink }}
-              />
-            ))}
-          </button>
+          {/* On mobile the toggle sits OUTSIDE the menu, beside the hamburger.
+              Inside it, changing the theme would mean opening a full-screen
+              overlay to alter the colour of the page that overlay is covering —
+              the one screen where the result is invisible until you close it. */}
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+            <button
+              className="z-50 flex flex-col gap-1.5 p-2"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+            >
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    "block h-0.5 w-6 transition-all duration-200",
+                    menuOpen && i === 0 && "translate-y-2 rotate-45",
+                    menuOpen && i === 1 && "opacity-0",
+                    menuOpen && i === 2 && "-translate-y-2 -rotate-45",
+                  )}
+                  style={{ backgroundColor: menuOpen ? COLORS.bg : COLORS.ink }}
+                />
+              ))}
+            </button>
+          </div>
         </nav>
       </header>
 

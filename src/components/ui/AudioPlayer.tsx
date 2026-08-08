@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useThemeColors, type ResolvedColors } from '@/lib/useThemeColors'
 import { COLORS, FONTS, MOTION } from '@/styles/tokens'
 
 /**
@@ -214,6 +215,8 @@ function drawWaveform(
   peaks: Float32Array,
   progress: number,
   active: boolean,
+  // Passed in, not imported: ctx.fillStyle silently ignores a CSS variable.
+  theme: ResolvedColors,
 ): boolean {
   const rect = canvas.getBoundingClientRect()
   if (rect.width < 1 || rect.height < 1) return false
@@ -234,7 +237,7 @@ function drawWaveform(
 
   const bars = Math.max(1, Math.floor((rect.width + BAR_GAP) / (BAR_W + BAR_GAP)))
   const mid = rect.height / 2
-  const playedColor = active ? COLORS.accent : COLORS.ink
+  const playedColor = active ? theme.accent : theme.ink
 
   for (let i = 0; i < bars; i++) {
     const from = Math.floor((i * peaks.length) / bars)
@@ -246,7 +249,7 @@ function drawWaveform(
     // A 1px floor keeps silence as a hairline rather than a gap.
     const barH = Math.max(1, v * (rect.height - 2))
     const x = i * (BAR_W + BAR_GAP)
-    ctx.fillStyle = (i + 0.5) / bars <= progress ? playedColor : COLORS.hairline
+    ctx.fillStyle = (i + 0.5) / bars <= progress ? playedColor : theme.hairline
     ctx.fillRect(x, mid - barH / 2, BAR_W, barH)
   }
   return true
@@ -287,6 +290,9 @@ function TrackRow({
   suppressed: boolean
   onPlay: (i: number) => void
 }) {
+  // The waveform is a canvas, so it needs resolved colours. In dark mode the
+  // bars draw in ink, which is near-white — not the near-black of light mode.
+  const theme = useThemeColors()
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const sliderRef = useRef<HTMLDivElement | null>(null)
@@ -316,7 +322,7 @@ function TrackRow({
 
     const canvas = canvasRef.current
     if (canvas && peaks) {
-      if (!drawWaveform(canvas, peaks, ratio, active)) {
+      if (!drawWaveform(canvas, peaks, ratio, active, theme)) {
         // Zero-size box: ask again next frame rather than drawing into it.
         if (retryRef.current) cancelAnimationFrame(retryRef.current)
         retryRef.current = requestAnimationFrame(() => {
@@ -329,7 +335,9 @@ function TrackRow({
 
     const fill = fillRef.current
     if (fill) fill.style.width = `${ratio * 100}%`
-  }, [peaks, active])
+    // `theme` is a dependency because the bars are painted pixels, not styled
+    // elements: nothing repaints them when the palette changes except this.
+  }, [peaks, active, theme])
 
   useEffect(() => {
     paint()

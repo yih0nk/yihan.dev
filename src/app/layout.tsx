@@ -5,35 +5,25 @@ import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, X_HANDLE } from "@/lib/site";
+import { THEME_ATTR, THEME_KEY } from "@/styles/tokens";
 
 /**
- * Site-wide metadata.
+ * Site-wide metadata. `metadataBase` is load-bearing: without it every relative
+ * URL here resolves against whatever origin Next guesses.
  *
- * `metadataBase` is the load-bearing line. Without it every relative URL in
- * this object — the OG image, the canonicals, the alternates — resolves against
- * whatever origin Next guesses, which on a preview deployment is the preview
- * hostname. It is also what lets the rest of the site write "/projects" instead
- * of repeating the origin, which is the same reason src/lib/site.ts exists.
+ * THREE FIELDS ARE OMITTED ON PURPOSE, all for the same reason — metadata
+ * inherits downward, and the intuitive version is wrong in ways only visible in
+ * the rendered tags:
  *
- * NOTE what is NOT here: `alternates.canonical`. Metadata inherits downward, so
- * a canonical set at the root would be inherited by every page that does not
- * override it, and each of them would tell Google it is a duplicate of the
- * homepage. Canonicals are declared per page, one at a time, on purpose.
- *
- * `openGraph` AND `twitter` DELIBERATELY OMIT title, description AND url. This
- * was measured, and the intuitive version of it is wrong in a way that is
- * invisible unless you go and read the rendered tags:
- *
- *   - Setting `openGraph.title` here does NOT give child pages a templated
- *     og:title. Metadata inherits, so a page that sets only `title` keeps the
- *     ROOT's og:title verbatim — /projects shared as "Yihan Hong" rather than
- *     "Projects | Yihan". Omitting it makes Next fall og:title back to the
- *     page's own resolved title, template applied. Same for description.
- *   - `openGraph.url` has no such fallback and is inherited literally, so a
- *     single `url` here stamped every page on the site with the homepage's
- *     address. Absent is strictly better than wrong: a scraper with no og:url
- *     uses the URL it fetched, which is right by construction, and the
- *     canonical link is on every page anyway.
+ *   - `alternates.canonical`: every page not overriding it would declare itself
+ *     a duplicate of the homepage. Canonicals are set per page.
+ *   - `openGraph.title` / `description`: setting them here does NOT template
+ *     down. A page setting only `title` keeps the ROOT's og:title verbatim, so
+ *     /projects shared as "Yihan Hong". Omitting them makes Next fall back to
+ *     the page's own resolved title, template applied.
+ *   - `openGraph.url`: no fallback, inherited literally — one `url` here
+ *     stamped every page with the homepage's address. A scraper with no og:url
+ *     uses the URL it fetched, which is right by construction.
  */
 const TITLE = {
   default: SITE_NAME,
@@ -75,23 +65,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable} ${body.variable}`}>
-      {/*
-        The machine-readable pointer to /llms.txt, as JSX rather than through
-        `alternates.types` in the metadata above. React hoists it into <head>.
-
-        It was in the metadata and it silently disappeared from EVERY page. The
-        Metadata API replaces `alternates` wholesale rather than merging it, so
-        the moment each page gained its own `alternates: { canonical }` — which
-        they all need, and all now have — the inherited `types` went with it.
-        Nothing warns about this; the tag is simply absent, and the only way to
-        notice is to go and read the rendered HTML of a page you did not touch.
-
-        In the JSX it cannot be clobbered by a child at all, which makes the
-        guarantee structural instead of something every future page has to
-        remember. That is worth one deviation from the Metadata API.
-      */}
-      <link rel="alternate" type="text/plain" href="/llms.txt" />
+    <html
+      lang="en"
+      className={`${display.variable} ${mono.variable} ${body.variable}`}
+      /* The script below writes `data-theme` before React hydrates, so server
+         and client differ here by design. This suppresses one level of
+         attributes only — a real mismatch inside <body> still surfaces. */
+      suppressHydrationWarning
+    >
+      {/* An explicit <head>, which Next does not otherwise require: React
+          hoists a stray <link>, but a sync <script> as a direct child of <html>
+          is invalid and causes a hydration error. */}
+      <head>
+        {/* In JSX, not `alternates.types`: the Metadata API replaces
+            `alternates` wholesale, so giving every page its own
+            `alternates: { canonical }` silently removed this tag from the whole
+            site. Here a child cannot clobber it. */}
+        <link rel="alternate" type="text/plain" href="/llms.txt" />
+        {/* Theme, applied before first paint. Must be a blocking inline
+            script: localStorage is unreadable during SSR, so applying the theme
+            in an effect gives a reader who chose dark one painted frame of
+            white. Writes nothing when unset — `color-scheme: light dark`
+            already defers to the system. try/catch because localStorage throws
+            in Safari private mode. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem(${JSON.stringify(THEME_KEY)});if(t==="light"||t==="dark")document.documentElement.setAttribute(${JSON.stringify(THEME_ATTR)},t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="flex flex-col min-h-screen">
         <Nav />
         <main className="flex flex-1 flex-col">{children}</main>

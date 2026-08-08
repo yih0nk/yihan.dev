@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { useThemeColors } from '@/lib/useThemeColors'
 import { COLORS, FONTS, MOTION } from '@/styles/tokens'
 
 /**
@@ -104,13 +105,21 @@ const BEST_KEY = 'play:rally:best'
  * Encoded rather than a file so there is no second request, and the hotspot is
  * the middle of the racket face so the visitor aims with the strings.
  */
-const RACKET = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-<ellipse cx="13" cy="13" rx="9.5" ry="11" fill="none" stroke="${COLORS.ink}" stroke-width="2"/>
-<line x1="18.5" y1="21.5" x2="29" y2="33" stroke="${COLORS.ink}" stroke-width="3" stroke-linecap="round"/>
+/*
+ * Takes the ink colour rather than reading the token, because a data: URI is a
+ * separate document: `stroke="var(--color-ink)"` resolves against nothing there
+ * and the racket draws with no stroke at all.
+ */
+const racketCursor = (ink: string) => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+<ellipse cx="13" cy="13" rx="9.5" ry="11" fill="none" stroke="${ink}" stroke-width="2"/>
+<line x1="18.5" y1="21.5" x2="29" y2="33" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>
 </svg>`
-const RACKET_CURSOR = `url("data:image/svg+xml,${encodeURIComponent(RACKET)}") 13 13, pointer`
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 13 13, pointer`
+}
 
 export default function Rally() {
+  const theme = useThemeColors()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const shuttleRef = useRef<Shuttle | null>(null)
   const rafRef = useRef(0)
@@ -146,7 +155,7 @@ export default function Rally() {
     ctx.clearRect(0, 0, c.width, c.height)
 
     // The net: one hairline, because the court is not the point.
-    ctx.strokeStyle = COLORS.hairline
+    ctx.strokeStyle = theme.hairline
     ctx.lineWidth = Math.max(1, s * 0.25)
     ctx.beginPath()
     ctx.moveTo(0, H * s - ctx.lineWidth)
@@ -161,7 +170,7 @@ export default function Rally() {
     ctx.rotate(sh.angle)
 
     // Skirt: a trapezoid opening away from travel. Cork: a filled round.
-    ctx.fillStyle = COLORS.hairline
+    ctx.fillStyle = theme.hairline
     ctx.beginPath()
     ctx.moveTo(-SHUTTLE_R * 0.55 * s, 0)
     ctx.lineTo(SHUTTLE_R * 0.55 * s, 0)
@@ -170,12 +179,12 @@ export default function Rally() {
     ctx.closePath()
     ctx.fill()
 
-    ctx.fillStyle = COLORS.ink
+    ctx.fillStyle = theme.ink
     ctx.beginPath()
     ctx.arc(0, 0, SHUTTLE_R * 0.62 * s, 0, Math.PI * 2)
     ctx.fill()
     ctx.restore()
-  }, [scale])
+  }, [scale, theme.hairline, theme.ink])
 
   const step = useCallback((h: number) => {
     const sh = shuttleRef.current
@@ -365,7 +374,7 @@ export default function Rally() {
         ref={canvasRef}
         onPointerDown={onPointer}
         className="block w-full touch-none select-none"
-        style={{ aspectRatio: `${W} / ${H}`, cursor: RACKET_CURSOR }}
+        style={{ aspectRatio: `${W} / ${H}`, cursor: racketCursor(theme.ink) }}
         aria-label="Keep the shuttle up"
         role="img"
       />

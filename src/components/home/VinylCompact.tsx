@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { COLORS } from '@/styles/tokens'
+import { useThemeColors } from '@/lib/useThemeColors'
 import { RESTING_LABEL } from './tracks'
 
 /**
@@ -19,7 +19,6 @@ import { RESTING_LABEL } from './tracks'
  * frames, so a throttled or briefly-backgrounded rAF cannot make it drift slow.
  */
 
-const BG = COLORS.bg
 const TAU = Math.PI * 2
 
 export default function VinylCompact({
@@ -38,6 +37,8 @@ export default function VinylCompact({
   /** 0..1 through the track. Positions the stylus; 0 parks it at the lead-in. */
   progress?: number
 }) {
+  // Canvas cannot take a CSS variable, so the spindle needs the resolved value.
+  const theme = useThemeColors()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Read inside the loop so a track change never re-initialises the canvas.
   const targetRef = useRef<[number, number, number]>(label ?? RESTING_LABEL)
@@ -329,7 +330,7 @@ export default function VinylCompact({
       // spindle
       ctx.beginPath()
       ctx.arc(0, 0, R * 0.035, 0, TAU)
-      ctx.fillStyle = BG
+      ctx.fillStyle = theme.bg
       ctx.fill()
       ctx.strokeStyle = 'rgba(0,0,0,0.26)'
       ctx.lineWidth = dpr
@@ -413,7 +414,7 @@ export default function VinylCompact({
     // `index` is read through targetRef inside the loop; it is listed only so the
     // initial colour matches when the component mounts mid-rotation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced, artLoaded])
+  }, [reduced, artLoaded, theme.bg])
 
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>

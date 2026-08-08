@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
+import { useThemeColors } from '@/lib/useThemeColors'
 import { COLORS } from '@/styles/tokens'
 import { REEL_SETTLED } from './reelEvent'
 
@@ -109,21 +110,10 @@ const hexToRgb = (hex: string): [number, number, number] => {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
 }
 
-// One fixed look. No palette prop, no theme switch.
-const BG = COLORS.bg
-const INK = COLORS.ink
-const MUTED = COLORS.muted
-const HAIRLINE = COLORS.hairline
-const ACCENT = COLORS.accent
-const BASE = '#161b21' // film base
+/* The film stock keeps its own colour in both themes: it is an object being
+   photographed, not part of the page surface. */
+const BASE = '#161b21'
 const BASE_EDGE = '#0c1015'
-
-const INK_RGB = hexToRgb(COLORS.ink)
-const PAGE_RGB = hexToRgb(COLORS.bg)
-/** The same colour as `BG`, pre-split so the draw loop can build rgba() cheaply. */
-const BG_RGB = PAGE_RGB.join(',')
-/** Unexposed frame interior — a shade off the page, so it reads as stock. */
-const SLUG = COLORS.surface
 
 const pad2 = (n: number) => (n < 10 ? `0${n}` : String(n))
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n)
@@ -137,7 +127,16 @@ export default function ReelHero({ font }: { font: string }) {
   const [touched, setTouched] = useState(false)
   const [settled, setSettled] = useState(false)
 
+  const theme = useThemeColors()
+
   useEffect(() => {
+    /* Resolved colours, not tokens: this whole effect paints to a canvas, and
+       ctx.fillStyle ignores a CSS variable without reporting anything. */
+    const BG = theme.bg
+    const ACCENT = theme.accent
+    const SLUG = theme.surface
+    const BG_RGB = hexToRgb(theme.bg).join(',')
+    const INK_RGB = hexToRgb(theme.ink).join(',')
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -943,8 +942,8 @@ export default function ReelHero({ font }: { font: string }) {
       }
 
       const onPhoto = !!duo
-      const numFill = focus ? ACCENT : onPhoto ? `rgba(${BG_RGB},0.66)` : 'rgba(107,114,128,0.9)'
-      const tickFill = onPhoto ? `rgba(${BG_RGB},0.4)` : 'rgba(20,22,26,0.22)'
+      const numFill = focus ? ACCENT : onPhoto ? `rgba(${BG_RGB},0.66)` : `rgba(${INK_RGB},0.55)`
+      const tickFill = onPhoto ? `rgba(${BG_RGB},0.4)` : `rgba(${INK_RGB},0.22)`
 
       // corner ticks — a frame, not a card
       const ti = fw * 0.038
@@ -1260,11 +1259,11 @@ export default function ReelHero({ font }: { font: string }) {
       window.removeEventListener('keydown', onKey)
       document.fonts.removeEventListener('loadingdone', onFontsDone)
     }
-  }, [font])
+  }, [font, theme])
 
   const meta: CSSProperties = {
     fontFamily: '"Source Code Pro", monospace',
-    color: MUTED,
+    color: COLORS.muted,
     letterSpacing: '0.22em',
     textTransform: 'uppercase',
   }
@@ -1272,7 +1271,7 @@ export default function ReelHero({ font }: { font: string }) {
   return (
     <section
       className="relative w-full h-screen min-h-[100svh] overflow-hidden select-none"
-      style={{ background: BG }}
+      style={{ background: COLORS.bg }}
     >
       {/* the canvas is decorative; the name itself is real text for everyone else */}
       <h1 className="sr-only">Yihan Hong — engineer, and a few other things.</h1>
@@ -1326,7 +1325,7 @@ export default function ReelHero({ font }: { font: string }) {
                         width: isName ? (on ? 9 : 6) : on ? 22 : 11,
                         height: isName ? (on ? 9 : 6) : 2,
                         borderRadius: isName ? 999 : 0,
-                        background: on ? ACCENT : 'rgba(20,22,26,0.2)',
+                        background: on ? COLORS.accent : `color-mix(in srgb, ${COLORS.ink} 20%, transparent)`,
                         transition:
                           'width 280ms cubic-bezier(.2,.8,.2,1), height 280ms cubic-bezier(.2,.8,.2,1), background-color 280ms linear',
                       }}
@@ -1357,7 +1356,7 @@ export default function ReelHero({ font }: { font: string }) {
           >
             <span
               className="block w-px h-6"
-              style={{ background: `linear-gradient(to bottom, transparent, ${HAIRLINE})` }}
+              style={{ background: `linear-gradient(to bottom, transparent, ${COLORS.hairline})` }}
             />
             <span className="text-[12px]" style={meta}>
               scroll
