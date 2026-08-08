@@ -65,7 +65,16 @@ export const COLORS_DARK = {
 export const TYPE = [12, 14, 16, 18, 24, 32, 48, 72, 112] as const
 
 export const LAYOUT = {
-  container: 'max-w-[1100px] mx-auto px-6',
+  /**
+   * `w-full` is load-bearing. `<main>` is a column flexbox, and auto inline
+   * margins on a flex item cancel the default `align-self: stretch` — the item
+   * shrinks to fit its content instead of filling the line, and `mx-auto` then
+   * centres that shrunken box. Pages whose content is naturally wide never
+   * showed it because they hit the 1100px cap anyway; /resume, whose widest
+   * element is a 54ch paragraph, rendered 656px wide and sat visibly off the
+   * axis the nav and footer align to.
+   */
+  container: 'w-full max-w-[1100px] mx-auto px-6',
   /** Long-form reading measure. */
   prose: 'max-w-[68ch]',
   /** Vertical rhythm between major sections. */
