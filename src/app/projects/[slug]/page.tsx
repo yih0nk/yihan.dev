@@ -42,7 +42,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return { title: project.title, description: project.tagline };
+
+  /**
+   * NO `openGraph` BLOCK HERE, AND THAT IS THE POINT.
+   *
+   * There is no per-project share card — these fall through to the site default
+   * at src/app/opengraph-image.tsx, which was the call: a card per project is
+   * five more images to keep true to five write-ups that change. Falling
+   * through only works if this page leaves openGraph alone. Setting one, even
+   * just to say `type: "article"`, replaces the inherited object wholesale and
+   * takes the default card's og:image with it — measured: /projects/cotter
+   * rendered with no og:image at all, and no warning anywhere.
+   *
+   * So title, description and the card are all inherited, and the only thing
+   * declared is the canonical, which cannot be.
+   */
+  return {
+    title: project.title,
+    description: project.tagline,
+    alternates: { canonical: `/projects/${slug}` },
+  };
 }
 
 export default async function ProjectDetailPage({

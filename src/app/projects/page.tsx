@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Systems Yihan built to answer a question he could not look up — agents, reinforcement learning, and the infrastructure underneath them.",
+  alternates: { canonical: "/projects" },
 };
 
 /**

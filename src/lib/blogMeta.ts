@@ -33,3 +33,27 @@ export const CATEGORY_DESCRIPTIONS: Record<PostCategory, string> = {
   film: "letterbox alternative",
   tech: "code and rabbit holes",
 };
+
+const MONTHS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+/**
+ * 2026-08-04 → "04 august 2026".
+ *
+ * By string surgery, never through `new Date()`. The frontmatter date is a bare
+ * calendar day with no timezone, and handing that to Date parses it as UTC
+ * midnight — which is the previous evening anywhere west of the meridian, so
+ * every post renders a day early in Los Angeles. mdx.ts fights the same battle
+ * on the way in (see `isoDate`); this is the other end of it.
+ *
+ * It lives here rather than in the page that renders it because the share card
+ * at blog/[slug]/opengraph-image.tsx sets the same line, and a second copy of a
+ * month table is a second thing to get wrong.
+ */
+export function formatPostDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  return `${m[3]} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
+}

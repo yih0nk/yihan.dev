@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import Home from "@/components/home/Home";
+import JsonLd from "@/components/seo/JsonLd";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
 import { FONTS } from "@/styles/tokens";
 
 /**
@@ -26,6 +28,47 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/**
+ * The Person entity, which is the one piece of structured data on this site
+ * that has a job to do.
+ *
+ * "Yihan Hong" is not a distinctive string, and the pages that rank for it are
+ * other people. `sameAs` is the lever: it is how a search engine decides that
+ * the GitHub account, the LinkedIn profile and this domain are one entity
+ * rather than three, and it is the only claim here that is not already stated
+ * in the visible copy.
+ *
+ * `@id` is a stable identifier rather than a URL to fetch, so the BlogPosting
+ * on each post can point its `author` at this exact node instead of restating
+ * the person. One entity, referenced twice.
+ */
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${SITE_URL}/#person`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  image: `${SITE_URL}/images/pfp.jpg`,
+  sameAs: SOCIALS,
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of Southern California",
+    url: "https://www.usc.edu",
+  },
+  knowsAbout: [
+    "Artificial intelligence",
+    "Reinforcement learning",
+    "AI agents",
+    "Machine learning infrastructure",
+  ],
+};
+
 export default function HomePage() {
-  return <Home font={FONTS.display} />;
+  return (
+    <>
+      <JsonLd data={personLd} />
+      <Home font={FONTS.display} />
+    </>
+  );
 }

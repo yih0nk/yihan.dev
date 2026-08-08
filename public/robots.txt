@@ -6,3 +6,8 @@ Disallow: /resume
 
 # AI agents: fetch /llms.txt — it is the index and the full plain-text
 # rendering of this site in one file, with no CSS or animation to parse.
+
+# Generated at src/app/sitemap.ts from the same modules the pages are built
+# from. Absolute by requirement: the sitemap directive is the one line in this
+# file that a relative path is invalid in.
+Sitemap: https://yihan.dev/sitemap.xml

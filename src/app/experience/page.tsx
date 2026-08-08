@@ -8,6 +8,7 @@ import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 export const metadata: Metadata = {
   title: "Experience",
   description: "Education, experience, and skills.",
+  alternates: { canonical: "/experience" },
 };
 
 /**
