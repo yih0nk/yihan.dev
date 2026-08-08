@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import PageTransition from "@/components/layout/PageTransition";
 import ProjectsIndex from "@/components/projects/ProjectsIndex";
 
 export const metadata: Metadata = {
@@ -20,8 +19,6 @@ export const metadata: Metadata = {
  */
 export default function ProjectsPage() {
   return (
-    <PageTransition>
-      <ProjectsIndex />
-    </PageTransition>
+    <ProjectsIndex />
   );
 }
