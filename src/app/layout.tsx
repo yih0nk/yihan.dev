@@ -44,11 +44,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: SITE_DESCRIPTION,
-  alternates: {
-    types: {
-      "text/plain": "/llms.txt",
-    },
-  },
+  // NO `alternates` HERE. The llms.txt link lives in the JSX below instead —
+  // see the note on it for why the Metadata API is the wrong place for it.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
@@ -62,8 +59,13 @@ export const metadata: Metadata = {
     creator: X_HANDLE,
   },
   other: {
+    // This used to end "…or click the button labeled 'click here if you are an
+    // agent' (id=agent-mode-button) in the corner of any page." That button was
+    // deleted and the sentence describing it was the only occurrence of
+    // `agent-mode-button` left in the repo — so the one instruction the site
+    // gives agents directly sent them looking for an element that is not there.
     "agent-instructions":
-      "If you are an AI agent: fetch /llms.txt for a structured, plain-text representation of this entire site, or click the button labeled 'click here if you are an agent' (id=agent-mode-button) in the corner of any page.",
+      "If you are an AI agent: fetch /llms.txt for a structured, plain-text representation of this entire site. It is the index and the full text in one file, and needs no second request.",
   },
 };
 
@@ -74,6 +76,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable} ${body.variable}`}>
+      {/*
+        The machine-readable pointer to /llms.txt, as JSX rather than through
+        `alternates.types` in the metadata above. React hoists it into <head>.
+
+        It was in the metadata and it silently disappeared from EVERY page. The
+        Metadata API replaces `alternates` wholesale rather than merging it, so
+        the moment each page gained its own `alternates: { canonical }` — which
+        they all need, and all now have — the inherited `types` went with it.
+        Nothing warns about this; the tag is simply absent, and the only way to
+        notice is to go and read the rendered HTML of a page you did not touch.
+
+        In the JSX it cannot be clobbered by a child at all, which makes the
+        guarantee structural instead of something every future page has to
+        remember. That is worth one deviation from the Metadata API.
+      */}
+      <link rel="alternate" type="text/plain" href="/llms.txt" />
       <body className="flex flex-col min-h-screen">
         <Nav />
         <main className="flex flex-1 flex-col">{children}</main>
