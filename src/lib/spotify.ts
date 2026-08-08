@@ -20,6 +20,14 @@
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
 const NOW_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing";
 const RECENT_URL = "https://api.spotify.com/v1/me/player/recently-played?limit=1";
+/**
+ * `short_term` is Spotify's rolling ~4 weeks. `medium_term` (~6 months) is
+ * steadier but that steadiness is the problem: a block that never changes is a
+ * hardcoded list with extra steps, and the whole point of replacing the written
+ * favourites was to show something that moves.
+ */
+const TOP_ARTISTS_URL =
+  "https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=8";
 
 export interface NowPlaying {
   title: string;
@@ -157,4 +165,78 @@ export async function getNowPlaying(): Promise<NowPlaying | null> {
   const first = items[0];
   if (typeof first !== "object" || first === null) return null;
   return readTrack((first as { track?: unknown }).track, false);
+}
+
+export interface TopArtist {
+  name: string;
+  url: string;
+  /**
+   * Smallest portrait Spotify offers, or null. They come in 640/320/160 and the
+   * block draws them at 28px, so the 160 is already four times more than the
+   * layout needs before the optimizer resizes it again.
+   */
+  image: string | null;
+}
+
+/**
+ * The artists actually on rotation in the last four weeks.
+ *
+ * This replaces a written list of favourites on /play. A written list is a
+ * claim; this is a measurement, and it is the more interesting of the two
+ * precisely because it can embarrass its owner.
+ *
+ * Returns null rather than an empty array when it cannot answer, so the caller
+ * can tell "no data" from "genuinely listened to nothing" and render nothing at
+ * all instead of an empty heading. Every failure lands here: no credentials, a
+ * refresh token minted before `user-top-read` was requested (which 403s), a
+ * network error, or a response whose shape is not what the docs promise.
+ */
+export async function getTopArtists(): Promise<TopArtist[] | null> {
+  const token = await accessToken();
+  if (!token) return null;
+
+  const res = await fetch(TOP_ARTISTS_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  // A 403 here almost always means the refresh token predates the
+  // `user-top-read` scope — see the note in /api/spotify/login.
+  if (!res.ok) return null;
+
+  const json = (await res.json()) as { items?: unknown };
+  const items = Array.isArray(json.items) ? json.items : [];
+
+  const artists = items
+    .map((raw): TopArtist | null => {
+      if (typeof raw !== "object" || raw === null) return null;
+      const a = raw as Record<string, unknown>;
+      if (typeof a.name !== "string" || !a.name) return null;
+      const urls =
+        typeof a.external_urls === "object" && a.external_urls !== null
+          ? (a.external_urls as { spotify?: unknown })
+          : {};
+
+      // Images arrive largest-first. Take the smallest that exists rather than
+      // indexing blindly — an artist with no portrait returns an empty array,
+      // and one with only a 640 should still get a picture.
+      const images = Array.isArray(a.images) ? a.images : [];
+      const smallest = images
+        .filter(
+          (i): i is { url: string; width: number } =>
+            typeof i === "object" &&
+            i !== null &&
+            typeof (i as { url?: unknown }).url === "string" &&
+            typeof (i as { width?: unknown }).width === "number",
+        )
+        .sort((x, y) => x.width - y.width)[0];
+
+      return {
+        name: a.name,
+        url: typeof urls.spotify === "string" ? urls.spotify : "https://open.spotify.com",
+        image: smallest?.url ?? null,
+      };
+    })
+    .filter((a): a is TopArtist => a !== null);
+
+  return artists.length > 0 ? artists : null;
 }

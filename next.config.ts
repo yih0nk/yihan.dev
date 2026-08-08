@@ -3,6 +3,20 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/webp"],
+    /**
+     * Spotify's image CDN, for the artist portraits in /play's listening block.
+     *
+     * Next fetches remote images server-side and re-serves them from this
+     * origin, which is what makes this workable at all: i.scdn.co sends no
+     * Access-Control-Allow-Origin header (see the note in VinylCompact, which
+     * draws album art to a knowingly-tainted canvas for the same reason), so a
+     * client-side treatment that reads pixels back is impossible. Going through
+     * the optimizer sidesteps CORS entirely and gets webp and a 56px resize
+     * instead of a 160px original.
+     */
+    remotePatterns: [
+      { protocol: "https", hostname: "i.scdn.co", pathname: "/image/**" },
+    ],
   },
   experimental: {
     optimizePackageImports: ["framer-motion"],

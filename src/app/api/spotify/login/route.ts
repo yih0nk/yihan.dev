@@ -8,7 +8,20 @@ import { redirect } from "next/navigation";
  * endpoint that begins an OAuth flow against the site's own client, and there
  * is no reason for it to be reachable once the token is in the environment.
  */
-const SCOPES = ["user-read-currently-playing", "user-read-recently-played"].join(" ");
+/**
+ * `user-top-read` was added after the fact, for the listening block on /play.
+ *
+ * Scopes are baked into a refresh token at the moment it is issued, so adding
+ * one to this list does nothing for a token that already exists — this flow has
+ * to be run again and SPOTIFY_REFRESH_TOKEN replaced. Until that happens
+ * `getTopArtists` returns null and the block renders nothing at all, which is
+ * the intended failure: a missing integration should look deliberate.
+ */
+const SCOPES = [
+  "user-read-currently-playing",
+  "user-read-recently-played",
+  "user-top-read",
+].join(" ");
 
 export function GET(request: Request) {
   if (process.env.NODE_ENV === "production") {
