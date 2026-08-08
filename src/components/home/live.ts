@@ -198,18 +198,13 @@ export interface SpotifyTrack {
  * one millisecond per millisecond. Each poll re-syncs, which is what makes
  * pausing, seeking and track changes correct themselves within one interval.
  *
- * RETURNS `settled` ALONGSIDE THE TRACK, the same shape `useLatestPost` returns,
- * because the two sit in the same row and had different ideas about what "no
- * answer yet" looks like. This one used to return a bare null, which the caller
- * could not tell apart from "asked, and there is nothing" — so the block
- * rendered its heading over an empty reserved box on every single load until
- * the first poll came back, and stayed that way forever whenever Spotify could
- * not answer. Its neighbour had already solved this by holding the column at
- * opacity 0 until it knew.
+ * Returns `settled` alongside the track, the same shape `useLatestPost` uses.
+ * A bare null could not be told apart from "asked, and there is nothing", so
+ * the block rendered its heading over an empty box on every load until the
+ * first poll — and permanently whenever Spotify could not answer.
  *
- * `settled` goes true on the FIRST completed poll, success or failure, and
- * never goes back — the ten-second re-polls behind it must not make the column
- * flicker once it has something to show.
+ * `settled` latches on the first completed poll, success or failure: the
+ * ten-second re-polls must not make the column flicker.
  */
 export function useSpotify(): { track: SpotifyTrack | null; settled: boolean } {
   const [track, setTrack] = useState<SpotifyTrack | null>(null)

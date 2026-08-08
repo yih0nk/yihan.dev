@@ -40,17 +40,11 @@ const MONTHS = [
 ];
 
 /**
- * 2026-08-04 → "04 august 2026".
+ * 2026-08-04 → "04 august 2026", by string surgery, never `new Date()`. A bare
+ * calendar day parses as UTC midnight, which is the previous evening west of
+ * the meridian — every post would render a day early in Los Angeles.
  *
- * By string surgery, never through `new Date()`. The frontmatter date is a bare
- * calendar day with no timezone, and handing that to Date parses it as UTC
- * midnight — which is the previous evening anywhere west of the meridian, so
- * every post renders a day early in Los Angeles. mdx.ts fights the same battle
- * on the way in (see `isoDate`); this is the other end of it.
- *
- * It lives here rather than in the page that renders it because the share card
- * at blog/[slug]/opengraph-image.tsx sets the same line, and a second copy of a
- * month table is a second thing to get wrong.
+ * Here rather than in the page because the share card sets the same line.
  */
 export function formatPostDate(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);

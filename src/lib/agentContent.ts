@@ -3,25 +3,13 @@ import { EDUCATION, ROLES, SKILLS, formatSpan } from "@/lib/experience";
 import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL, SITE_URL } from "@/lib/site";
 
 /**
- * Body of the /llms.txt document.
+ * Body of the /llms.txt document. Everything factual is DERIVED — projects from
+ * projects.ts, roles and skills from experience.ts, URLs from site.ts.
  *
- * Everything factual here is DERIVED, not retyped. Projects come from
- * projects.ts, roles and skills from experience.ts, URLs from site.ts. The
- * header comment always claimed this, and for the experience section it was
- * not true — that was a hand-written copy, and it had drifted exactly the way
- * a hand-written copy does:
- *
- *   - The Mississauga Chess Club role was dated "Oct 2023 – Jun 2025" here and
- *     "Feb 2025 – Jun 2025" on /experience. Nearly sixteen months of
- *     difference, in the file agents are told to read first.
- *   - Two role descriptions had been rewritten on the page and not here.
- *   - The hobby headings were still the old /hobbies names — Music
- *     ("keys & reeds"), Visual Art ("ink & paint") — when /play has plainly
- *     called them music, art, photography and badminton since it was rebuilt.
- *
- * A stale fact in the human-facing page gets noticed because someone looks at
- * it. Nothing looks at this file, which is the argument for it deriving
- * everything it can rather than being kept in step by memory.
+ * The experience section used to be a hand-written copy and had drifted: the
+ * chess club role was dated sixteen months wrong against /experience, two
+ * descriptions were stale, and the hobby headings were still the deleted
+ * /hobbies names. Nothing reads this file by hand, so nothing catches that.
  */
 export function generateAgentDoc(): string {
   const roleSection = ROLES.map(

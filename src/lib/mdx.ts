@@ -154,16 +154,12 @@ export function getPostBySlug(slug: string): Post | null {
 /**
  * Every slug claimed by more than one file. Empty is the healthy answer.
  *
- * welcome.mdx is counted alongside the category directories, not just them.
- * `getAllPosts` walks CATEGORIES, and welcome.mdx sits above those — so a file
- * added at src/content/blog/tech/welcome.mdx was invisible to this check while
- * being exactly the collision it exists to catch: `getPostBySlug` answers
- * "welcome" from the root file before it ever looks in a category, and the
- * other post is unreachable at any URL with no error anywhere.
+ * welcome.mdx is counted too, not just the category directories: getPostBySlug
+ * answers "welcome" from the root file before looking in any category, so a
+ * tech/welcome.mdx would be unreachable at any URL with no error anywhere.
  *
- * Called from generateStaticParams in blog/[slug]/page.tsx, which throws on a
- * non-empty result. The failure has to be at build time, because at runtime it
- * does not look like a failure at all — it looks like a post that renders.
+ * generateStaticParams throws on a non-empty result. It has to fail at build
+ * time — at runtime a collision looks like a post that renders.
  */
 export function duplicateSlugs(): string[] {
   const seen = new Map<string, number>();
