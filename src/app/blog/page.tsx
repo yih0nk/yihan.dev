@@ -1,73 +1,106 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import PostList from "@/components/blog/PostList";
+import { getAllPosts, getCategoryCounts, getWelcomePost } from "@/lib/mdx";
+import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
+
 export const metadata: Metadata = {
   title: "Blog",
   description: "Thought dumps by Yihan — life, music, film, tech.",
 };
 
-const CATEGORIES = [
-  { slug: "life", label: "life", description: "living and figuring it out" },
-  { slug: "music", label: "music", description: "notes records and everything in between" },
-  { slug: "film", label: "film", description: "what i watched and what stayed with me" },
-  { slug: "tech", label: "tech", description: "code projects and rabbit holes" },
-] as const;
-
+/**
+ * The blog index shows the writing.
+ *
+ * It used to show five bordered, rounded tiles and no posts: one pinned welcome
+ * card and a 2x2 of category doors, two of which opened onto nothing. With
+ * three posts across four categories the taxonomy was bigger than the thing it
+ * organised, and a visitor's most likely first click landed on an empty page.
+ *
+ * The h1 was 48px of Source Code Pro and Instrument Serif appeared nowhere.
+ * `rounded-sm` appeared on all five tiles and nowhere else on the site. The
+ * "start here" label was 10px, the smallest type anywhere and below the 12px
+ * floor tokens.ts calls hard.
+ *
+ * Welcome stays pinned, above the rule, because it is the one post that is
+ * about the blog rather than in it — it does not belong in a reverse-chronology
+ * that will eventually push it off the bottom.
+ */
 export default function BlogPage() {
-  return (
-    <div className="max-w-[1100px] mx-auto px-6 pt-[calc(var(--nav-h)+5rem)] pb-20">
-      <h1
-        className="text-4xl md:text-5xl mb-4 lowercase"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        blog.
-      </h1>
-      <p className="text-muted mb-16 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
-        unfiltered. sporadic. mine.
-      </p>
+  const welcome = getWelcomePost();
+  const posts = getAllPosts();
+  const counts = getCategoryCounts();
 
-      {/* Welcome post — pinned */}
-      <Link
-        href="/blog/welcome"
-        className="group block border border-gray-200 rounded-sm p-6 mb-16 hover:border-black transition-colors duration-200"
+  return (
+    <div className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)] pb-24 md:pb-32`}>
+      <div
+        className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
+        style={{
+          fontFamily: FONTS.mono,
+          color: COLORS.muted,
+          borderColor: COLORS.hairline,
+        }}
       >
-        <div className="flex items-center gap-2 mb-3">
+        <span>blog</span>
+        <span>
+          {String(posts.length).padStart(2, "0")}{" "}
+          {posts.length === 1 ? "post" : "posts"}
+        </span>
+      </div>
+
+      <header className="mt-10 md:mt-14">
+        <h1
+          className="text-5xl leading-[0.95] tracking-[-0.02em] md:text-7xl"
+          style={{ fontFamily: FONTS.display }}
+        >
+          blog
+        </h1>
+        <p
+          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
+          style={{ fontFamily: FONTS.body, color: COLORS.muted }}
+        >
+          Half-formed thoughts I wanted to keep. Mostly written late.
+        </p>
+      </header>
+
+      {/* Pinned. Not a card — a rule and a label, the way every other
+          promoted thing on this site is marked. */}
+      {welcome && (
+        <Link
+          href="/blog/welcome"
+          className="group mt-14 block border-t pt-6 md:mt-16"
+          style={{ borderColor: COLORS.hairline }}
+        >
           <span
-            className="text-[10px] uppercase tracking-widest text-muted"
-            style={{ fontFamily: "var(--font-mono)" }}
+            className="text-[12px] uppercase tracking-[0.18em]"
+            style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
           >
             start here
           </span>
-        </div>
-        <h2
-          className="text-xl mb-2 lowercase"
-          style={{ fontFamily: "var(--font-mono)" }}
-        >
-          welcome to my thought dumps.
-        </h2>
-        <p className="text-sm text-muted">
-          what this is, what it isn&apos;t, and why i&apos;m writing.
-        </p>
-      </Link>
-
-      {/* Category tiles */}
-      <div className="grid grid-cols-2 gap-4">
-        {CATEGORIES.map((cat) => (
-          <Link
-            key={cat.slug}
-            href={`/blog/${cat.slug}`}
-            className="group border border-gray-200 rounded-sm p-6 hover:border-black transition-colors duration-200"
+          <h2
+            className="mt-3 text-[32px] leading-none tracking-[-0.01em] group-hover:underline underline-offset-4"
+            style={{ fontFamily: FONTS.display }}
           >
-            <h2
-              className="text-2xl mb-2 lowercase"
-              style={{ fontFamily: "var(--font-mono)" }}
+            {welcome.title}
+          </h2>
+          {welcome.excerpt && (
+            <p
+              className="mt-3 max-w-[62ch] text-base leading-relaxed"
+              style={{ fontFamily: FONTS.body, color: COLORS.muted }}
             >
-              {cat.label}.
-            </h2>
-            <p className="text-sm text-muted">{cat.description}</p>
-          </Link>
-        ))}
-      </div>
+              {welcome.excerpt}
+            </p>
+          )}
+        </Link>
+      )}
+
+      <section
+        className="mt-16 border-t pt-8 md:mt-20"
+        style={{ borderColor: COLORS.hairline }}
+      >
+        <PostList posts={posts} counts={counts} />
+      </section>
     </div>
   );
 }

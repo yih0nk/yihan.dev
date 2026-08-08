@@ -40,12 +40,17 @@ function isoDay(raw: string): string {
 }
 
 function postLines(): string {
-  // getPostsByCategory already drops anything marked `draft: true`, which is how
-  // the reusable new-post template stays out of this list.
+  // getPostsByCategory already drops anything marked `draft: true`.
+  //
+  // Post URLs are flat now — /blog/<slug>, no category segment. Emitting the
+  // old nested path here would hand agents a URL that only resolves through a
+  // redirect, which is a worse answer than the real one, and the kind of rot
+  // that goes unnoticed because nobody reads this file by hand. The category is
+  // still named after the colon, which was always the useful part of it.
   const rows = CATEGORIES.flatMap((category) =>
     getPostsByCategory(category).map((post) => ({
       day: isoDay(post.date),
-      line: `- [${post.title}](${BASE}/blog/${category}/${post.slug}): ${category}`,
+      line: `- [${post.title}](${BASE}/blog/${post.slug}): ${category}`,
     })),
   );
   // Newest first. Sorting the rendered strings would order them by title.

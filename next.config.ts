@@ -32,6 +32,22 @@ const nextConfig: NextConfig = {
       // /hobbies became /play; /about and /contact were folded into the
       // homepage and the footer respectively. Anything already linking to the
       // old paths lands somewhere sensible rather than on a 404.
+      // Blog posts lost the category from their path when categories became
+      // tags rather than folders. Both the old post URLs and the old category
+      // listings redirect rather than 404, because they are the ones already in
+      // Google's index and in anything anyone has linked. 308 keeps the method
+      // and tells crawlers the move is permanent, so the new URL inherits the
+      // old one's standing instead of competing with it.
+      {
+        source: "/blog/:category(life|music|film|tech)/:slug",
+        destination: "/blog/:slug",
+        permanent: true,
+      },
+      {
+        source: "/blog/:category(life|music|film|tech)",
+        destination: "/blog",
+        permanent: true,
+      },
       { source: "/hobbies", destination: "/play", permanent: true },
       { source: "/about", destination: "/", permanent: true },
       { source: "/contact", destination: "/", permanent: true },
