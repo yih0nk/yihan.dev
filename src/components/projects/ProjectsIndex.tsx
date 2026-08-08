@@ -145,7 +145,7 @@ function IndexRow({
         </span>
 
         <h3
-          className="pi-anim text-xl leading-tight tracking-[-0.01em] md:col-span-4 md:text-2xl"
+          className="pi-anim text-2xl leading-tight tracking-[-0.01em] md:col-span-4"
           style={{
             fontFamily: FONTS.display,
             color: active ? COLORS.accent : COLORS.ink,
