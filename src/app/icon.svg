@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<!--
+  Lowercase y in Instrument Serif: the same face and case as the wordmark in
+  the nav. An OUTLINE, not text — a favicon is its own document and cannot load
+  the site's fonts.
+
+  The stroke is deliberate. Instrument Serif is a display face with very fine
+  hairlines, and at 16px the unstroked glyph renders as a faint smudge. 40 units
+  thickens it enough to read in a tab; 60 was legible too but blobbed the serifs
+  at 64px, and this one file has to serve every size.
+
+  FILL AND STROKE BOTH FLIP. Theming only the fill leaves a light letter with a
+  dark outline on dark chrome.
+
+  Ink is from src/styles/tokens.ts; the dark value is pure white rather than the
+  token's #e9eaec, chosen deliberately for contrast against dark browser chrome.
+-->
+<style>
+path{fill:#14161a;stroke:#14161a}
+@media (prefers-color-scheme:dark){path{fill:#fff;stroke:#fff}}
+</style>
+<path stroke-width="40" stroke-linejoin="round" transform="translate(22.194 3.000) scale(0.13147 -0.13147) translate(14 -510)" d="M83 -205Q56 -205 40.0 -186.5Q24 -168 24 -144Q24 -125 35.0 -112.0Q46 -99 65 -99Q81 -99 88.0 -106.0Q95 -113 98.0 -122.0Q101 -131 104.0 -138.0Q107 -145 116 -145Q127 -145 136.0 -129.5Q145 -114 161 -64Q171 -34 173.5 -12.0Q176 10 172.5 35.0Q169 60 157 96L48 443Q41 467 34.5 474.0Q28 481 14 484L-1 487Q-14 490 -14 500Q-14 510 0 510H165Q179 510 179 500Q179 489 166 487L150 485Q126 482 119.5 473.5Q113 465 120 443L208 150Q211 140 217.5 140.0Q224 140 227 150L312 425Q320 452 316.5 465.5Q313 479 288 483L267 487Q254 490 254 500Q254 510 268 510H395Q409 510 409 499Q409 489 397 485L388 482Q373 477 363.0 464.0Q353 451 342 419L193 -46Q171 -116 153.5 -150.0Q136 -184 120.0 -194.5Q104 -205 83 -205Z"/>
+</svg>
