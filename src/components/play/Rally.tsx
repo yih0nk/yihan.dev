@@ -339,6 +339,10 @@ export default function Rally() {
     const ro = new ResizeObserver(measure)
     ro.observe(c)
     measure()
+    // `measure` early-returns when the width is unchanged, so it does not
+    // repaint on a theme change. An idle court holds a static frame and would
+    // otherwise keep the old palette until the next serve.
+    draw()
     return () => ro.disconnect()
   }, [draw])
 

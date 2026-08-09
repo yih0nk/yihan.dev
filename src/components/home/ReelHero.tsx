@@ -129,15 +129,51 @@ export default function ReelHero({ font }: { font: string }) {
 
   const theme = useThemeColors()
 
+  /*
+   * THE PALETTE REACHES THE DRAW LOOP THROUGH A REF, NOT THROUGH THE DEPS.
+   *
+   * `theme` was in the big effect's dependency array, which meant every theme
+   * toggle tore the whole reel down and rebuilt it: `pos` went back to -0.55,
+   * `isSettled` back to false, and all thirty frame images reloaded. On the
+   * homepage that read as the reel going blank and the page scrolling straight
+   * past it into the bio — the section was still a full screen tall, just
+   * empty, and the scrub had nothing to scrub.
+   *
+   * The reel's motion state has to survive a repaint. Same pattern the file
+   * already uses for anything that changes without re-initialising the canvas.
+   */
+  const themeRef = useRef(theme)
+  const repaintRef = useRef<(() => void) | null>(null)
+  useEffect(() => {
+    themeRef.current = theme
+    // The loop parks itself once the name is static, so a theme change while
+    // parked would never reach the canvas without this.
+    repaintRef.current?.()
+  }, [theme])
+
   useEffect(() => {
     /* Resolved colours, not tokens: this whole effect paints to a canvas, and
-       ctx.fillStyle ignores a CSS variable without reporting anything. */
-    const BG = theme.bg
-    const ACCENT = theme.accent
-    const SLUG = theme.surface
-    const BG_RGB = hexToRgb(theme.bg).join(',')
-    const INK_RGB = hexToRgb(theme.ink).join(',')
-    const MUTED_RGB = hexToRgb(theme.muted).join(',')
+       ctx.fillStyle ignores a CSS variable without reporting anything.
+
+       `let`, re-derived from themeRef when the theme actually moves. Recomputing
+       three hexToRgb every frame would be waste; recomputing them never would
+       leave the canvas in the old palette. */
+    let BG = '', ACCENT = '', SLUG = '', BG_RGB = '', INK_RGB = '', MUTED_RGB = ''
+    let paletteKey = ''
+    let paletteVersion = 0
+    const syncPalette = () => {
+      const t = themeRef.current
+      if (t.bg === paletteKey) return
+      paletteKey = t.bg
+      paletteVersion += 1
+      BG = t.bg
+      ACCENT = t.accent
+      SLUG = t.surface
+      BG_RGB = hexToRgb(t.bg).join(',')
+      INK_RGB = hexToRgb(t.ink).join(',')
+      MUTED_RGB = hexToRgb(t.muted).join(',')
+    }
+    syncPalette()
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -800,9 +836,16 @@ export default function ReelHero({ font }: { font: string }) {
       ctx.strokeRect(x0 + 3 * dpr, yy + 3 * dpr, fw - 6 * dpr, fh - 6 * dpr)
     }
 
-    // rgba strings are reused via a quantised cache so fillStyle churn stays low
+    // rgba strings are reused via a quantised cache so fillStyle churn stays low.
+    //
+    // IT IS KEYED ON THE PALETTE TOO. It was keyed on alpha alone, and that is
+    // what made the ASCII name vanish on a theme toggle: the strings were baked
+    // with the old ink, `style !== undefined` short-circuited every lookup, and
+    // the name kept painting near-black on a dark page — and white on a white
+    // one going back. Invisible in both directions, from a cache hit.
     const QA = 24
-    const styleCache: Array<string | undefined> = new Array(QA + 1)
+    let styleCache: Array<string | undefined> = new Array(QA + 1)
+    let styleCacheVersion = paletteVersion
 
     /**
      * The name, built out of live ASCII.
@@ -814,6 +857,12 @@ export default function ReelHero({ font }: { font: string }) {
      * the name is still mostly scattered grain and at `amt = 1` it is type.
      */
     const drawName = (t: number, amt: number) => {
+      // Once per paint, not once per cell: the lookup below is the hottest loop
+      // in this file.
+      if (styleCacheVersion !== paletteVersion) {
+        styleCache = new Array(QA + 1)
+        styleCacheVersion = paletteVersion
+      }
       const c0 = cov
       if (!c0 || !cols || !rows) return
 
@@ -973,6 +1022,7 @@ export default function ReelHero({ font }: { font: string }) {
     }
 
     const draw = (t: number) => {
+      syncPalette()
       const noiseFrame = Math.floor(t * 14) // film-ish resample rate
       // gate weave: the whole strip is a hair unsteady
       const wAmp = 1.1 * dpr
@@ -1240,9 +1290,16 @@ export default function ReelHero({ font }: { font: string }) {
       // let the last of the arrival play out, then stop burning frames
       if (isSettled && (reduced || now - settleAt > 900)) holdDrawn = true
     }
+    // The loop always re-arms itself, so clearing holdDrawn is enough to make
+    // the next frame repaint in the new palette.
+    repaintRef.current = () => {
+      holdDrawn = false
+    }
+
     raf = requestAnimationFrame(loop)
 
     return () => {
+      repaintRef.current = null
       disposed = true
       cancelAnimationFrame(raf)
       cancelAnimationFrame(rafBuild)
@@ -1260,7 +1317,7 @@ export default function ReelHero({ font }: { font: string }) {
       window.removeEventListener('keydown', onKey)
       document.fonts.removeEventListener('loadingdone', onFontsDone)
     }
-  }, [font, theme])
+  }, [font])
 
   const meta: CSSProperties = {
     fontFamily: '"Source Code Pro", monospace',

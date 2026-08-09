@@ -37,8 +37,19 @@ export default function VinylCompact({
   /** 0..1 through the track. Positions the stylus; 0 parks it at the lead-in. */
   progress?: number
 }) {
-  // Canvas cannot take a CSS variable, so the spindle needs the resolved value.
+  /*
+   * Canvas cannot take a CSS variable, so the spindle needs the resolved value
+   * — but through a ref, not the effect deps. `theme.bg` in the dependency
+   * array rebuilt the whole canvas on every toggle, and `started` is captured
+   * there, so the record jumped back to angle zero mid-spin.
+   */
   const theme = useThemeColors()
+  const themeRef = useRef(theme)
+  const repaintRef = useRef<(() => void) | null>(null)
+  useEffect(() => {
+    themeRef.current = theme
+    repaintRef.current?.()
+  }, [theme])
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Read inside the loop so a track change never re-initialises the canvas.
   const targetRef = useRef<[number, number, number]>(label ?? RESTING_LABEL)
@@ -330,7 +341,7 @@ export default function VinylCompact({
       // spindle
       ctx.beginPath()
       ctx.arc(0, 0, R * 0.035, 0, TAU)
-      ctx.fillStyle = theme.bg
+      ctx.fillStyle = themeRef.current.bg
       ctx.fill()
       ctx.strokeStyle = 'rgba(0,0,0,0.26)'
       ctx.lineWidth = dpr
@@ -397,6 +408,8 @@ export default function VinylCompact({
     // effect body. Calling any of them above this line would hit its dead zone.
     // `artLoaded` is in the dependency list, so a cover arriving while the loop
     // is parked still reaches the canvas through this one paint.
+    repaintRef.current = () => draw(performance.now())
+
     const sizer = new ResizeObserver(build)
     sizer.observe(canvas)
     build()
@@ -404,6 +417,7 @@ export default function VinylCompact({
     document.addEventListener('visibilitychange', onVisibility)
 
     return () => {
+      repaintRef.current = null
       alive = false
       running = false
       sizer.disconnect()
@@ -414,7 +428,7 @@ export default function VinylCompact({
     // `index` is read through targetRef inside the loop; it is listed only so the
     // initial colour matches when the component mounts mid-rotation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced, artLoaded, theme.bg])
+  }, [reduced, artLoaded])
 
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
