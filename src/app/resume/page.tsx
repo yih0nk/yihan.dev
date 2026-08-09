@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import ResumeGate from "@/components/ui/ResumeGate";
+import { EMAIL } from "@/lib/site";
 import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
 export const metadata: Metadata = {
@@ -53,7 +54,7 @@ export default function ResumePage() {
           This one&apos;s behind a password. If you need it and don&apos;t have
           it, just{" "}
           <a
-            href="mailto:yihanhon@usc.edu"
+            href={`mailto:${EMAIL}`}
             className="underline underline-offset-4"
             style={{ color: COLORS.accent }}
           >
