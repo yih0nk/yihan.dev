@@ -7,7 +7,7 @@ import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Thought dumps by Yihan — life, music, film, tech.",
+  description: "Half-formed thoughts Yihan wanted to keep: life, music, film, tech.",
   alternates: { canonical: "/blog" },
 };
 

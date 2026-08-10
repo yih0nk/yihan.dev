@@ -7,8 +7,22 @@ export const SITE_URL = "https://yihan.dev";
 
 export const SITE_NAME = "Yihan Hong";
 
+/**
+ * One description, used by the root metadata, the homepage, and the schema.org
+ * `Person`. There were two of these and they disagreed: this constant said
+ * "Personal website of Yihan Hong — a USC computer engineering and computer
+ * science student…" while page.tsx overrode it with a different sentence, so
+ * the OG card and the meta tag described the same person differently.
+ *
+ * The homepage's wording won, because "systems that act on their own" says
+ * something and "personal website of" says nothing. Its em dash became a colon:
+ * the site's voice does not use em dashes, and this string is the one sentence
+ * that shows up in search results and on every share card.
+ *
+ * 161 characters, which is inside the ~160 Google renders before truncating.
+ */
 export const SITE_DESCRIPTION =
-  "Personal website of Yihan Hong — a USC computer engineering and computer science student building AI agents, reinforcement learning systems, and the infrastructure underneath them.";
+  "Computer engineering and CS student at USC. Builds systems that act on their own: fine-tuned models, evaluation harnesses for AI behaviour, and retrieval at scale.";
 
 /**
  * These were written out by hand in three files and two of them were wrong: the

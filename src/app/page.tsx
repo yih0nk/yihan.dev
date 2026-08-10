@@ -23,8 +23,11 @@ import { FONTS } from "@/styles/tokens";
  */
 export const metadata: Metadata = {
   title: "Yihan Hong",
-  description:
-    "Computer engineering and CS student at USC. Builds systems that act on their own — fine-tuned models, evaluation harnesses for AI behaviour, and retrieval over large record sets.",
+  // No `description` override. It used to carry its own sentence, which meant
+  // the homepage and the root metadata described the same person two different
+  // ways — and the OG card, built from SITE_DESCRIPTION, disagreed with the
+  // meta tag right beside it. That wording is now SITE_DESCRIPTION itself, so
+  // inheriting is both shorter and the only way they cannot drift apart again.
   alternates: { canonical: "/" },
 };
 
