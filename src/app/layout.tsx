@@ -40,6 +40,41 @@ export const metadata: Metadata = {
     type: "website",
     siteName: SITE_NAME,
     locale: "en_US",
+    /**
+     * A static file, not the generated `opengraph-image.tsx` route.
+     *
+     * The generated route was correct by every check available from outside:
+     * absolute HTTPS URL, HTTP 200 to Twitterbot in 68ms, `image/png`, no
+     * redirects, correct width and height declared, and X's own validator
+     * reported "Card loaded successfully". X still rendered the small `summary`
+     * card, which is what it falls back to when it cannot use the image.
+     *
+     * The one thing about that response that had no business being there was
+     * the header Next attaches to it:
+     *
+     *   vary: rsc, next-router-state-tree, next-router-prefetch, …
+     *
+     * Router negotiation headers on a PNG. A crawler that treats `vary`
+     * conservatively can decide the bytes are not a stable representation of
+     * the URL. That is a hypothesis and it was never proven — but serving the
+     * file from /public removes it along with the cache-bust query string, the
+     * function invocation and the cold start, which is every remaining variable
+     * at once.
+     *
+     * The cost is that the card no longer regenerates when the copy changes.
+     * The generator that produced public/og.png is at 2dd13a7 in
+     * src/app/opengraph-image.tsx — restore it, hit /opengraph-image, save the
+     * PNG over public/og.png, and delete the route again. The per-post cards
+     * under /blog/[slug] are still generated, since those genuinely have to be.
+     */
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — personal site`,
+      },
+    ],
   },
   twitter: {
     // summary_large_image, not summary: the cards are 1200x630, and `summary`
