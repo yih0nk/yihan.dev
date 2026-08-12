@@ -218,7 +218,11 @@ export default function VinylCompact({
       const cx = W * 0.5
       const cy = H * 0.5
       const R = S * 0.42
-      const LR = R * 0.38
+      // 0.44 rather than the 0.38 a real 12" label measures. At 148px that was a
+      // 47px circle to hold a cover in, which reads as a coloured smudge rather
+      // than as artwork. This is as far as it can go: the groove field starts at
+      // 0.46R, and a label past that would sit on top of its own grooves.
+      const LR = R * 0.44
 
       // contact shadow
       ctx.save()
@@ -324,10 +328,15 @@ export default function VinylCompact({
         ctx.restore()
       }
 
+      // The sheen is a highlight on paper, and paper is what it should read as.
+      // Over a photograph it is just a white wash across the middle of the cover
+      // and a dark ring around it, so it halves when there is art underneath.
+      const paperLit = cover ? 0.08 : 0.16
+      const paperEdge = cover ? 0.07 : 0.13
       const paper = ctx.createRadialGradient(-LR * 0.3, -LR * 0.34, LR * 0.05, 0, 0, LR)
-      paper.addColorStop(0, 'rgba(255,255,255,0.16)')
+      paper.addColorStop(0, `rgba(255,255,255,${paperLit})`)
       paper.addColorStop(0.7, 'rgba(255,255,255,0)')
-      paper.addColorStop(1, 'rgba(0,0,0,0.13)')
+      paper.addColorStop(1, `rgba(0,0,0,${paperEdge})`)
       ctx.beginPath()
       ctx.arc(0, 0, LR, 0, TAU)
       ctx.fillStyle = paper
