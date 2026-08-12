@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react'
 
+import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import VinylCompact from './VinylCompact'
 import {
@@ -170,7 +171,13 @@ function clock(ms: number): string {
   return `${m}:${sec < 10 ? '0' : ''}${sec}`
 }
 
-export default function AboutComposed({ font }: { font: string }) {
+export default function AboutComposed({
+  font,
+  nowPlaying = null,
+}: {
+  font: string
+  nowPlaying?: InitialNowPlaying | null
+}) {
   const still = useReducedMotion()
 
   // ── the greeting ──────────────────────────────────────────────────────────
@@ -190,16 +197,17 @@ export default function AboutComposed({ font }: { font: string }) {
   }, [])
 
   // ── the record ────────────────────────────────────────────────────────────
-  // Only ever the real thing. There is no placeholder track: the record turns
-  // with a resting label until Spotify answers, and the type below it is held
-  // at opacity 0 in space already reserved for it, so nothing moves when it
-  // lands and nothing shows while there is nothing to say.
-  const { track: live, settled: liveSettled } = useSpotify()
+  // Always real Spotify data: the live track, or the last one played. It arrives
+  // with the HTML, so there is no window in which the disc has nothing to show —
+  // it used to mount with a grey label and two empty lines beside it and wait for
+  // a poll. Only a Spotify that cannot answer at all leaves this null, and then
+  // the block holds its space rather than showing a blank record.
+  const { track: live } = useSpotify(nowPlaying)
 
-  // Position within the track, extrapolated between polls. Zero when there is
-  // no track, which has no position to report.
+  // Extrapolated between polls; null until the first tick, which is the only
+  // honest answer before the client has a clock of its own.
   const elapsedMs = useElapsed(live)
-  const progress = live?.durationMs ? elapsedMs / live.durationMs : 0
+  const progress = live?.durationMs && elapsedMs !== null ? elapsedMs / live.durationMs : 0
 
   // ── the live readouts ─────────────────────────────────────────────────────
   const { days, total } = useContributions(SPAN)
@@ -359,27 +367,23 @@ export default function AboutComposed({ font }: { font: string }) {
           {/* Top-aligned, not centred: "now playing" has to sit on the same
               line as "last wrote" and "commits" across the gutter, and centring
               it against a 148px disc pushed it low. */}
-          <div className="flex items-start gap-6 md:col-span-5">
-            <VinylCompact
-                reduced={still}
-                size={148}
-                art={live?.image ?? null}
-                progress={progress}
-              />
+          <div
+            className="flex items-start gap-6 md:col-span-5"
+            aria-hidden={!live}
+            style={{ opacity: live ? 1 : 0, transition: fade }}
+          >
+            {/* The box holds the row's height whether or not the disc is in it. */}
+            <div className="shrink-0" style={{ width: 148, height: 148 }}>
+              {live ? (
+                <VinylCompact reduced={still} size={148} art={live.image} progress={progress} />
+              ) : null}
+            </div>
             <div className="min-w-0">
               <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
                 {live && !live.isPlaying ? 'last played' : 'now playing'}
               </span>
-              {/* Reserved height so a longer title never shifts the row, and
-                  held at opacity 0 until the first poll answers — exactly what
-                  the "last wrote" column beside it does. Without the gate this
-                  rendered its heading over two empty lines on every load until
-                  the fetch landed, and permanently whenever Spotify could not
-                  answer at all. */}
-              <div
-                className="mt-4 min-h-[4.25rem]"
-                style={{ opacity: liveSettled ? 1 : 0, transition: fade }}
-              >
+              {/* Reserved height so a longer title never shifts the row. */}
+              <div className="mt-4 min-h-[4.25rem]">
                 <p
                   className="text-[20px] leading-[1.2] text-balance"
                   style={{ fontFamily: font, color: INK }}
@@ -400,7 +404,7 @@ export default function AboutComposed({ font }: { font: string }) {
                 className="mt-3 block text-[12px] tracking-[0.2em] uppercase tabular-nums"
                 style={{ fontFamily: MONO, color: MUTED }}
               >
-                {live?.isPlaying && live.durationMs
+                {live?.isPlaying && live.durationMs && elapsedMs !== null
                   ? `${clock(elapsedMs)} / ${clock(live.durationMs)}`
                   : '33 1/3 rpm'}
               </span>

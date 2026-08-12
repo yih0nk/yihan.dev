@@ -168,6 +168,31 @@ export async function getNowPlaying(): Promise<NowPlaying | null> {
   return readTrack((first as { track?: unknown }).track, false);
 }
 
+/** A track plus when it was read, so the client can age its position. */
+export interface InitialNowPlaying extends NowPlaying {
+  fetchedAt: number;
+}
+
+/**
+ * The now-playing state for the server render, so the homepage's record arrives
+ * already carrying real data instead of a blank disc waiting on a poll.
+ *
+ * Never throws and never hangs: the page it feeds is regenerated on a schedule,
+ * and a slow Spotify must not hold that up. `null` degrades to the client poll.
+ */
+export async function getInitialNowPlaying(): Promise<InitialNowPlaying | null> {
+  if (!isConfigured()) return null;
+  try {
+    const track = await Promise.race([
+      getNowPlaying(),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
+    ]);
+    return track ? { ...track, fetchedAt: Date.now() } : null;
+  } catch {
+    return null;
+  }
+}
+
 export interface TopArtist {
   name: string;
   url: string;

@@ -3,7 +3,20 @@ import type { Metadata } from "next";
 import Home from "@/components/home/Home";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
+import { getInitialNowPlaying } from "@/lib/spotify";
 import { FONTS } from "@/styles/tokens";
+
+/**
+ * Ten seconds, which is what buys the record its data.
+ *
+ * This page was fully static, so its HTML could not contain what was playing —
+ * the disc had to mount blank and wait for a client poll, and that wait was
+ * visible on every refresh. Regenerating on a short interval puts a real track
+ * in the markup at first paint while keeping the page a cached static file, and
+ * costs Spotify one call per ten seconds no matter how many people are reading.
+ * The client still polls, so anything staler than the interval self-corrects.
+ */
+export const revalidate = 10;
 
 /**
  * The homepage.
@@ -67,11 +80,13 @@ const personLd = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const nowPlaying = await getInitialNowPlaying();
+
   return (
     <>
       <JsonLd data={personLd} />
-      <Home font={FONTS.display} />
+      <Home font={FONTS.display} nowPlaying={nowPlaying} />
     </>
   );
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import ReelHero from './ReelHero'
 import AboutComposed from './AboutComposed'
@@ -23,7 +24,14 @@ import AboutComposed from './AboutComposed'
 const { bg: BG, ink: INK } = COLORS
 const FALLBACK_FACE = FONTS.display
 
-export default function Home({ font }: { font: string }) {
+export default function Home({
+  font,
+  nowPlaying = null,
+}: {
+  font: string
+  /** Resolved by the server so the record is never blank on first paint. */
+  nowPlaying?: InitialNowPlaying | null
+}) {
   // An empty string invalidates the whole `ctx.font` shorthand downstream, and
   // the canvas would silently rasterize its type in 10px system sans.
   const face = font.trim() ? font : FALLBACK_FACE
@@ -31,7 +39,7 @@ export default function Home({ font }: { font: string }) {
   return (
     <div className="w-full overflow-x-clip" style={{ backgroundColor: BG, color: INK }}>
       <ReelHero font={face} />
-      <AboutComposed font={face} />
+      <AboutComposed font={face} nowPlaying={nowPlaying} />
 
       {/* The page exhales instead of stopping — but only a little. AboutComposed
           already carries its own bottom padding, and stacking a tall spacer on

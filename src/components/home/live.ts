@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import type { InitialNowPlaying } from '@/lib/spotify'
+
 /**
  * Shared plumbing for the two live readouts — the thirty-day contribution block
  * and the most recent post.
@@ -235,6 +237,28 @@ function cacheAgeMs(res: Response): number {
   return Math.min(seconds, 60) * 1000
 }
 
+/** Wall clock since the server read the seed, clamped against client skew. */
+function htmlAgeMs(fetchedAt: number): number {
+  const age = Date.now() - fetchedAt
+  if (!Number.isFinite(age) || age <= 0) return 0
+  return Math.min(age, 60_000)
+}
+
+/** The server's track, aged by however long its HTML took to reach a reader. */
+function seed(initial: InitialNowPlaying | null): SpotifyTrack | null {
+  if (!initial) return null
+  return {
+    title: initial.title,
+    artist: initial.artist,
+    url: initial.url,
+    isPlaying: initial.isPlaying,
+    image: initial.image,
+    progressMs: initial.progressMs,
+    durationMs: initial.durationMs,
+    receivedAt: performance.now() - htmlAgeMs(initial.fetchedAt),
+  }
+}
+
 /**
  * The real "now playing", when it is configured.
  *
@@ -244,17 +268,19 @@ function cacheAgeMs(res: Response): number {
  * one millisecond per millisecond. Each poll re-syncs, which is what makes
  * pausing, seeking and track changes correct themselves within one interval.
  *
- * Returns `settled` alongside the track, the same shape `useLatestPost` uses.
- * A bare null could not be told apart from "asked, and there is nothing", so
- * the block rendered its heading over an empty box on every load until the
- * first poll — and permanently whenever Spotify could not answer.
+ * Seeded from the server render, which is what removes the wait entirely: the
+ * first paint already holds a real track, and the first poll only refreshes it.
+ * A failed poll leaves the seed standing rather than blanking the record.
  *
  * `settled` latches on the first completed poll, success or failure: the
  * ten-second re-polls must not make the column flicker.
  */
-export function useSpotify(): { track: SpotifyTrack | null; settled: boolean } {
-  const [track, setTrack] = useState<SpotifyTrack | null>(null)
-  const [settled, setSettled] = useState(false)
+export function useSpotify(initial: InitialNowPlaying | null = null): {
+  track: SpotifyTrack | null
+  settled: boolean
+} {
+  const [track, setTrack] = useState<SpotifyTrack | null>(() => seed(initial))
+  const [settled, setSettled] = useState(initial !== null)
 
   useEffect(() => {
     let alive = true
@@ -366,9 +392,14 @@ export function useLatestPost() {
  *
  * A paused track does not advance — `isPlaying` is false and the position is
  * frozen wherever the last poll left it, which is what Spotify itself reports.
+ *
+ * Null means "no position worth claiming yet": there is no track, or a playing
+ * one has not been ticked since mount. The server cannot know when its HTML will
+ * be read, so a position it prints is already wrong by the time anyone sees it —
+ * better to print none and let the first tick, milliseconds later, be right.
  */
-export function useElapsed(track: SpotifyTrack | null): number {
-  const [now, setNow] = useState(() => performance.now())
+export function useElapsed(track: SpotifyTrack | null): number | null {
+  const [now, setNow] = useState<number | null>(null)
 
   useEffect(() => {
     if (!track || !track.isPlaying) return
@@ -379,8 +410,9 @@ export function useElapsed(track: SpotifyTrack | null): number {
     return () => window.clearInterval(id)
   }, [track])
 
-  if (!track) return 0
+  if (!track) return null
   if (!track.isPlaying) return track.progressMs
+  if (now === null) return null
   const elapsed = track.progressMs + Math.max(0, now - track.receivedAt)
   return track.durationMs ? Math.min(elapsed, track.durationMs) : elapsed
 }
