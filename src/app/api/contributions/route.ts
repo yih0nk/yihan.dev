@@ -36,10 +36,16 @@ interface Payload {
 /** Last answer that had data. Warm instances often have one; a cushion only. */
 let lastGood: Payload | null = null;
 
-function ok(payload: Payload) {
+/**
+ * `source` is diagnostic, and the reason it exists is the bug this route had: a
+ * silent fallback is indistinguishable from the path you meant to take. A token
+ * that is revoked, or minted without `read:user`, degrades to the scrape and
+ * looks perfectly healthy — this makes one curl enough to tell.
+ */
+function ok(payload: Payload, source: "api" | "html") {
   lastGood = payload;
   return NextResponse.json(
-    { ok: true, ...payload },
+    { ok: true, source, ...payload },
     {
       headers: {
         "Cache-Control": `public, s-maxage=${GOOD_FOR}, stale-while-revalidate=${GOOD_FOR}`,
@@ -56,7 +62,7 @@ function ok(payload: Payload) {
 function fail() {
   const body = lastGood ?? { days: [], total: 0 };
   return NextResponse.json(
-    { ok: false, ...body },
+    { ok: false, source: lastGood ? "stale" : "none", ...body },
     { status: 200, headers: { "Cache-Control": "no-store" } },
   );
 }
@@ -184,11 +190,11 @@ export async function GET() {
   try {
     if (token) {
       const viaApi = await fromApi(token);
-      if (viaApi) return ok(viaApi);
+      if (viaApi) return ok(viaApi, "api");
       // A revoked token should degrade to the public path, not to an empty graph.
     }
     const viaHtml = await fromHtml();
-    return viaHtml ? ok(viaHtml) : fail();
+    return viaHtml ? ok(viaHtml, "html") : fail();
   } catch {
     return fail();
   }
