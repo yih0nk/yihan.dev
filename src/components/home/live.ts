@@ -143,6 +143,17 @@ export function useReducedMotion(): boolean {
   return reduced
 }
 
+/**
+ * Two retries, spaced — not a poll. `/api/contributions` says `ok: false` when
+ * GitHub refused it, which is worth a second look; an honestly empty year is
+ * accepted first time.
+ */
+const CONTRIB_BACKOFF = [1200, 4000]
+
+function refused(raw: unknown): boolean {
+  return typeof raw === 'object' && raw !== null && (raw as { ok?: unknown }).ok === false
+}
+
 /** The thirty-day window. Null total means "not answered yet"; no number is shown. */
 export function useContributions(span: number) {
   const [days, setDays] = useState<Day[]>([])
@@ -151,23 +162,41 @@ export function useContributions(span: number) {
   useEffect(() => {
     let alive = true
     const controller = new AbortController()
+    const timers: number[] = []
 
-    fetch('/api/contributions', { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`http ${r.status}`))))
-      .then((raw: unknown) => {
-        if (!alive) return
-        const window30 = parseDays(raw, span)
-        if (window30.length === 0) return // grey block stays; no number is claimed
-        setDays(window30)
-        setTotal(window30.reduce((n, d) => n + d.count, 0))
-      })
-      .catch(() => {
-        // A quiet grid is the failure state. Nothing to say.
-      })
+    const again = (n: number) => {
+      if (n >= CONTRIB_BACKOFF.length) return
+      timers.push(window.setTimeout(() => attempt(n + 1), CONTRIB_BACKOFF[n]))
+    }
+
+    const attempt = (n: number) => {
+      fetch('/api/contributions', { signal: controller.signal })
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`http ${r.status}`))))
+        .then((raw: unknown) => {
+          if (!alive) return
+          const window30 = parseDays(raw, span)
+          if (window30.length > 0) {
+            // Data is data even alongside `ok: false` — that is the route's last
+            // good answer, which beats a grey block.
+            setDays(window30)
+            setTotal(window30.reduce((sum, d) => sum + d.count, 0))
+            return
+          }
+          if (refused(raw)) again(n)
+          // Otherwise the grey block stays and no number is claimed.
+        })
+        .catch(() => {
+          // An abort is an unmount, not a failure worth retrying.
+          if (alive && !controller.signal.aborted) again(n)
+        })
+    }
+
+    attempt(0)
 
     return () => {
       alive = false
       controller.abort()
+      timers.forEach((t) => window.clearTimeout(t))
     }
   }, [span])
 
