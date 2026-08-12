@@ -91,7 +91,15 @@ const STOPS = [...FRAMES.map((_, i) => i), NAME_POS]
 // `pad2` is declared below and would still be in its temporal dead zone here.
 const STOP_LABELS = [...FRAMES.map((_, i) => `0${i + 1}`), 'the name']
 
-const IDLE_TO_NAME = 6 // seconds of stillness before the reel resolves itself
+/**
+ * Seconds of stillness before the reel resolves itself.
+ *
+ * Was 6, which is enough to guarantee the payoff but not enough to discover
+ * that the strip is draggable — a visitor who pauses to look at the photographs
+ * has it decided for them before they think to touch it, and the resolve is
+ * one-way, so there is no second chance without a reload.
+ */
+const IDLE_TO_NAME = 10
 const MAX_CELLS = 14000
 const MASK_MAX_W = 1600 // cap the offscreen raster; it is only a coverage mask
 const PHOTO_MAX = 1400 // cap the duotone buffer
