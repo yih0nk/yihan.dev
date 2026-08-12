@@ -214,8 +214,25 @@ export interface SpotifyTrack {
   progressMs: number
   /** Track length, ms. Zero when Spotify does not report one. */
   durationMs: number
-  /** `performance.now()` at the moment it arrived, so the client can extrapolate. */
+  /**
+   * `performance.now()` for the moment `progressMs` was true: arrival, less how
+   * long the answer sat in a cache on the way here.
+   */
   receivedAt: number
+}
+
+/**
+ * Staleness of an answer in ms, from `Age` — readable because the request is
+ * same-origin. A body reporting 1:12 that was made four seconds ago describes
+ * 1:16, and calling it 1:12 puts the readout behind until the next poll yanks it
+ * forward. Clamped: a huge age is a broken intermediary, better left alone.
+ */
+function cacheAgeMs(res: Response): number {
+  const raw = res.headers.get('age')
+  if (!raw) return 0
+  const seconds = Number(raw)
+  if (!Number.isFinite(seconds) || seconds <= 0) return 0
+  return Math.min(seconds, 60) * 1000
 }
 
 /**
@@ -244,9 +261,15 @@ export function useSpotify(): { track: SpotifyTrack | null; settled: boolean } {
     const controller = new AbortController()
 
     const load = () => {
-      fetch('/api/spotify/now-playing', { signal: controller.signal })
-        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`http ${r.status}`))))
-        .then((raw: unknown) => {
+      // `no-store` so the browser cannot hand back a position from an earlier
+      // poll; the edge cache may still help, and its age is measured not ignored.
+      fetch('/api/spotify/now-playing', { signal: controller.signal, cache: 'no-store' })
+        .then((r) =>
+          r.ok
+            ? r.json().then((raw: unknown) => ({ raw, at: performance.now() - cacheAgeMs(r) }))
+            : Promise.reject(new Error(`http ${r.status}`)),
+        )
+        .then(({ raw, at }: { raw: unknown; at: number }) => {
           if (!alive) return
           // Every path below this line is an answer, including the ones that
           // produce no track: a refresh token Spotify has stopped accepting
@@ -269,7 +292,7 @@ export function useSpotify(): { track: SpotifyTrack | null; settled: boolean } {
             image: typeof image === 'string' && image ? image : null,
             progressMs: num(progressMs),
             durationMs: num(durationMs),
-            receivedAt: performance.now(),
+            receivedAt: at,
           })
         })
         .catch(() => {
@@ -349,6 +372,9 @@ export function useElapsed(track: SpotifyTrack | null): number {
 
   useEffect(() => {
     if (!track || !track.isPlaying) return
+    // Re-base as the poll lands: until the next tick `now` predates `receivedAt`,
+    // the sum clamps at zero, and the clock stalls for half a second every poll.
+    setNow(performance.now())
     const id = window.setInterval(() => setNow(performance.now()), 500)
     return () => window.clearInterval(id)
   }, [track])
