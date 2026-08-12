@@ -22,15 +22,16 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion"],
   },
   /**
-   * The OG cards read three .ttf files off disk to render in the site's real
-   * faces (see src/lib/og/fonts.ts — Satori cannot read the woff2 the pages
-   * use). Both image routes are prerendered, so the read normally happens at
-   * build time, where the whole repo is present. This makes the files ship
-   * anyway: tracing follows imports, and a path assembled from `process.cwd()`
-   * is not an import, so nothing would otherwise tell it these are needed.
+   * The post share card reads three .ttf files off disk to render in the site's
+   * real faces (see src/lib/og/fonts.ts — Satori cannot read the woff2 the
+   * pages use). The route is prerendered, so the read normally happens at build
+   * time, where the whole repo is present. This makes the files ship anyway:
+   * tracing follows imports, and a path assembled from `process.cwd()` is not
+   * an import, so nothing would otherwise tell it these are needed.
+   *
+   * The site-wide card is a static public/og.png now and needs none of this.
    */
   outputFileTracingIncludes: {
-    "/opengraph-image": ["./src/lib/og/fonts/**"],
     "/blog/[slug]/opengraph-image": ["./src/lib/og/fonts/**"],
   },
   async redirects() {
