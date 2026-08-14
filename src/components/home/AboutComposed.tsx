@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react'
 
+import { EMAIL } from '@/lib/site'
 import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import VinylCompact from './VinylCompact'
@@ -338,16 +339,27 @@ export default function AboutComposed({
                 badminton with a level of competitiveness the sport did not ask for and cannot
                 contain.
               </p>
-              {/* The closing line is just the third paragraph. It used to sit in
-                  its own block behind a short hairline tick, which meant its
-                  gap was assembled out of a margin, a rule and another margin
-                  and could not help but differ from the 20px `space-y-5` sets
-                  between the other two. Same flow, same interval, no arithmetic
-                  to keep in agreement — and the line carries itself without a
-                  mark announcing it. */}
+              {/* The close is two short paragraphs — a punchline and a
+                  standing offer — set in the same BODY flow as the two above.
+                  No own block, no hairline tick: the 20px `space-y-5` that
+                  sets every gap here sets these too, so the interval is one
+                  the eye already trusts and no arithmetic has to be kept in
+                  agreement. The lines carry themselves without a mark
+                  announcing them. */}
               <p>
-                I like building two kinds of things: the ones that work and the ones that matter.
-                Occasionally the same thing.
+                So I&rsquo;m just an engineer, and a few other things. Really &mdash; the
+                &ldquo;few other things&rdquo; are where most of the personality lives.
+              </p>
+              <p>
+                Summer 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}
+                <a
+                  href={`mailto:${EMAIL}`}
+                  className="decoration-1 underline-offset-[3px] transition-colors duration-200 hover:underline focus-visible:underline"
+                  style={{ color: ACCENT }}
+                >
+                  say hi
+                </a>
+                .
               </p>
             </div>
           </div>
