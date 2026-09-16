@@ -62,7 +62,7 @@ export default function ExperiencePage() {
           className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
-          Drawn to scale, so the overlaps are visible — since the start of 2026
+          Drawn to scale, so the overlaps are visible: since the start of 2026
           there have been two or three of these running at once.
         </p>
       </header>

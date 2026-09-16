@@ -72,7 +72,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME} — personal site`,
+        alt: `${SITE_NAME}, personal site`,
       },
     ],
   },

@@ -65,11 +65,11 @@ interface IndexEntry {
 
 const INDEX: Record<string, IndexEntry> = {
   cotter: {
-    line: 'Compliance testing for learned robot policies — pytest, for robots.',
+    line: 'Compliance testing for learned robot policies: pytest, for robots.',
     keys: ['Python', 'MuJoCo', "Wald's SPRT"],
   },
   trove: {
-    line: 'Cafe operations — live inventory, autonomous reordering, forecast demand.',
+    line: 'Cafe operations: live inventory, autonomous reordering, forecast demand.',
     keys: ['Next.js', 'XGBoost', 'Supabase'],
   },
   hivemind: {
@@ -257,7 +257,7 @@ export default function ProjectsIndex() {
           className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
           style={{ fontFamily: FONTS.body, color: COLORS.muted }}
         >
-          Systems I built to answer a question I could not look up — mostly agents,
+          Systems I built to answer a question I could not look up. Mostly agents,
           reinforcement learning, and the infrastructure underneath them.
         </p>
       </header>
