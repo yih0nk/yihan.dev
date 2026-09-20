@@ -467,17 +467,17 @@ export default function AboutComposed({
               <div className="lately-fan flex w-full items-start justify-between">
                 <style>{`
                   .lately-fan > figure { transition: transform 500ms cubic-bezier(0.16,1,0.3,1); }
-                  .lately-fan > figure:nth-child(1) { transform: rotate(-5deg); }
-                  .lately-fan > figure:nth-child(2) { transform: rotate(3deg) translateY(10px); }
-                  .lately-fan > figure:nth-child(3) { transform: rotate(-2deg) translateY(2px); }
-                  .lately-fan:hover > figure:nth-child(1) { transform: rotate(-11deg) translate(-22px,-12px) scale(1.03); }
-                  .lately-fan:hover > figure:nth-child(2) { transform: rotate(2deg) translateY(-8px) scale(1.05); }
-                  .lately-fan:hover > figure:nth-child(3) { transform: rotate(8deg) translate(22px,-12px) scale(1.03); }
+                  .lately-fan > figure:nth-of-type(1) { transform: rotate(-5deg); }
+                  .lately-fan > figure:nth-of-type(2) { transform: rotate(3deg) translateY(10px); }
+                  .lately-fan > figure:nth-of-type(3) { transform: rotate(-2deg) translateY(2px); }
+                  .lately-fan:hover > figure:nth-of-type(1) { transform: rotate(-11deg) translate(-22px,-12px) scale(1.03); }
+                  .lately-fan:hover > figure:nth-of-type(2) { transform: rotate(2deg) translateY(-8px) scale(1.05); }
+                  .lately-fan:hover > figure:nth-of-type(3) { transform: rotate(8deg) translate(22px,-12px) scale(1.03); }
                   @media (prefers-reduced-motion: reduce) {
                     .lately-fan > figure { transition: none; }
-                    .lately-fan:hover > figure:nth-child(1) { transform: rotate(-5deg); }
-                    .lately-fan:hover > figure:nth-child(2) { transform: rotate(3deg) translateY(10px); }
-                    .lately-fan:hover > figure:nth-child(3) { transform: rotate(-2deg) translateY(2px); }
+                    .lately-fan:hover > figure:nth-of-type(1) { transform: rotate(-5deg); }
+                    .lately-fan:hover > figure:nth-of-type(2) { transform: rotate(3deg) translateY(10px); }
+                    .lately-fan:hover > figure:nth-of-type(3) { transform: rotate(-2deg) translateY(2px); }
                   }
                 `}</style>
                 {LATELY.map((src) => (
