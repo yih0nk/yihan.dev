@@ -340,11 +340,11 @@ export default function AboutComposed({
               <span aria-hidden className="h-px flex-1" style={{ backgroundColor: HAIRLINE }} />
             </div>
 
-            <div className="mt-4 max-w-[360px]">
+            <div className="mt-6">
               {ROLES.map((r) => (
                 <div
                   key={`${r.org}-${r.title}`}
-                  className="group cursor-help border-b border-dotted py-[7px]"
+                  className="group cursor-help border-b border-dotted py-3.5"
                   style={{ borderColor: HAIRLINE }}
                   onMouseEnter={(e) => openBadge(e, r.org, r.line)}
                   onMouseLeave={closeBadge}
@@ -354,16 +354,16 @@ export default function AboutComposed({
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <span
-                      className="text-[16px] leading-tight transition-colors group-hover:[color:var(--accent)] group-focus:[color:var(--accent)]"
+                      className="text-[22px] leading-tight transition-colors group-hover:[color:var(--accent)] group-focus:[color:var(--accent)]"
                       style={{ fontFamily: font }}
                     >
                       {r.org}
                     </span>
-                    <span className="shrink-0 text-[10.5px] tracking-[0.04em] whitespace-nowrap" style={{ fontFamily: MONO, color: MUTED }}>
+                    <span className="shrink-0 text-[12px] tracking-[0.06em] whitespace-nowrap" style={{ fontFamily: MONO, color: MUTED }}>
                       {span(r)}
                     </span>
                   </div>
-                  <div className="mt-[2px] text-[11px]" style={{ fontFamily: BODY, color: MUTED }}>
+                  <div className="mt-1 text-[13px]" style={{ fontFamily: BODY, color: MUTED }}>
                     {r.title} · {cityOf(r.location)}
                   </div>
                 </div>
