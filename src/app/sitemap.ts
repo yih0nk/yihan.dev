@@ -16,7 +16,7 @@ import { projects } from "@/lib/projects";
  * the whole site changed on every deploy.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/projects", "/experience", "/play", "/blog"].map(
+  const staticRoutes = ["", "/projects", "/play", "/blog"].map(
     (path) => ({ url: `${SITE_URL}${path}` }),
   );
 
