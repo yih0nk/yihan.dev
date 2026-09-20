@@ -1,65 +1,34 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useCallback, useRef, useState, type PointerEvent } from 'react'
+
 import { projects, type Project } from '@/lib/projects'
 import { COLORS, FONTS, LAYOUT, MOTION } from '@/styles/tokens'
+import { useReducedMotion } from '@/components/home/live'
 
 /**
- * The projects index — a list, but not a ruled one.
+ * The projects index — a shelf of cards that tilt to the cursor.
  *
- * It was hairline-ruled rows for a while, and that was fine until /experience
- * also became hairline-ruled rows. Two of the four main pages then read as the
- * same page with different words in it, and only one of them had a reason: the
- * time axis needs a grid under it. This page does not, so the rules are gone and
- * a ghost numeral carries the rhythm instead — 72px of display face at hairline
- * strength, which sets each row's height and gives the column a repeating shape
- * without adding a line to the page.
- *
- * The largest thing here is therefore also the quietest. A number in an index is
- * the one element nobody actually needs to read, so it can afford the size; it
- * only comes up to the accent under a cursor, alongside the title.
- *
- * There is no featured block. One project blown up to full width with a cover
- * image made the page two designs stapled together — and picking a favourite is
- * a claim the index does not need to make.
- *
- * ── the row grid ────────────────────────────────────────────────────────────
- * On md+ every row shares one 12-column frame, so three columns line up down the
- * page even though nothing is ruled:
- *
- *   2        │ 6                              │ 4
- *   01       │ Trove                          │ next.js · xgboost · supabase →
- *            │ Cafe operations — live …       │
- *
- * Below md the grid collapses and each entry stacks (number, title, line, keys),
- * which is the same reading order, just folded.
+ * This replaces the ghost-numeral list. A card grid was avoided here for a long
+ * time on the grounds that it read as a template; the answer is that the cards
+ * are not a uniform grid of boxes but physical things — each shows the project's
+ * own cover, tilts in 3D toward the pointer, and on hover dims that cover to
+ * bring up the one-liner and the stack.
  *
  * ── why this page never renders `project.tagline` ───────────────────────────
- * Two reasons. Index lines want ~10 words, and the stored taglines run to full
- * sentences; and the résumé is password-gated, so the quantitative figures the
- * taglines carry — accuracy figures, dataset counts — must never reach a public
- * page. `INDEX` below is the only source of rendered prose, and there is
- * deliberately no fallback to `tagline`, so a project added to the data without
- * an entry here renders no line at all rather than leaking one.
+ * Index lines want ~10 words and the stored taglines run to full sentences, so
+ * the prose here is `INDEX` below, with no fallback to `tagline`: a project
+ * added to the data without an entry renders no line rather than an unedited one.
  */
-
 
 const GITHUB = 'https://github.com/yih0nk'
 
 interface IndexEntry {
-  /** One-line summary, index measure. No quantitative claims. */
+  /** One-line summary, index measure. */
   line: string
-  /**
-   * Three hand-picked technologies, not a slice of `tags`.
-   *
-   * The index used to carry no per-row technology at all, on the grounds that
-   * one tag pulled from an array of ten reads as "this is the stack" and is
-   * false for every project here. That reasoning holds for a slice and not for
-   * a choice: three chosen to characterise the thing are a description, and
-   * they give the row a right-hand column so the layout has something to align
-   * against besides its left edge.
-   */
+  /** Three hand-picked technologies. */
   keys: string[]
 }
 
@@ -87,217 +56,159 @@ const INDEX: Record<string, IndexEntry> = {
 }
 
 const EASE = MOTION.ease
-const UI = `${MOTION.ui} ${EASE}`
+const MAX_TILT = 9
 
-/**
- * Reduced motion is handled in one place rather than branched through state:
- * the animated inline styles all sit on `.pi-anim`, and `!important` in a
- * stylesheet outranks an inline declaration that lacks it.
- */
-const REDUCED_MOTION_CSS = `
-@media (prefers-reduced-motion: reduce) {
-  .pi-anim { transition: none !important; }
-  .pi-zoom { transform: none !important; }
-}
-`
+function TiltCard({ project, n, entry }: { project: Project; n: number; entry: IndexEntry | undefined }) {
+  const ref = useRef<HTMLAnchorElement | null>(null)
+  const still = useReducedMotion()
+  const [tilt, setTilt] = useState('')
+  const [glow, setGlow] = useState<{ x: number; y: number } | null>(null)
 
-/** The '→' that slides in on hover. Fixed width so nothing reflows. */
-function Arrow({ active }: { active: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className="pi-anim inline-block w-4 shrink-0 text-right"
-      style={{
-        opacity: active ? 1 : 0,
-        transform: active ? 'translateX(0)' : 'translateX(-6px)',
-        transition: `opacity ${UI}, transform ${UI}`,
-      }}
-    >
-      →
-    </span>
+  const onMove = useCallback(
+    (e: PointerEvent<HTMLAnchorElement>) => {
+      if (still) return
+      const r = ref.current?.getBoundingClientRect()
+      if (!r) return
+      const px = (e.clientX - r.left) / r.width - 0.5
+      const py = (e.clientY - r.top) / r.height - 0.5
+      setTilt(`perspective(1200px) rotateY(${px * MAX_TILT}deg) rotateX(${-py * MAX_TILT}deg) translateZ(16px)`)
+      setGlow({ x: (px + 0.5) * 100, y: (py + 0.5) * 100 })
+    },
+    [still],
   )
-}
-
-
-/**
- * A row, with the numeral doing the work the rules used to.
- *
- * The first version separated entries with a hairline each and set everything
- * on one baseline, which is the most obvious way to build an index and also the
- * way /experience ended up being built. With both pages ruled the same way, two
- * of the four main pages read as one page with different words in it — and
- * /experience has a reason for its rules, since the time axis above them needs
- * a grid to sit on. This page has no such reason.
- *
- * So the rules are gone. Rhythm comes from a 72px numeral in the display face,
- * which sets the row's height, gives the column a repeating shape, and puts the
- * largest thing on the page in the quietest colour — a number is the one piece
- * of an index nobody needs to read, so it can afford to be big.
- */
-function IndexRow({
-  project,
-  n,
-  active,
-  onActive,
-}: {
-  project: Project
-  n: number
-  active: boolean
-  onActive: (slug: string | null) => void
-}) {
-  const entry = INDEX[project.slug]
+  const onLeave = useCallback(() => {
+    setTilt('')
+    setGlow(null)
+  }, [])
 
   return (
     <Link
+      ref={ref}
       href={`/projects/${project.slug}`}
-      className="pi-anim group block py-7 md:py-9"
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      className="group relative block aspect-[4/3] overflow-hidden rounded-[10px]"
       style={{
-        transform: active ? 'translateX(6px)' : 'translateX(0)',
-        transition: `transform ${UI}`,
+        transform: tilt,
+        transformStyle: 'preserve-3d',
+        transition: `transform 500ms ${EASE}, box-shadow 500ms ${EASE}`,
+        boxShadow: glow
+          ? '0 34px 60px -30px rgba(20,22,26,0.55)'
+          : '0 18px 40px -28px rgba(20,22,26,0.45)',
+        border: `1px solid ${COLORS.hairline}`,
+        backgroundColor: '#0f1115',
       }}
-      onMouseEnter={() => onActive(project.slug)}
-      onMouseLeave={() => onActive(null)}
-      onFocus={() => onActive(project.slug)}
-      onBlur={() => onActive(null)}
     >
-      <div className="md:grid md:grid-cols-12 md:items-baseline md:gap-8">
+      {/* the cover, or a fallback panel for a project without one */}
+      {project.image ? (
+        <Image
+          src={project.image}
+          alt=""
+          fill
+          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 340px"
+          className="object-cover transition-[filter,transform] duration-500 group-hover:scale-[1.03] group-hover:brightness-[0.45] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+        />
+      ) : (
         <span
           aria-hidden
-          className="pi-anim block text-5xl leading-none tracking-[-0.02em] md:col-span-2 md:text-7xl"
-          style={{
-            fontFamily: FONTS.display,
-            color: active ? COLORS.accent : COLORS.hairline,
-            transition: `color ${UI}`,
-          }}
+          className="absolute inset-0 grid place-items-center transition-[filter] duration-500 group-hover:brightness-[0.6]"
+          style={{ background: 'radial-gradient(120% 120% at 30% 20%, #1b1f27, #0c0d10)' }}
         >
-          {String(n).padStart(2, '0')}
+          <span className="text-[96px] leading-none" style={{ fontFamily: FONTS.display, color: 'rgba(255,255,255,0.06)' }}>
+            {String(n).padStart(2, '0')}
+          </span>
         </span>
+      )}
 
-        <div className="mt-3 md:col-span-6 md:mt-0">
-          <h3
-            className="pi-anim text-[32px] leading-none tracking-[-0.01em]"
-            style={{
-              fontFamily: FONTS.display,
-              color: active ? COLORS.accent : COLORS.ink,
-              transition: `color ${UI}`,
-            }}
-          >
-            {project.title}
-          </h3>
+      {/* a scrim so the resting title reads on any cover */}
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{ background: 'linear-gradient(to top, rgba(8,9,11,0.85), transparent)' }} />
 
-          {/*
-            No fallback to `tagline`: a project added to the data without an
-            entry here renders no line at all rather than leaking the résumé
-            figures the taglines carry.
-          */}
-          {entry?.line && (
-            <p
-              className="mt-3 text-base leading-relaxed"
-              style={{ fontFamily: FONTS.body, color: COLORS.muted }}
-            >
-              {entry.line}
-            </p>
-          )}
-        </div>
+      {/* cursor glow */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: glow ? `radial-gradient(360px circle at ${glow.x}% ${glow.y}%, rgba(255,255,255,0.10), transparent 45%)` : 'none',
+        }}
+      />
 
-        <div className="mt-4 flex items-baseline gap-3 md:col-span-4 md:mt-0 md:justify-end">
-          {entry?.keys && (
-            <p
-              className="text-[12px] tracking-[0.08em] md:text-right"
-              style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
-            >
-              {entry.keys.join('  ·  ')}
-            </p>
-          )}
-          <Arrow active={active} />
-        </div>
+      {/* number, top-left */}
+      <span className="absolute left-4 top-4 z-[2] text-[11px] tracking-[0.2em]" style={{ fontFamily: FONTS.mono, color: 'rgba(255,255,255,0.55)' }}>
+        {String(n).padStart(2, '0')}
+      </span>
+
+      {/* the resting title — slides up on hover to clear the reveal */}
+      <div className="absolute inset-x-5 bottom-5 z-[2] transition-transform duration-500 group-hover:-translate-y-[92px] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0" style={{ transitionTimingFunction: EASE }}>
+        <h3 className="text-[26px] leading-none" style={{ fontFamily: FONTS.display, color: '#fff' }}>
+          {project.title}
+        </h3>
+      </div>
+
+      {/* the reveal — one-liner + stack, up from the bottom on hover */}
+      <div className="absolute inset-x-5 bottom-5 z-[2] translate-y-2 opacity-0 transition-[opacity,transform] duration-500 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none" style={{ transitionTimingFunction: EASE }}>
+        {entry?.line && (
+          <p className="text-[13.5px] leading-snug" style={{ fontFamily: FONTS.body, color: 'rgba(255,255,255,0.82)' }}>
+            {entry.line}
+          </p>
+        )}
+        {entry?.keys && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {entry.keys.map((k) => (
+              <span key={k} className="rounded-full border px-2.5 py-[3px] text-[10px] tracking-[0.04em]" style={{ fontFamily: FONTS.mono, color: '#fff', borderColor: 'rgba(255,255,255,0.22)' }}>
+                {k}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </Link>
   )
 }
 
 export default function ProjectsIndex() {
-  const [hovered, setHovered] = useState<string | null>(null)
-
-
   return (
     <div className="w-full overflow-x-clip">
-      <style>{REDUCED_MOTION_CSS}</style>
-
-      {/*
-        The nav is fixed and does not offset the document, so this clears it
-        itself — the same `--nav-h` + 5rem every other page uses. Standing alone
-        above the chrome as a preview, a flat pt-24 was enough; under the real
-        nav it would have left the index rule 32px from the bar.
-      */}
       <header className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)]`}>
         <div
           className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
         >
-          {/*
-            The left slot is the page's own name on every page that has this
-            rule — /experience says "experience", /resume says "résumé". This
-            one said "index", which described the layout rather than the page,
-            so the one label a visitor could use to tell where they were was the
-            only one that did not say.
-          */}
           <span>projects</span>
           <span>{String(projects.length).padStart(2, '0')} entries</span>
         </div>
 
-        <h1
-          className="mt-10 text-5xl leading-[0.95] tracking-[-0.02em] md:mt-14 md:text-7xl"
-          style={{ fontFamily: FONTS.display }}
-        >
+        <h1 className="mt-10 text-5xl leading-[0.95] tracking-[-0.02em] md:mt-14 md:text-7xl" style={{ fontFamily: FONTS.display }}>
           projects
         </h1>
 
-        <p
-          className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg"
-          style={{ fontFamily: FONTS.body, color: COLORS.muted }}
-        >
+        <p className="mt-5 text-base leading-relaxed md:mt-6 md:text-lg" style={{ fontFamily: FONTS.body, color: COLORS.muted }}>
           Systems I built to answer a question I could not look up. Mostly agents,
           reinforcement learning, and the infrastructure underneath them.
         </p>
       </header>
 
-      {/* ── the index ──────────────────────────────────────────────────── */}
-      <section className={`${LAYOUT.container} mt-16 md:mt-20`}>
-        <div>
-          {projects.map((project, i) => (
-            <IndexRow
-              key={project.slug}
-              project={project}
-              n={i + 1}
-              active={hovered === project.slug}
-              onActive={setHovered}
-            />
-          ))}
+      {/* the shelf, over a quiet aurora */}
+      <section className="relative mt-16 md:mt-20">
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <span className="absolute rounded-full" style={{ width: 460, height: 460, left: '4%', top: -80, background: 'color-mix(in srgb, var(--accent) 8%, transparent)', filter: 'blur(100px)' }} />
+          <span className="absolute rounded-full" style={{ width: 380, height: 380, right: '6%', top: 220, background: 'color-mix(in srgb, var(--accent) 6%, transparent)', filter: 'blur(100px)' }} />
+        </div>
+
+        <div className={`${LAYOUT.container} relative`}>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, i) => (
+              <TiltCard key={project.slug} project={project} n={i + 1} entry={INDEX[project.slug]} />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── closing ────────────────────────────────────────────────────── */}
       <section className={`${LAYOUT.container} pb-24 pt-16 md:pb-32 md:pt-24`}>
-        <div
-          className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t pt-8"
-          style={{ borderColor: COLORS.hairline }}
-        >
-          <p
-            className="text-base leading-relaxed"
-            style={{ fontFamily: FONTS.body, color: COLORS.muted }}
-          >
-            Smaller experiments and the things that never made it this far are
-            all on GitHub.
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t pt-8" style={{ borderColor: COLORS.hairline }}>
+          <p className="text-base leading-relaxed" style={{ fontFamily: FONTS.body, color: COLORS.muted }}>
+            Smaller experiments and the things that never made it this far are all on GitHub.
           </p>
-
-          <a
-            href={GITHUB}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-baseline gap-2 text-[12px] tracking-[0.08em] underline-offset-4 hover:underline"
-            style={{ fontFamily: FONTS.mono, color: COLORS.accent }}
-          >
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="flex items-baseline gap-2 text-[12px] tracking-[0.08em] underline-offset-4 hover:underline" style={{ fontFamily: FONTS.mono, color: COLORS.accent }}>
             github.com/yih0nk
             <span aria-hidden>→</span>
           </a>
