@@ -2,8 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useState, type MouseEvent, type FocusEvent } from 'react'
 
+import { ROLES, type Role } from '@/lib/experience'
 import { EMAIL } from '@/lib/site'
 import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
@@ -12,81 +13,37 @@ import {
   CELL_EDGE,
   RAMP,
   buildCells,
-  relativeTime,
   useContributions,
-  useLatestPost,
   useElapsed,
   useReducedMotion,
   useSpotify,
 } from './live'
 
 /**
- * The whole of the page below the reel, as one composition.
+ * Everything below the reel, as one composition: the about, the experience
+ * folded in from what used to be its own page, and a live column — what is
+ * playing, the commit block, and a few photographs.
  *
- * The previous arrangement spent three full-height sections on this material —
- * about, then a 420px record, then a two-column footer row — and measured about
- * 2,500px of scroll with two large voids in it. Everything here is the same
- * content at a density that lets the eye take the page in rather than tour it.
+ * The through-line is one interaction. A dotted term in the copy and a row in
+ * the experience ledger both open the same small white badge on hover; a solid
+ * underline navigates instead. So "photography" and "SIAS Lab" behave the same
+ * way, and the page teaches its own vocabulary once.
  *
- * ── two rows ────────────────────────────────────────────────────────────────
- *
- *   ┌─────────────┬──────────────────────────────────┐
- *   │             │  the greeting                    │
- *   │  photograph │  the copy                        │
- *   │             │  ── the closing line             │
- *   ├─────────────┼──────────────────────────────────┤
- *   │  the record │  last wrote          commits     │
- *   └─────────────┴──────────────────────────────────┘
- *
- * Both rows are separate grids on IDENTICAL 5fr/7fr tracks rather than one grid
- * with row spans: the photograph and the copy have to balance each other, and a
- * single grid would tie the record's row height to whichever of them ran longer.
- *
- * There was a band of facts between them — based in, studying, instruments,
- * sport, drink. It is gone. Half of it repeated what the paragraph above
- * already said in better words, and once the duplicates were cut what remained
- * was three lines of biographical trivia earning a whole movement of the page.
- * The copy says who he is; it does not need a spec sheet underneath agreeing.
- *
- * All three kickers in the last row — now playing, last wrote, commits — sit on
- * one line across the gutter, which is why that grid is items-start.
- *
- * The closing line is set in the BODY face, not the display serif. It is a
- * statement, not a pull quote; at 32px display it shouted the one thing that
- * should be said levelly.
- *
- * Hierarchy is carried by size and space. Nothing here is a card, and the only
- * saturated colour on the page is the GitHub ramp, which stays quarantined to
- * the commit block.
+ * Hierarchy is size and space. Nothing here is a card; the only saturated colour
+ * is the GitHub ramp, quarantined to the commit block, and one accent for
+ * interaction.
  */
 
-const {
-  ink: INK,
-  muted: MUTED,
-  bg: BG,
-  hairline: HAIRLINE,
-  accent: ACCENT,
-} = COLORS
+const { ink: INK, muted: MUTED, bg: BG, hairline: HAIRLINE, accent: ACCENT } = COLORS
 const MONO = FONTS.mono
-/**
- * Read through the custom property rather than straight from FONTS: /preview
- * rebinds --font-body on its wrapper so the body face can be swapped live.
- * FONTS.body is the fallback for every other route, where nothing rebinds it.
- */
+/** Read through the property so /preview can rebind the body face; FONTS.body is the floor. */
 const BODY = `var(--font-body, ${FONTS.body})`
 
-const K_VISITS = 'yh:visits'
+const LABEL = 'text-[12px] uppercase leading-none tracking-[0.2em]'
+
+// ── greeting ────────────────────────────────────────────────────────────────
 const K_LAST = 'yh:last'
 
-
-// 3 rows x 10 columns = 30 days.
-const COLS = 10
-const ROWS = 3
-const SPAN = COLS * ROWS
-const CELL = 11
-const GAP = 3.5
-
-/** Opener from the visitor's own clock, so it differs per person, per session. */
 function timeOfDay(hour: number): string {
   if (hour < 5) return 'late night'
   if (hour < 12) return 'good morning'
@@ -95,7 +52,7 @@ function timeOfDay(hour: number): string {
   return 'late night'
 }
 
-/** Friendly, deliberately coarse. Nobody wants "it's been 3.4 days". */
+/** Friendly, deliberately coarse. */
 function relative(ms: number): string {
   const s = Math.max(0, Math.floor(ms / 1000))
   if (s < 60) return 'just now'
@@ -115,61 +72,79 @@ interface Memory {
   line: string
   returning: boolean
 }
-
-/** A "visit" is a page load, not a React mount — see the note in resolveMemory. */
 let loadMemory: Memory | null = null
 
 /**
- * Read the stored visit, write the current one, and turn the gap into a
- * sentence. Read and write are guarded SEPARATELY: Safari's private mode hands
- * back a working `getItem` and then throws on `setItem`, and lumping the two
- * together would discard a memory we had already read and greet a returning
- * visitor as a stranger.
+ * Read the last visit, write this one, turn the gap into a sentence. Read and
+ * write are guarded separately: Safari private mode gives a working getItem and
+ * throws on setItem, and lumping them would greet a returning visitor cold.
  */
 function resolveMemory(): Memory {
   const now = Date.now()
-  let visits = 1
   let previous: number | null = null
-
   try {
-    const rawVisits = window.localStorage.getItem(K_VISITS)
-    const rawLast = window.localStorage.getItem(K_LAST)
-    const pv = rawVisits === null ? 0 : Number.parseInt(rawVisits, 10)
-    const pl = rawLast === null ? 0 : Number.parseInt(rawLast, 10)
-    if (Number.isFinite(pv) && pv > 0) visits = pv + 1
-    // A clock wound backwards would otherwise report a visit from the future.
+    const raw = window.localStorage.getItem(K_LAST)
+    const pl = raw === null ? 0 : Number.parseInt(raw, 10)
     if (Number.isFinite(pl) && pl > 0 && pl <= now) previous = pl
   } catch {
-    visits = 1
     previous = null
   }
-
   try {
-    window.localStorage.setItem(K_VISITS, String(visits))
     window.localStorage.setItem(K_LAST, String(now))
   } catch {
-    // Write blocked; whatever was read above still stands and still shows.
+    /* write blocked; the read above still stands */
   }
-
   const open = timeOfDay(new Date().getHours())
   if (previous === null) return { line: `${open}, first time here`, returning: false }
-
   const rel = relative(now - previous)
-  const line =
-    rel === 'just now'
-      ? `${open}, welcome back, that was quick`
-      : `${open}, welcome back, it’s been ${rel}`
+  const line = rel === 'just now' ? `${open}, welcome back, that was quick` : `${open}, welcome back, it's been ${rel}`
   return { line, returning: true }
 }
 
-const LABEL = 'text-[12px] uppercase leading-none tracking-[0.2em]'
+// ── experience formatting ─────────────────────────────────────────────────────
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-/** ms -> m:ss. Hours would be a podcast, and this is a record. */
+/** "May 2026 – now" · "Jan – Jun 2026" · "Jun – Aug 2025". En dash, never em. */
+function span(r: Role): string {
+  const [fy, fm] = r.from
+  if (!r.to) return `${MON[fm - 1]} ${fy} – now`
+  const [ty, tm] = r.to
+  if (fy === ty) return `${MON[fm - 1]} – ${MON[tm - 1]} ${ty}`
+  return `${MON[fm - 1]} ${fy} – ${MON[tm - 1]} ${ty}`
+}
+
+const cityOf = (loc: string) => loc.split(',')[0].trim()
+
+// ── hobby badges — the dotted terms in the copy ───────────────────────────────
+const HOBBIES = {
+  piano: { icon: '🎹', desc: 'Fifteen years. Where I learned harmony: chords, voicings, what actually holds a song up.' },
+  'tenor sax': { icon: '🎷', desc: 'Three years in. Still bad at it, which is most of the fun.' },
+  photography: { icon: '📷', desc: 'How I practice seeing. Composition, contrast, the way light lands.' },
+  badminton: { icon: '🏸', desc: "Retired competitive doubles, provincial gold. I still can't let a rally go." },
+} as const
+
+/** Placeholder snapshots for the "lately" strip — swap for real ones later. */
+const LATELY = ['/images/reel/03.jpg', '/images/reel/05.jpg', '/images/reel/04.jpg']
+
+// ── clock ─────────────────────────────────────────────────────────────────────
 function clock(ms: number): string {
   const total = Math.max(0, Math.floor(ms / 1000))
   const m = Math.floor(total / 60)
   const sec = total % 60
   return `${m}:${sec < 10 ? '0' : ''}${sec}`
+}
+
+const COLS = 10
+const ROWS = 3
+const SPAN = COLS * ROWS
+const CELL = 11
+const GAP = 3.5
+
+interface BadgeState {
+  label: string
+  text: string
+  x: number
+  y: number
 }
 
 export default function AboutComposed({
@@ -181,8 +156,7 @@ export default function AboutComposed({
 }) {
   const still = useReducedMotion()
 
-  // ── the greeting ──────────────────────────────────────────────────────────
-  // Starts null so the first client render matches the server byte for byte.
+  // greeting — starts null so the first client render matches the server byte
   const [memory, setMemory] = useState<Memory | null>(null)
   useEffect(() => {
     let alive = true
@@ -197,79 +171,69 @@ export default function AboutComposed({
     }
   }, [])
 
-  // ── the record ────────────────────────────────────────────────────────────
-  // Always real Spotify data: the live track, or the last one played. It arrives
-  // with the HTML, so there is no window in which the disc has nothing to show —
-  // it used to mount with a grey label and two empty lines beside it and wait for
-  // a poll. Only a Spotify that cannot answer at all leaves this null, and then
-  // the block holds its space rather than showing a blank record.
+  // the record — always real Spotify data, seeded from the server
   const { track: live } = useSpotify(nowPlaying)
-
-  // Extrapolated between polls; null until the first tick, which is the only
-  // honest answer before the client has a clock of its own.
   const elapsedMs = useElapsed(live)
   const progress = live?.durationMs && elapsedMs !== null ? elapsedMs / live.durationMs : 0
 
-  // ── the live readouts ─────────────────────────────────────────────────────
+  // the commit block
   const { days, total } = useContributions(SPAN)
-  const { post, settled } = useLatestPost()
   const cells = buildCells(days, SPAN)
-  const when = post ? relativeTime(post.date) : null
 
-  const gridWrapRef = useRef<HTMLDivElement | null>(null)
-  const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null)
-
-  const onCellEnter = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    const text = e.currentTarget.dataset.tip
-    const wrap = gridWrapRef.current
-    if (!text || !wrap) return
-    const r = e.currentTarget.getBoundingClientRect()
-    const box = wrap.getBoundingClientRect()
-    // The label is monospace at a known size, so its width is arithmetic rather
-    // than a measurement — no reflow to place a tooltip.
-    const half = (text.length * 6.6 + 16) / 2
-    setTip({
-      x: Math.min(Math.max(r.left - box.left + r.width / 2, half), Math.max(half, box.width - half)),
-      y: r.top - box.top,
-      text,
-    })
-  }, [])
+  // the shared badge
+  const [badge, setBadge] = useState<BadgeState | null>(null)
+  const openBadge = (e: MouseEvent | FocusEvent, label: string, text: string) => {
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    const x = Math.max(12, Math.min(r.left, window.innerWidth - 302))
+    setBadge({ label, text, x, y: r.bottom + 8 })
+  }
+  const closeBadge = () => setBadge(null)
 
   const fade = still ? 'none' : 'opacity 500ms ease'
 
   return (
     <section
       id="about"
-      className="w-full scroll-mt-20 pt-20 pb-6 md:pt-28 md:pb-8"
+      className="w-full scroll-mt-20 pt-20 pb-16 md:pt-28 md:pb-24"
       style={{ backgroundColor: BG, color: INK }}
     >
-      <div className="mx-auto max-w-[1100px] px-6">
-        {/* section label, hairline running off to the right */}
-        <div className="flex items-center gap-4 md:gap-6">
-          <h2 className={`shrink-0 ${LABEL}`} style={{ fontFamily: MONO, color: MUTED }}>
-            about
-          </h2>
-          <span aria-hidden className="h-px flex-1" style={{ backgroundColor: HAIRLINE }} />
-        </div>
+      {/* quiet aurora, fixed behind the page */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <span
+          className="absolute rounded-full"
+          style={{
+            width: 420,
+            height: 420,
+            left: -80,
+            top: 120,
+            background: 'color-mix(in srgb, var(--accent) 9%, transparent)',
+            filter: 'blur(90px)',
+            animation: still ? 'none' : 'aura1 24s ease-in-out infinite',
+          }}
+        />
+        <span
+          className="absolute rounded-full"
+          style={{
+            width: 340,
+            height: 340,
+            right: -60,
+            top: 460,
+            background: 'color-mix(in srgb, var(--accent) 6%, transparent)',
+            filter: 'blur(90px)',
+            animation: still ? 'none' : 'aura2 28s ease-in-out infinite',
+          }}
+        />
+        <style>{`@keyframes aura1{50%{transform:translate(70px,60px) scale(1.1)}}@keyframes aura2{50%{transform:translate(-60px,40px) scale(1.12)}}`}</style>
+      </div>
 
-        {/* ── 1 + 2 — the print, the copy, the closing line ──────────────── */}
-        {/* No items-start: the figure stretches to the row, so the photograph
-            ends level with the copy beside it instead of stopping short and
-            leaving a notch of dead space under the print. */}
-        <div className="mt-10 grid grid-cols-1 gap-x-12 gap-y-10 md:mt-14 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
-          <figure className="group flex w-full max-w-[360px] flex-col md:max-w-none">
-            {/* 4:5 on a phone, where the row height means nothing; on md+ the
-                box gives up its aspect ratio and takes whatever is left after
-                the caption, which is what makes the two columns end together. */}
+      <div className="relative z-[1] mx-auto max-w-[1100px] px-6">
+        {/* ── about ─────────────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 items-center gap-x-12 gap-y-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
+          <figure className="group m-0 flex w-full max-w-[360px] flex-col md:max-w-none">
             <div
-              className="relative aspect-[4/5] w-full overflow-hidden rounded-[3px] md:aspect-auto md:min-h-[420px] md:flex-1"
-              // The placeholder tint was a flat 4% black, which is a lighter
-              // square on a white page and a darker one on a dark page — the
-              // wrong direction. Mixed out of `ink` it inverts with the theme.
-              // The drop shadow keeps its own black: a shadow is cast light,
-              // not page colour, and a pale one reads as a glow.
+              className="relative aspect-[4/5] w-full overflow-hidden rounded-[3px]"
               style={{
-                backgroundColor: `color-mix(in srgb, ${COLORS.ink} 4%, transparent)`,
+                backgroundColor: `color-mix(in srgb, ${INK} 4%, transparent)`,
                 boxShadow: '0 1px 2px rgba(20,22,26,0.07), 0 18px 40px -22px rgba(20,22,26,0.45)',
               }}
             >
@@ -280,7 +244,7 @@ export default function AboutComposed({
                 sizes="(max-width: 768px) 88vw, 460px"
                 quality={90}
                 priority
-                className="object-cover object-[48%_50%] transition-transform duration-[900ms] ease-out motion-safe:group-hover:scale-[1.02] motion-reduce:transition-none"
+                className="object-cover object-[48%_40%] transition-transform duration-[900ms] ease-out motion-safe:group-hover:scale-[1.02] motion-reduce:transition-none"
               />
               <span
                 aria-hidden
@@ -288,9 +252,6 @@ export default function AboutComposed({
                 style={{ boxShadow: `inset 0 0 0 1px ${HAIRLINE}` }}
               />
             </div>
-            {/* "engineer, and a few other things." used to sit here. It now
-                lands under the ASCII name in the hero, where it reads as the
-                second line of the mark rather than a caption to a photograph. */}
             <figcaption className="mt-4 flex shrink-0 items-baseline justify-between gap-4">
               <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
                 yihan hong
@@ -302,8 +263,7 @@ export default function AboutComposed({
           </figure>
 
           <div className="min-w-0">
-            {/* the whisper. The box reserves the tallest the line can get, so the
-                copy below never moves when the greeting arrives. */}
+            {/* the whisper */}
             <div className="mb-6 min-h-8 sm:min-h-4">
               <span
                 className={`inline-flex items-start gap-2 text-[12px] leading-4 uppercase tracking-[0.14em] transition-opacity duration-700 ease-out motion-reduce:transition-none ${
@@ -312,50 +272,54 @@ export default function AboutComposed({
                 style={{ fontFamily: MONO, color: MUTED }}
               >
                 {memory !== null && memory.returning ? (
-                  <span
-                    aria-hidden
-                    className="mt-1.5 inline-block h-1 w-1 shrink-0 rounded-full"
-                    style={{ backgroundColor: ACCENT }}
-                  />
+                  <span aria-hidden className="mt-1.5 inline-block h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: ACCENT }} />
                 ) : null}
                 {memory === null ? '' : memory.line}
               </span>
             </div>
 
-            <div
-              className="space-y-5 text-[16px] leading-relaxed md:text-[18px]"
-              style={{ fontFamily: BODY, color: INK }}
-            >
+            <div className="space-y-5 text-[16px] leading-relaxed md:text-[18px]" style={{ fontFamily: BODY, color: INK }}>
               <p>
-                I&rsquo;m Yihan, a computer engineering and CS student at USC. Most of my week goes
-                to making software act on its own: fine-tuning models to someone&rsquo;s taste,
-                testing whether AI systems behave the way they&rsquo;re supposed to (and documenting
-                the many ways they don&rsquo;t), and wiring up retrieval across hundreds of thousands
-                of records that all insist they&rsquo;re relevant.
+                I&rsquo;m Yihan, a computer engineering and CS student at{' '}
+                <NavTerm href="https://www.usc.edu" icon="🏛">
+                  USC
+                </NavTerm>
+                . Most of my week goes to{' '}
+                <Link
+                  href="/projects"
+                  className="whitespace-nowrap border-b [border-color:var(--accent)] transition-colors duration-200 hover:[color:var(--accent)]"
+                >
+                  <span aria-hidden className="mr-[3px]">🛠</span>making software act on its own
+                </Link>
+                : fine-tuning models to someone&rsquo;s taste, testing whether AI systems behave the way
+                they&rsquo;re supposed to (and documenting the many ways they don&rsquo;t), and wiring up
+                retrieval across hundreds of thousands of records that all insist they&rsquo;re relevant.
               </p>
               <p>
-                The rest of my time is less structured. Fifteen years of piano, three of tenor sax,
-                some photography, and more movies than a person can reasonably defend. I also play
-                badminton with a level of competitiveness the sport did not ask for and cannot
-                contain.
+                The rest of my time is less structured. Fifteen years of{' '}
+                <BadgeTerm label="piano" onOpen={openBadge} onClose={closeBadge}>
+                  <span aria-hidden className="mr-[3px]">{HOBBIES.piano.icon}</span>piano
+                </BadgeTerm>
+                , three of{' '}
+                <BadgeTerm label="tenor sax" onOpen={openBadge} onClose={closeBadge}>
+                  <span aria-hidden className="mr-[3px]">{HOBBIES['tenor sax'].icon}</span>tenor sax
+                </BadgeTerm>
+                , some{' '}
+                <BadgeTerm label="photography" onOpen={openBadge} onClose={closeBadge}>
+                  <span aria-hidden className="mr-[3px]">{HOBBIES.photography.icon}</span>photography
+                </BadgeTerm>
+                , and more movies than a person can reasonably defend. I also play{' '}
+                <BadgeTerm label="badminton" onOpen={openBadge} onClose={closeBadge}>
+                  <span aria-hidden className="mr-[3px]">{HOBBIES.badminton.icon}</span>badminton
+                </BadgeTerm>{' '}
+                with a level of competitiveness the sport did not ask for and cannot contain.
               </p>
-              {/* The close is two short paragraphs — a punchline and a
-                  standing offer — set in the same BODY flow as the two above.
-                  No own block, no hairline tick: the 20px `space-y-5` that
-                  sets every gap here sets these too, so the interval is one
-                  the eye already trusts and no arithmetic has to be kept in
-                  agreement. The lines carry themselves without a mark
-                  announcing them. */}
-              <p>
-                So I&rsquo;m an engineer, and a few other things. Most of them started as
-                the thing I did instead of studying.
-              </p>
+              <p>So I&rsquo;m an engineer, and a few other things. Most of them started as the thing I did instead of studying.</p>
               <p>
                 Summer 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}
                 <a
                   href={`mailto:${EMAIL}`}
-                  className="decoration-1 underline-offset-[3px] transition-colors duration-200 hover:underline focus-visible:underline"
-                  style={{ color: ACCENT }}
+                  className="border-b [border-color:var(--accent)] [color:var(--accent)]"
                 >
                   say hi
                 </a>
@@ -365,186 +329,225 @@ export default function AboutComposed({
           </div>
         </div>
 
-        {/* ── the live row: the record, the last post, the commit block ────
-            One 12-column grid, 5 / 4 / 3. It used to be the same 5fr/7fr as the
-            row above with a nested 1fr/auto inside the right half, and that
-            nested `1fr` pooled every spare pixel into one gap: 211px of nothing
-            between the end of the post title and the commit block. Three
-            explicit spans distribute the slack instead of collecting it.
+        {/* ── experience (folded in) + the live column ──────────────────────── */}
+        <div className="mt-20 grid grid-cols-1 items-start gap-x-12 gap-y-14 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
+          {/* experience ledger — compact, capped narrower than the photograph */}
+          <div>
+            <div className="flex items-center gap-4">
+              <h2 className={`shrink-0 ${LABEL}`} style={{ fontFamily: MONO, color: MUTED }}>
+                experience
+              </h2>
+              <span aria-hidden className="h-px flex-1" style={{ backgroundColor: HAIRLINE }} />
+            </div>
 
-            items-start, not items-center: all three kickers have to sit on one
-            line across the gutter, and centring against a 148px disc drops the
-            first one. */}
-        <div className="mt-20 grid grid-cols-1 items-start gap-x-10 gap-y-10 md:mt-24 md:grid-cols-12 lg:gap-x-12">
-          {/* Top-aligned, not centred: "now playing" has to sit on the same
-              line as "last wrote" and "commits" across the gutter, and centring
-              it against a 148px disc pushed it low. */}
-          <div
-            className="flex items-start gap-6 md:col-span-5"
-            aria-hidden={!live}
-            style={{ opacity: live ? 1 : 0, transition: fade }}
-          >
-            {/* The box holds the row's height whether or not the disc is in it. */}
-            <div className="shrink-0" style={{ width: 148, height: 148 }}>
-              {live ? (
-                <VinylCompact reduced={still} size={148} art={live.image} progress={progress} />
-              ) : null}
-            </div>
-            <div className="min-w-0">
-              <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
-                {live && !live.isPlaying ? 'last played' : 'now playing'}
-              </span>
-              {/* Reserved height so a longer title never shifts the row. */}
-              <div className="mt-4 min-h-[4.25rem]">
-                <p
-                  className="text-[20px] leading-[1.2] text-balance"
-                  style={{ fontFamily: font, color: INK }}
+            <div className="mt-4 max-w-[360px]">
+              {ROLES.map((r) => (
+                <div
+                  key={`${r.org}-${r.title}`}
+                  className="group cursor-help border-b border-dotted py-[7px]"
+                  style={{ borderColor: HAIRLINE }}
+                  onMouseEnter={(e) => openBadge(e, r.org, r.line)}
+                  onMouseLeave={closeBadge}
+                  onFocus={(e) => openBadge(e, r.org, r.line)}
+                  onBlur={closeBadge}
+                  tabIndex={0}
                 >
-                  {live?.title ?? ''}
-                </p>
-                <p className="mt-1.5 text-[16px]" style={{ fontFamily: BODY, color: MUTED }}>
-                  {live?.artist ?? ''}
-                </p>
-              </div>
-              {/* The clock only runs while something is actually playing.
-                  A paused or last-played track reports position 0, and
-                  "0:00 / 2:50" then reads as a stalled player rather than as
-                  nothing happening — it is a number that looks live and is not.
-                  Everything else falls back to the speed, which is the one true
-                  thing a stationary record can say about itself. */}
-              <span
-                className="mt-3 block text-[12px] tracking-[0.2em] uppercase tabular-nums"
-                style={{ fontFamily: MONO, color: MUTED }}
-              >
-                {live?.isPlaying && live.durationMs && elapsedMs !== null
-                  ? `${clock(elapsedMs)} / ${clock(live.durationMs)}`
-                  : '33 1/3 rpm'}
-              </span>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span
+                      className="text-[16px] leading-tight transition-colors group-hover:[color:var(--accent)] group-focus:[color:var(--accent)]"
+                      style={{ fontFamily: font }}
+                    >
+                      {r.org}
+                    </span>
+                    <span className="shrink-0 text-[10.5px] tracking-[0.04em] whitespace-nowrap" style={{ fontFamily: MONO, color: MUTED }}>
+                      {span(r)}
+                    </span>
+                  </div>
+                  <div className="mt-[2px] text-[11px]" style={{ fontFamily: BODY, color: MUTED }}>
+                    {r.title} · {cityOf(r.location)}
+                  </div>
+                </div>
+              ))}
             </div>
+
+            <Link
+              href="/resume"
+              className="mt-4 inline-block text-[11px] tracking-[0.1em] [color:var(--accent)] underline-offset-[3px] hover:underline"
+              style={{ fontFamily: MONO }}
+            >
+              full résumé →
+            </Link>
           </div>
 
-          {/* the two live readouts share the right half of this row */}
-          <div className="min-w-0 md:col-span-4">
-              <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
-                last wrote
-              </span>
-              <div
-                className="mt-4 min-h-[4.25rem]"
-                style={{ opacity: settled ? 1 : 0, transition: fade }}
-              >
-                {post ? (
-                  <>
-                    <h3 className="max-w-[24ch] text-balance">
-                      <Link
-                        href={post.href}
-                        className="text-[20px] leading-[1.2] decoration-1 underline-offset-[6px] transition-colors duration-200 hover:underline focus-visible:underline"
-                        style={{ fontFamily: font, color: INK }}
-                      >
-                        {post.title}
-                      </Link>
-                    </h3>
-                    {(when || post.category) && (
-                      <p
-                        className="mt-2.5 text-[12px] leading-none tracking-[0.18em] uppercase"
-                        style={{ fontFamily: MONO, color: MUTED }}
-                      >
-                        {[when, post.category].filter(Boolean).join('  ·  ')}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-[16px]" style={{ fontFamily: BODY, color: MUTED }}>
-                    nothing new yet
-                  </p>
-                )}
+          {/* live column: now playing + commits, then the photographs */}
+          <div className="flex flex-col gap-10 md:gap-12">
+            <div className="grid grid-cols-1 items-start gap-x-10 gap-y-10 sm:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
+              {/* now playing */}
+              <div className="flex items-start gap-5" aria-hidden={!live} style={{ opacity: live ? 1 : 0, transition: fade }}>
+                <div className="shrink-0" style={{ width: 104, height: 104 }}>
+                  {live ? <VinylCompact reduced={still} size={104} art={live.image} progress={progress} /> : null}
+                </div>
+                <div className="min-w-0">
+                  <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
+                    {live && !live.isPlaying ? 'last played' : 'now playing'}
+                  </span>
+                  <div className="mt-3 min-h-[3.5rem]">
+                    <p className="text-balance text-[18px] leading-[1.2]" style={{ fontFamily: font, color: INK }}>
+                      {live?.title ?? ''}
+                    </p>
+                    <p className="mt-1 text-[14px]" style={{ fontFamily: BODY, color: MUTED }}>
+                      {live?.artist ?? ''}
+                    </p>
+                  </div>
+                  <span className="mt-2 block text-[11px] uppercase tracking-[0.18em] tabular-nums" style={{ fontFamily: MONO, color: MUTED }}>
+                    {live?.isPlaying && live.durationMs && elapsedMs !== null
+                      ? `${clock(elapsedMs)} / ${clock(live.durationMs)}`
+                      : '33 1/3 rpm'}
+                  </span>
+                </div>
+              </div>
+
+              {/* commits */}
+              <div>
+                <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
+                  commits
+                </span>
+                <div className="mt-[19px]">
+                  <div
+                    role="img"
+                    aria-label={
+                      total === null
+                        ? 'GitHub contribution activity for the last thirty days'
+                        : `${total.toLocaleString('en-US')} contribution${total === 1 ? '' : 's'} in the last thirty days`
+                    }
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: `repeat(${COLS}, ${CELL}px)`,
+                      gridTemplateRows: `repeat(${ROWS}, ${CELL}px)`,
+                      gap: GAP,
+                    }}
+                  >
+                    {cells.map((c, i) => (
+                      <div
+                        key={c.key}
+                        aria-hidden
+                        style={{
+                          borderRadius: 2,
+                          background: RAMP[c.level] ?? RAMP[0],
+                          boxShadow: `inset 0 0 0 1px ${CELL_EDGE}`,
+                          transition: still ? 'none' : 'background-color 500ms ease',
+                          transitionDelay: still ? '0ms' : `${i * 8}ms`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div
+                    aria-hidden={total === null}
+                    className="mt-3 flex items-baseline gap-2.5"
+                    style={{ opacity: total === null ? 0 : 1, visibility: total === null ? 'hidden' : 'visible', transition: fade }}
+                  >
+                    <span className="text-[32px] leading-none" style={{ fontFamily: font, color: INK }}>
+                      {total === null ? '0' : total.toLocaleString('en-US')}
+                    </span>
+                    <span className="text-[12px] uppercase leading-none tracking-[0.18em]" style={{ fontFamily: MONO, color: MUTED }}>
+                      in 30 days
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="md:col-span-3">
-              <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
-                commits
+
+            {/* lately — placeholder polaroids, wide across the column */}
+            <div>
+              <span className={`${LABEL} mb-4 block`} style={{ fontFamily: MONO, color: MUTED }}>
+                lately
               </span>
-              {/* 23px, not the 16px its neighbour uses. The two blocks are
-                  box-aligned already, but a 20px serif at 1.2 leading puts its
-                  cap 7px below its own box top while a grid cell starts at
-                  pixel zero — so matching the boxes left the grid visibly high.
-                  This aligns the ink, which is the only alignment anyone sees. */}
-              <div ref={gridWrapRef} className="relative mt-[23px]">
-                <div
-                  onMouseLeave={() => setTip(null)}
-                  role="img"
-                  aria-label={
-                    total === null
-                      ? 'GitHub contribution activity for the last thirty days'
-                      : `${total.toLocaleString('en-US')} contribution${total === 1 ? '' : 's'} in the last thirty days`
-                  }
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${COLS}, ${CELL}px)`,
-                    gridTemplateRows: `repeat(${ROWS}, ${CELL}px)`,
-                    gap: GAP,
-                  }}
-                >
-                  {cells.map((c, i) => (
-                    <div
-                      key={c.key}
-                      aria-hidden
-                      data-tip={c.tip ?? undefined}
-                      onMouseEnter={onCellEnter}
-                      style={{
-                        borderRadius: 2,
-                        background: RAMP[c.level] ?? RAMP[0],
-                        boxShadow: `inset 0 0 0 1px ${CELL_EDGE}`,
-                        transition: still ? 'none' : 'background-color 500ms ease',
-                        transitionDelay: still ? '0ms' : `${i * 8}ms`,
-                      }}
-                    />
-                  ))}
-                </div>
-                {/* the one factual claim — withheld until the data arrives */}
-                <div
-                  aria-hidden={total === null}
-                  className="mt-3.5 flex items-baseline gap-2.5"
-                  style={{
-                    opacity: total === null ? 0 : 1,
-                    visibility: total === null ? 'hidden' : 'visible',
-                    transition: fade,
-                  }}
-                >
-                  <span
-                    className="text-[32px] leading-none"
-                    style={{ fontFamily: font, color: INK }}
+              <div className="group flex w-full items-start justify-between">
+                {LATELY.map((src, i) => (
+                  <div
+                    key={src}
+                    className="w-[32%] rounded-[2px] bg-white p-[9px] pb-[30px] transition-transform duration-500"
+                    style={{
+                      boxShadow: '0 16px 30px -12px rgba(20,22,26,0.5)',
+                      transform: [`rotate(-5deg)`, `rotate(3deg) translateY(10px)`, `rotate(-2deg) translateY(2px)`][i],
+                    }}
                   >
-                    {total === null ? '0' : total.toLocaleString('en-US')}
-                  </span>
-                  <span
-                    className="text-[12px] leading-none tracking-[0.18em] uppercase"
-                    style={{ fontFamily: MONO, color: MUTED }}
-                  >
-                    in 30 days
-                  </span>
-                </div>
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute z-10 rounded-[3px] px-1.5 py-1 text-[12px] leading-none whitespace-nowrap"
-                  style={{
-                    left: tip?.x ?? 0,
-                    top: tip?.y ?? 0,
-                    transform: 'translate(-50%, -100%) translateY(-7px)',
-                    fontFamily: MONO,
-                    letterSpacing: '0.04em',
-                    background: INK,
-                    color: BG,
-                    opacity: tip ? 1 : 0,
-                    visibility: tip ? 'visible' : 'hidden',
-                    transition: still ? 'none' : 'opacity 120ms ease',
-                  }}
-                >
-                  {tip?.text ?? ''}
-                </div>
+                    <div className="relative h-0 w-full pb-[75%]">
+                      <Image src={src} alt="" fill sizes="180px" className="rounded-[1px] object-cover" />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* the shared badge */}
+      <div
+        aria-hidden={badge === null}
+        className="pointer-events-none fixed z-[9000] max-w-[290px] rounded-md border p-[13px_15px] text-[14px] leading-[1.55]"
+        style={{
+          left: badge?.x ?? 0,
+          top: badge?.y ?? 0,
+          background: '#fff',
+          color: INK,
+          borderColor: HAIRLINE,
+          boxShadow: '0 18px 36px -14px rgba(20,22,26,0.30)',
+          opacity: badge ? 1 : 0,
+          transform: badge ? 'none' : 'translateY(5px)',
+          transition: 'opacity .18s, transform .18s',
+          fontFamily: BODY,
+        }}
+      >
+        <span className="mb-1.5 block text-[10px] uppercase tracking-[0.16em] [color:var(--accent)]" style={{ fontFamily: MONO }}>
+          {badge?.label ?? ''}
+        </span>
+        {badge?.text ?? ''}
+      </div>
     </section>
+  )
+}
+
+/** A dotted term in the copy: hovering opens the shared badge, does not navigate. */
+function BadgeTerm({
+  label,
+  children,
+  onOpen,
+  onClose,
+}: {
+  label: string
+  children: React.ReactNode
+  onOpen: (e: MouseEvent | FocusEvent, label: string, text: string) => void
+  onClose: () => void
+}) {
+  const text = HOBBIES[label as keyof typeof HOBBIES].desc
+  return (
+    <span
+      tabIndex={0}
+      className="cursor-help whitespace-nowrap border-b border-dotted transition-colors duration-200 hover:[color:var(--accent)] hover:[border-color:var(--accent)] focus:[color:var(--accent)]"
+      style={{ borderColor: MUTED }}
+      onMouseEnter={(e) => onOpen(e, label, text)}
+      onMouseLeave={onClose}
+      onFocus={(e) => onOpen(e, label, text)}
+      onBlur={onClose}
+    >
+      {children}
+    </span>
+  )
+}
+
+/** A solid-underline link in the copy — navigates. */
+function NavTerm({ href, icon, children }: { href: string; icon: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="whitespace-nowrap border-b [border-color:var(--accent)] transition-colors duration-200 hover:[color:var(--accent)]"
+    >
+      <span aria-hidden className="mr-[3px]">{icon}</span>
+      {children}
+    </a>
   )
 }
