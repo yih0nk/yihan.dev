@@ -206,7 +206,7 @@ export default function AboutComposed({
             height: 420,
             left: -80,
             top: 120,
-            background: 'color-mix(in srgb, var(--accent) 9%, transparent)',
+            background: 'color-mix(in srgb, var(--color-accent) 9%, transparent)',
             filter: 'blur(90px)',
             animation: still ? 'none' : 'aura1 24s ease-in-out infinite',
           }}
@@ -218,7 +218,7 @@ export default function AboutComposed({
             height: 340,
             right: -60,
             top: 460,
-            background: 'color-mix(in srgb, var(--accent) 6%, transparent)',
+            background: 'color-mix(in srgb, var(--color-accent) 6%, transparent)',
             filter: 'blur(90px)',
             animation: still ? 'none' : 'aura2 28s ease-in-out infinite',
           }}
@@ -287,7 +287,7 @@ export default function AboutComposed({
                 . Most of my week goes to{' '}
                 <Link
                   href="/projects"
-                  className="whitespace-nowrap border-b [border-color:var(--accent)] transition-colors duration-200 hover:[color:var(--accent)]"
+                  className="whitespace-nowrap border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
                 >
                   <span aria-hidden className="mr-[3px]">🛠</span>making software act on its own
                 </Link>
@@ -319,7 +319,7 @@ export default function AboutComposed({
                 Summer 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}
                 <a
                   href={`mailto:${EMAIL}`}
-                  className="border-b [border-color:var(--accent)] [color:var(--accent)]"
+                  className="border-b [border-color:var(--color-accent)] [color:var(--color-accent)]"
                 >
                   say hi
                 </a>
@@ -354,7 +354,7 @@ export default function AboutComposed({
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <span
-                      className="text-[22px] leading-tight transition-colors group-hover:[color:var(--accent)] group-focus:[color:var(--accent)]"
+                      className="text-[22px] leading-tight transition-colors group-hover:[color:var(--color-accent)] group-focus:[color:var(--color-accent)]"
                       style={{ fontFamily: font }}
                     >
                       {r.org}
@@ -372,7 +372,7 @@ export default function AboutComposed({
 
             <Link
               href="/resume"
-              className="mt-4 inline-block text-[11px] tracking-[0.1em] [color:var(--accent)] underline-offset-[3px] hover:underline"
+              className="mt-4 inline-block text-[11px] tracking-[0.1em] [color:var(--color-accent)] underline-offset-[3px] hover:underline"
               style={{ fontFamily: MONO }}
             >
               full résumé →
@@ -517,7 +517,7 @@ export default function AboutComposed({
           fontFamily: BODY,
         }}
       >
-        <span className="mb-1.5 block text-[10px] uppercase tracking-[0.16em] [color:var(--accent)]" style={{ fontFamily: MONO }}>
+        <span className="mb-1.5 block text-[10px] uppercase tracking-[0.16em] [color:var(--color-accent)]" style={{ fontFamily: MONO }}>
           {badge?.label ?? ''}
         </span>
         {badge?.text ?? ''}
@@ -542,7 +542,7 @@ function BadgeTerm({
   return (
     <span
       tabIndex={0}
-      className="cursor-help whitespace-nowrap border-b border-dotted transition-colors duration-200 hover:[color:var(--accent)] hover:[border-color:var(--accent)] focus:[color:var(--accent)]"
+      className="cursor-help whitespace-nowrap border-b border-dotted transition-colors duration-200 hover:[color:var(--color-accent)] hover:[border-color:var(--color-accent)] focus:[color:var(--color-accent)]"
       style={{ borderColor: MUTED }}
       onMouseEnter={(e) => onOpen(e, label, text)}
       onMouseLeave={onClose}
@@ -561,7 +561,7 @@ function NavTerm({ href, icon, children }: { href: string; icon: string; childre
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="whitespace-nowrap border-b [border-color:var(--accent)] transition-colors duration-200 hover:[color:var(--accent)]"
+      className="whitespace-nowrap border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
     >
       <span aria-hidden className="mr-[3px]">{icon}</span>
       {children}
