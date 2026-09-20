@@ -141,9 +141,8 @@ Now plays recreationally.
 
 ## Site Map
 
-- / — home, bio, and what is playing right now
+- / — home, bio, experience, and what is playing right now
 - /projects — full project list
-- /experience — education, work history, skills
 - /play — music, art, photography, badminton
 - /blog — writing
 - /resume — password-gated

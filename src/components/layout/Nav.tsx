@@ -53,7 +53,6 @@ import { REEL_SETTLED } from "@/components/home/reelEvent";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
-  { href: "/experience", label: "Experience" },
   { href: "/play", label: "Play" },
   { href: "/blog", label: "Blog" },
 ];

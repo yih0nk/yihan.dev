@@ -86,9 +86,8 @@ function body(): string {
 
 ## Pages
 
-- [Home](${BASE}/): who he is, what he is working on now
+- [Home](${BASE}/): who he is, what he is working on, and his experience
 - [Projects](${BASE}/projects): engineering work, written up as case studies
-- [Experience](${BASE}/experience): roles, education, skills
 - [Play](${BASE}/play): music, art, photography, badminton
 - [Blog](${BASE}/blog): writing on tech, life, music and film
 - [Résumé](${BASE}/resume): password-gated; do not index the contents

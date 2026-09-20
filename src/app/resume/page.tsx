@@ -19,7 +19,8 @@ export const metadata: Metadata = {
  * also had no header rule, so it was the one page that started with a heading
  * floating in space rather than under a label.
  *
- * The rule points back at /experience, which is the page that links here. A
+ * The rule points back home, which is the page that links here now that the
+ * experience section lives there. A
  * gate is a dead end otherwise: there is nothing else on it, and a visitor
  * without the password should not have to reach for the browser's back button.
  */
@@ -35,8 +36,8 @@ export default function ResumePage() {
         }}
       >
         <span>résumé</span>
-        <Link href="/experience" className="hover:underline underline-offset-4">
-          ← experience
+        <Link href="/" className="hover:underline underline-offset-4">
+          ← home
         </Link>
       </div>
 
