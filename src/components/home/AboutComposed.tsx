@@ -490,7 +490,7 @@ export default function AboutComposed({
         style={{
           left: badge?.x ?? 0,
           top: badge?.y ?? 0,
-          background: '#fff',
+          background: COLORS.surface,
           color: INK,
           borderColor: HAIRLINE,
           boxShadow: '0 18px 36px -14px rgba(20,22,26,0.30)',
