@@ -464,21 +464,35 @@ export default function AboutComposed({
               <span className={`${LABEL} mb-4 block`} style={{ fontFamily: MONO, color: MUTED }}>
                 lately
               </span>
-              <div className="group flex w-full items-start justify-between">
-                {LATELY.map((src, i) => (
-                  <div
+              <div className="lately-fan flex w-full items-start justify-between">
+                <style>{`
+                  .lately-fan > figure { transition: transform 500ms cubic-bezier(0.16,1,0.3,1); }
+                  .lately-fan > figure:nth-child(1) { transform: rotate(-5deg); }
+                  .lately-fan > figure:nth-child(2) { transform: rotate(3deg) translateY(10px); }
+                  .lately-fan > figure:nth-child(3) { transform: rotate(-2deg) translateY(2px); }
+                  .lately-fan:hover > figure:nth-child(1) { transform: rotate(-11deg) translate(-22px,-12px) scale(1.03); }
+                  .lately-fan:hover > figure:nth-child(2) { transform: rotate(2deg) translateY(-8px) scale(1.05); }
+                  .lately-fan:hover > figure:nth-child(3) { transform: rotate(8deg) translate(22px,-12px) scale(1.03); }
+                  @media (prefers-reduced-motion: reduce) {
+                    .lately-fan > figure { transition: none; }
+                    .lately-fan:hover > figure:nth-child(1) { transform: rotate(-5deg); }
+                    .lately-fan:hover > figure:nth-child(2) { transform: rotate(3deg) translateY(10px); }
+                    .lately-fan:hover > figure:nth-child(3) { transform: rotate(-2deg) translateY(2px); }
+                  }
+                `}</style>
+                {LATELY.map((src) => (
+                  <figure
                     key={src}
-                    className="w-[32%] rounded-[2px] p-[10px] pb-[34px] transition-transform duration-500"
+                    className="m-0 w-[32%] rounded-[2px] p-[10px] pb-[34px]"
                     style={{
                       background: 'light-dark(#ffffff, #3a3d44)',
                       boxShadow: '0 16px 30px -12px rgba(20,22,26,0.5)',
-                      transform: [`rotate(-5deg)`, `rotate(3deg) translateY(10px)`, `rotate(-2deg) translateY(2px)`][i],
                     }}
                   >
                     <div className="relative h-0 w-full pb-[92%]">
                       <Image src={src} alt="" fill sizes="180px" className="rounded-[1px] object-cover" />
                     </div>
-                  </div>
+                  </figure>
                 ))}
               </div>
             </div>
