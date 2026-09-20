@@ -330,7 +330,7 @@ export default function AboutComposed({
         </div>
 
         {/* ── experience (folded in) + the live column ──────────────────────── */}
-        <div className="mt-20 grid grid-cols-1 items-stretch gap-x-12 gap-y-14 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
+        <div className="mt-20 grid grid-cols-1 items-start gap-x-12 gap-y-14 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
           {/* experience ledger — compact, capped narrower than the photograph */}
           <div>
             <div className="flex items-center gap-4">
@@ -379,9 +379,10 @@ export default function AboutComposed({
             </Link>
           </div>
 
-          {/* live column: now playing + commits, then the photographs — spread
-              to the height of the experience ledger beside it */}
-          <div className="flex h-full flex-col justify-between gap-12">
+          {/* live column: now playing + commits, then the photographs. Flows
+              top-down with one even gap — forcing it to the ledger's full height
+              only piled the slack into a single void between the two blocks. */}
+          <div className="flex flex-col gap-12">
             <div className="grid grid-cols-1 items-start gap-x-10 gap-y-10 sm:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
               {/* now playing */}
               <div className="flex items-start gap-5" aria-hidden={!live} style={{ opacity: live ? 1 : 0, transition: fade }}>
