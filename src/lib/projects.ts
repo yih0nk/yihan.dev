@@ -43,10 +43,10 @@ export const projects: Project[] = [
     slug: "cotter",
     title: "Cotter",
     tagline:
-      "Compliance testing for AI-controlled robot policies — pytest for robots.",
+      "Compliance testing for AI-controlled robot policies: pytest for robots.",
     description: [
-      "Cotter loads a trained robot policy as a black box (observation → action), runs it through a battery of standardized tests in MuJoCo simulation, and produces structured pass/fail results with statistical guarantees. It targets the emerging regulatory need for evidence that a learned controller actually behaves (EU Machinery Regulation, ISO 10218), but the core is just honest, reproducible testing. Everything runs on CPU — developed on Apple Silicon, with no CUDA anywhere in the stack.",
-      "Four test categories, each backed by a real statistical method. Performance uses Wald's sequential probability ratio test (SPRT), which stops sampling as soon as the evidence is decisive — cutting the median trials needed from 20 to 9. Safety runs per-timestep checks on joint velocities, actuator forces, and contacts, where a single violation anywhere fails with no averaging. Regression uses matched pairs on a shared seed sequence with exact McNemar and Wilcoxon signed-rank tests.",
+      "Cotter loads a trained robot policy as a black box (observation → action), runs it through a battery of standardized tests in MuJoCo simulation, and produces structured pass/fail results with statistical guarantees. It targets the emerging regulatory need for evidence that a learned controller actually behaves (EU Machinery Regulation, ISO 10218), but the core is just honest, reproducible testing. Everything runs on CPU. Developed on Apple Silicon, with no CUDA anywhere in the stack.",
+      "Four test categories, each backed by a real statistical method. Performance uses Wald's sequential probability ratio test (SPRT), which stops sampling as soon as the evidence is decisive, cutting the median trials needed from 20 to 9. Safety runs per-timestep checks on joint velocities, actuator forces, and contacts, where a single violation anywhere fails with no averaging. Regression uses matched pairs on a shared seed sequence with exact McNemar and Wilcoxon signed-rank tests.",
       "The adversarial suite trains a PPO adversary to perturb the policy's observations within an L∞ budget, alongside a guaranteed random-noise baseline. On a trained victim policy it drove task success from 100% to 0% at a bounded budget where random noise had zero effect. As founder I built and published the framework to PyPI (as cotterbot); the statistical core is validated by 75 passing tests with green CI.",
     ],
     tags: [
@@ -74,7 +74,7 @@ export const projects: Project[] = [
       "A Kubernetes operator that turns a Prometheus alert into a GitHub PR with an LLM-generated root-cause report.",
     description: [
       "A Prometheus alert fires and Alertmanager POSTs it to the operator's webhook receiver, which creates an IncidentTriage custom resource in the alert's namespace. The reconciler drives that CR through a phase machine, fanning out three evidence agents concurrently with an errgroup: one fetches pod logs, one queries Prometheus for resource trends, and one matches the alert against a ConfigMap of runbooks.",
-      "A synthesizer agent then combines their outputs into a root-cause summary and recommended fix, and the operator opens a GitHub PR with the full report — before anyone has opened a terminal. All LLM calls go through any OpenAI-compatible backend: a local Ollama by default, or a hosted provider like Groq.",
+      "A synthesizer agent then combines their outputs into a root-cause summary and recommended fix, and the operator opens a GitHub PR with the full report, before anyone has opened a terminal. All LLM calls go through any OpenAI-compatible backend: a local Ollama by default, or a hosted provider like Groq.",
       "Built in Go with kubebuilder v4, and open-sourced under MIT. Stack: Go, Kubernetes, Prometheus, and Helm.",
     ],
     tags: [
@@ -121,7 +121,7 @@ export const projects: Project[] = [
       "A walking robot built from scratch, trained with reinforcement learning to move and interact with its environment.",
     description: [
       "Rocket is a custom-built robot developed with USC Makers. The hardware runs on an ATmega microcontroller and a Jetson for compute, with stepper motors, an IMU, and other sensors.",
-      "I wrote the I2C communication protocol between the ATmega and Jetson and helped assemble the robot — wiring, electronics, and integration. On the software side, I implemented a custom RL environment in Python using Isaac Sim and Isaac Lab, defining state observations, action spaces, and reward functions to prototype autonomous control behaviors in simulation using OpenAI Gymnasium.",
+      "I wrote the I2C communication protocol between the ATmega and Jetson and helped assemble the robot: wiring, electronics, and integration. On the software side, I implemented a custom RL environment in Python using Isaac Sim and Isaac Lab, defining state observations, action spaces, and reward functions to prototype autonomous control behaviors in simulation using OpenAI Gymnasium.",
     ],
     tags: [
       "Python",

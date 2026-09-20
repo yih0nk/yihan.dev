@@ -152,13 +152,13 @@ function resolveMemory(): Memory {
   }
 
   const open = timeOfDay(new Date().getHours())
-  if (previous === null) return { line: `${open} — first time here`, returning: false }
+  if (previous === null) return { line: `${open}, first time here`, returning: false }
 
   const rel = relative(now - previous)
   const line =
     rel === 'just now'
-      ? `${open} — welcome back, that was quick`
-      : `${open} — welcome back, it’s been ${rel}`
+      ? `${open}, welcome back, that was quick`
+      : `${open}, welcome back, it’s been ${rel}`
   return { line, returning: true }
 }
 
@@ -347,8 +347,8 @@ export default function AboutComposed({
                   agreement. The lines carry themselves without a mark
                   announcing them. */}
               <p>
-                So I&rsquo;m just an engineer, and a few other things. Really &mdash; the
-                &ldquo;few other things&rdquo; are where most of the personality lives.
+                So I&rsquo;m an engineer, and a few other things. Most of them started as
+                the thing I did instead of studying.
               </p>
               <p>
                 Summer 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}

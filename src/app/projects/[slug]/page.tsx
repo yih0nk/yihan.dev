@@ -147,7 +147,7 @@ export default async function ProjectDetailPage({
         >
           <Image
             src={project.image}
-            alt={`${project.title} — screenshot`}
+            alt={`${project.title} screenshot`}
             width={1100}
             height={619}
             sizes="(min-width: 1100px) 1052px, 100vw"

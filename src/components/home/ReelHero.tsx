@@ -1340,7 +1340,7 @@ export default function ReelHero({ font }: { font: string }) {
       style={{ background: COLORS.bg }}
     >
       {/* the canvas is decorative; the name itself is real text for everyone else */}
-      <h1 className="sr-only">Yihan Hong — engineer, and a few other things.</h1>
+      <h1 className="sr-only">Yihan Hong, engineer, and a few other things.</h1>
 
       <canvas
         ref={canvasRef}
