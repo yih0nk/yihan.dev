@@ -167,8 +167,16 @@ function TiltCard({ project, n, entry }: { project: Project; n: number; entry: I
 
 export default function ProjectsIndex() {
   return (
-    <div className="w-full overflow-x-clip">
-      <header className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)]`}>
+    <div className="relative w-full overflow-x-clip">
+      {/* ambient aurora — sits behind the header whitespace and the top of the
+          shelf, where it actually shows, rather than trapped under the cards */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[900px] overflow-hidden">
+        <span className="absolute rounded-full" style={{ width: 520, height: 520, left: '-6%', top: -60, background: 'color-mix(in srgb, var(--color-accent) 30%, transparent)', filter: 'blur(100px)' }} />
+        <span className="absolute rounded-full" style={{ width: 440, height: 440, right: '-4%', top: 40, background: 'color-mix(in srgb, var(--color-accent) 22%, transparent)', filter: 'blur(100px)' }} />
+        <span className="absolute rounded-full" style={{ width: 340, height: 340, left: '42%', top: 340, background: 'color-mix(in srgb, var(--color-accent) 15%, transparent)', filter: 'blur(110px)' }} />
+      </div>
+
+      <header className={`${LAYOUT.container} relative pt-[calc(var(--nav-h)+5rem)]`}>
         <div
           className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
@@ -187,13 +195,8 @@ export default function ProjectsIndex() {
         </p>
       </header>
 
-      {/* the shelf, over a quiet aurora */}
+      {/* the shelf */}
       <section className="relative mt-16 md:mt-20">
-        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-          <span className="absolute rounded-full" style={{ width: 460, height: 460, left: '4%', top: -80, background: 'color-mix(in srgb, var(--accent) 8%, transparent)', filter: 'blur(100px)' }} />
-          <span className="absolute rounded-full" style={{ width: 380, height: 380, right: '6%', top: 220, background: 'color-mix(in srgb, var(--accent) 6%, transparent)', filter: 'blur(100px)' }} />
-        </div>
-
         <div className={`${LAYOUT.container} relative`}>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, i) => (
