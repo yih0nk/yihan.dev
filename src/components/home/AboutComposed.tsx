@@ -123,8 +123,8 @@ const HOBBIES = {
   badminton: { icon: '🏸', desc: "Retired competitive doubles, provincial gold. I still can't let a rally go." },
 } as const
 
-/** Placeholder snapshots for the "lately" strip — swap for real ones later. */
-const LATELY = ['/images/reel/03.jpg', '/images/reel/05.jpg', '/images/reel/04.jpg']
+/** Snapshots for the "lately" strip — fanned left to right. */
+const LATELY = ['/images/lately/01.jpg', '/images/lately/02.jpg', '/images/lately/03.jpg']
 
 // ── clock ─────────────────────────────────────────────────────────────────────
 function clock(ms: number): string {
