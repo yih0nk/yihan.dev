@@ -137,8 +137,8 @@ function clock(ms: number): string {
 const COLS = 10
 const ROWS = 3
 const SPAN = COLS * ROWS
-const CELL = 11
-const GAP = 3.5
+const CELL = 13
+const GAP = 4
 
 interface BadgeState {
   label: string
@@ -330,7 +330,7 @@ export default function AboutComposed({
         </div>
 
         {/* ── experience (folded in) + the live column ──────────────────────── */}
-        <div className="mt-20 grid grid-cols-1 items-start gap-x-12 gap-y-14 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
+        <div className="mt-20 grid grid-cols-1 items-stretch gap-x-12 gap-y-14 md:mt-24 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
           {/* experience ledger — compact, capped narrower than the photograph */}
           <div>
             <div className="flex items-center gap-4">
@@ -379,13 +379,14 @@ export default function AboutComposed({
             </Link>
           </div>
 
-          {/* live column: now playing + commits, then the photographs */}
-          <div className="flex flex-col gap-10 md:gap-12">
+          {/* live column: now playing + commits, then the photographs — spread
+              to the height of the experience ledger beside it */}
+          <div className="flex h-full flex-col justify-between gap-12">
             <div className="grid grid-cols-1 items-start gap-x-10 gap-y-10 sm:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
               {/* now playing */}
               <div className="flex items-start gap-5" aria-hidden={!live} style={{ opacity: live ? 1 : 0, transition: fade }}>
-                <div className="shrink-0" style={{ width: 104, height: 104 }}>
-                  {live ? <VinylCompact reduced={still} size={104} art={live.image} progress={progress} /> : null}
+                <div className="shrink-0" style={{ width: 128, height: 128 }}>
+                  {live ? <VinylCompact reduced={still} size={128} art={live.image} progress={progress} /> : null}
                 </div>
                 <div className="min-w-0">
                   <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
@@ -466,13 +467,14 @@ export default function AboutComposed({
                 {LATELY.map((src, i) => (
                   <div
                     key={src}
-                    className="w-[32%] rounded-[2px] bg-white p-[9px] pb-[30px] transition-transform duration-500"
+                    className="w-[32%] rounded-[2px] p-[10px] pb-[34px] transition-transform duration-500"
                     style={{
+                      background: 'light-dark(#ffffff, #3a3d44)',
                       boxShadow: '0 16px 30px -12px rgba(20,22,26,0.5)',
                       transform: [`rotate(-5deg)`, `rotate(3deg) translateY(10px)`, `rotate(-2deg) translateY(2px)`][i],
                     }}
                   >
-                    <div className="relative h-0 w-full pb-[75%]">
+                    <div className="relative h-0 w-full pb-[92%]">
                       <Image src={src} alt="" fill sizes="180px" className="rounded-[1px] object-cover" />
                     </div>
                   </div>
