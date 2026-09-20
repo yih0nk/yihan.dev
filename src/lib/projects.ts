@@ -62,7 +62,6 @@ export const projects: Project[] = [
     ],
     image: "/images/projects/cotter.svg",
     links: [
-      { label: "Website", href: "https://cotter-website.vercel.app" },
       { label: "PyPI", href: "https://pypi.org/project/cotterbot/" },
       { label: "GitHub", href: "https://github.com/yih0nk/cotter" },
     ],
