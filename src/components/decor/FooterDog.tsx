@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-import { FONTS, MOTION } from '@/styles/tokens'
+import { useThemeColors } from '@/lib/useThemeColors'
+import { COLORS_DARK, FONTS, MOTION } from '@/styles/tokens'
 
 import { DOG } from './art/dog'
 
@@ -46,11 +47,26 @@ const ROWS = DOG.split('\n')
 const COLS = Math.max(...ROWS.map((r) => r.length))
 const BASE = ROWS.map((r) => [...r.padEnd(COLS)].map((ch) => Math.max(0, RAMP.indexOf(ch))))
 
-/** Ink strength for a ramp index: light fur ~22%, the densest cells ~96%. */
-const ink = (d: number) =>
-  d === 0
-    ? 'transparent'
-    : `color-mix(in srgb, var(--color-ink) ${Math.round(22 + 74 * (d / (RAMP.length - 1)) ** 1.3)}%, transparent)`
+/**
+ * Ink strength for a ramp index: light fur ~22%, the densest cells ~96% in the
+ * light theme; 26 to 78% in the dark one, where the tones are inverted (see
+ * DARK_FLOOR) and the brightest cells are the pale fur.
+ */
+const ink = (d: number, dark: boolean) => {
+  if (d === 0) return 'transparent'
+  const t = (d / (RAMP.length - 1)) ** 1.3
+  const pct = dark ? 26 + 52 * t : 22 + 74 * t
+  return `color-mix(in srgb, var(--color-ink) ${Math.round(pct)}%, transparent)`
+}
+
+/**
+ * The drawing is dark ink on white at heart. With light ink, dense would mean
+ * bright and the dog would read as a photo negative, its shadows glowing. So in
+ * the dark theme the interior is drawn inverted, pale fur bright and shadow
+ * dim, with a floor of `A` so the shaded side of the head never drops into the
+ * page. Edge cells keep their own light glyphs, or the outline becomes a rim.
+ */
+const DARK_FLOOR = RAMP.indexOf('A')
 
 export default function FooterDog({ className = '' }: { className?: string }) {
   const artRef = useRef<HTMLPreElement | null>(null)
@@ -58,13 +74,19 @@ export default function FooterDog({ className = '' }: { className?: string }) {
   const awakeRef = useRef(false)
   awakeRef.current = awake
 
+  // The tones depend on the theme (see DARK_FLOOR), so every cell is
+  // repainted when it changes.
+  const dark = useThemeColors().bg === COLORS_DARK.bg
+
   useEffect(() => {
     const art = artRef.current
     if (!art) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const cells = Array.from(art.querySelectorAll<HTMLSpanElement>('span[data-c]'))
+    const top = RAMP.length - 1
     const inked = (r: number, c: number) => r >= 0 && r < BASE.length && c >= 0 && c < COLS && BASE[r][c] > 0
+    const baseAt = (i: number) => BASE[Math.floor(i / COLS)][i % COLS]
+    const inverted = (d: number) => Math.max(DARK_FLOOR, top + 1 - d)
     // interior only: a cell at the silhouette's edge that changes reads as the
     // outline breaking, not as fur
     const interior: number[] = []
@@ -73,16 +95,26 @@ export default function FooterDog({ className = '' }: { className?: string }) {
         if (d >= 1 && inked(r - 1, c) && inked(r + 1, c) && inked(r, c - 1) && inked(r, c + 1)) interior.push(r * COLS + c)
       }),
     )
-    const top = RAMP.length - 1
-    const baseAt = (i: number) => BASE[Math.floor(i / COLS)][i % COLS]
+    /** The resting tone of an interior cell in the current theme. */
+    const toneAt = (i: number) => (dark ? inverted(baseAt(i)) : baseAt(i))
     const shown = new Map<number, number>(interior.map((i) => [i, baseAt(i)]))
     const nudged = new Map<number, number>()
     const paint = (i: number, d: number) => {
       if (shown.get(i) === d) return
       shown.set(i, d)
       cells[i].textContent = RAMP[d]
-      cells[i].style.color = ink(d)
+      cells[i].style.color = ink(d, dark)
     }
+    // edges keep their glyph but take the theme's ink
+    cells.forEach((cell, i) => {
+      const d = baseAt(i)
+      if (d > 0) cell.style.color = ink(d, dark)
+    })
+    for (const i of interior) paint(i, toneAt(i))
+    const rest = () => {
+      for (const i of interior) paint(i, baseAt(i))
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return rest
 
     let visible = false
     const io = new IntersectionObserver(([e]) => {
@@ -109,7 +141,7 @@ export default function FooterDog({ className = '' }: { className?: string }) {
           const c = i % COLS
           const wave = Math.sin(RIPPLE_K * (r + c * 0.6) - phase)
           const ripple = wave > 0.6 ? Math.round(mode.ripple * (wave - 0.6) / 0.4) : 0
-          const d = baseAt(i) + ripple + (nudged.get(i) ?? 0)
+          const d = toneAt(i) + ripple + (nudged.get(i) ?? 0)
           paint(i, Math.max(1, Math.min(top, d)))
         }
       }
@@ -119,9 +151,9 @@ export default function FooterDog({ className = '' }: { className?: string }) {
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
-      for (const i of interior) paint(i, baseAt(i))
+      rest()
     }
-  }, [])
+  }, [dark])
 
   // The bubble grows out of the head: the small circle first, then the larger
   // one, then the bubble itself, each easing up from a little below and a
@@ -180,7 +212,7 @@ export default function FooterDog({ className = '' }: { className?: string }) {
         {BASE.map((row, r) => (
           <span key={r}>
             {row.map((d, c) => (
-              <span key={c} data-c style={{ color: ink(d) }}>
+              <span key={c} data-c style={{ color: ink(d, false) }}>
                 {RAMP[d]}
               </span>
             ))}
