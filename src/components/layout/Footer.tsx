@@ -13,8 +13,9 @@ import { COLORS, FONTS } from "@/styles/tokens";
  * setting the one long sentence in mono and the five short labels in the body
  * face, and it sat in a 1400px container while every page sits in 1100.
  *
- * The rule is kept: this is the bottom of the document and the hairline is what
- * closes it. Hierarchy inside the footer still comes from size and space.
+ * No rule on top. The hairline used to be what closed the page; the dog does
+ * that now, and the line only cut the page's background off in a hard edge.
+ * Hierarchy inside the footer still comes from size and space.
  */
 /**
  * The URLs come from src/lib/site.ts rather than being typed here. They were
@@ -33,7 +34,7 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16" style={{ borderTop: `1px solid ${COLORS.hairline}` }}>
+    <footer>
       {/*
         Copyright over links on the left, the dog on the right, with room to
         breathe above and below it. The dog sets the footer's height.

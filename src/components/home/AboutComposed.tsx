@@ -194,7 +194,7 @@ export default function AboutComposed({
   return (
     <section
       id="about"
-      className="w-full scroll-mt-20 pt-20 pb-16 md:pt-28 md:pb-24"
+      className="w-full scroll-mt-20 pt-20 pb-12 md:pt-28 md:pb-16"
       style={{ backgroundColor: BG, color: INK }}
     >
       {/* quiet aurora, fixed behind the page */}
