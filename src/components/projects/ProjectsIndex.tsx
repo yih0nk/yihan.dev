@@ -7,6 +7,8 @@ import { useCallback, useRef, useState, type PointerEvent } from 'react'
 import { projects, type Project } from '@/lib/projects'
 import { COLORS, FONTS, LAYOUT, MOTION } from '@/styles/tokens'
 import { useReducedMotion } from '@/components/home/live'
+import AsciiMark from '@/components/decor/AsciiMark'
+import { SHARK } from '@/components/decor/ascii-art'
 
 /**
  * The projects index — a shelf of cards that tilt to the cursor.
@@ -168,15 +170,12 @@ function TiltCard({ project, n, entry }: { project: Project; n: number; entry: I
 export default function ProjectsIndex() {
   return (
     <div className="relative w-full overflow-x-clip">
-      {/* ambient aurora — sits behind the header whitespace and the top of the
-          shelf, where it actually shows, rather than trapped under the cards */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[900px] overflow-hidden">
-        <span className="absolute rounded-full" style={{ width: 520, height: 520, left: '-6%', top: -60, background: 'color-mix(in srgb, var(--color-accent) 30%, transparent)', filter: 'blur(100px)' }} />
-        <span className="absolute rounded-full" style={{ width: 440, height: 440, right: '-4%', top: 40, background: 'color-mix(in srgb, var(--color-accent) 22%, transparent)', filter: 'blur(100px)' }} />
-        <span className="absolute rounded-full" style={{ width: 340, height: 340, left: '42%', top: 340, background: 'color-mix(in srgb, var(--color-accent) 15%, transparent)', filter: 'blur(110px)' }} />
-      </div>
+      {/* ascii marks in the corners' whitespace — behind the content, never over
+          the cards (header and shelf sit above on z-[1]) */}
+      <AsciiMark art={SHARK} className="absolute -left-4 top-[calc(var(--nav-h)+1rem)] z-0 hidden origin-center lg:block [transform:rotate(-32deg)]" />
+      <AsciiMark art={SHARK} className="absolute -right-4 bottom-10 z-0 hidden origin-center lg:block [transform:scaleY(-1)_rotate(-32deg)]" />
 
-      <header className={`${LAYOUT.container} relative pt-[calc(var(--nav-h)+5rem)]`}>
+      <header className={`${LAYOUT.container} relative z-[1] pt-[calc(var(--nav-h)+5rem)]`}>
         <div
           className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
           style={{ fontFamily: FONTS.mono, color: COLORS.muted, borderColor: COLORS.hairline }}
@@ -196,7 +195,7 @@ export default function ProjectsIndex() {
       </header>
 
       {/* the shelf */}
-      <section className="relative mt-16 md:mt-20">
+      <section className="relative z-[1] mt-16 md:mt-20">
         <div className={`${LAYOUT.container} relative`}>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, i) => (
@@ -206,7 +205,7 @@ export default function ProjectsIndex() {
         </div>
       </section>
 
-      <section className={`${LAYOUT.container} pb-24 pt-16 md:pb-32 md:pt-24`}>
+      <section className={`${LAYOUT.container} relative z-[1] pb-24 pt-16 md:pb-32 md:pt-24`}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 border-t pt-8" style={{ borderColor: COLORS.hairline }}>
           <p className="text-base leading-relaxed" style={{ fontFamily: FONTS.body, color: COLORS.muted }}>
             Smaller experiments and the things that never made it this far are all on GitHub.
