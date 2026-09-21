@@ -197,35 +197,6 @@ export default function AboutComposed({
       className="w-full scroll-mt-20 pt-20 pb-12 md:pt-28 md:pb-16"
       style={{ backgroundColor: BG, color: INK }}
     >
-      {/* quiet aurora, fixed behind the page */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <span
-          className="absolute rounded-full"
-          style={{
-            width: 420,
-            height: 420,
-            left: -80,
-            top: 120,
-            background: 'color-mix(in srgb, var(--color-accent) 9%, transparent)',
-            filter: 'blur(90px)',
-            animation: still ? 'none' : 'aura1 24s ease-in-out infinite',
-          }}
-        />
-        <span
-          className="absolute rounded-full"
-          style={{
-            width: 340,
-            height: 340,
-            right: -60,
-            top: 460,
-            background: 'color-mix(in srgb, var(--color-accent) 6%, transparent)',
-            filter: 'blur(90px)',
-            animation: still ? 'none' : 'aura2 28s ease-in-out infinite',
-          }}
-        />
-        <style>{`@keyframes aura1{50%{transform:translate(70px,60px) scale(1.1)}}@keyframes aura2{50%{transform:translate(-60px,40px) scale(1.12)}}`}</style>
-      </div>
-
       <div className="relative z-[1] mx-auto max-w-[1100px] px-6">
         {/* ── about ─────────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 items-center gap-x-12 gap-y-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-16">
