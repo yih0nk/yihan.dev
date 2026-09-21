@@ -13,3 +13,6 @@ tsconfig.tsbuildinfo
 
 # Working notes — useful locally, not repo content.
 docs/
+
+# Editor and agent tooling. Local convenience, not repo content.
+.claude/
