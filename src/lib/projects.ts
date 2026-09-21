@@ -60,7 +60,7 @@ export const projects: Project[] = [
       "Open Source",
       "PyPI",
     ],
-    image: "/images/projects/cotter.svg",
+    image: "/images/projects/cotter.jpg",
     links: [
       { label: "PyPI", href: "https://pypi.org/project/cotterbot/" },
       { label: "GitHub", href: "https://github.com/yih0nk/cotter" },
@@ -86,7 +86,7 @@ export const projects: Project[] = [
       "Operator Pattern",
       "Ollama / Groq",
     ],
-    image: "/images/projects/hivemind.svg",
+    image: "/images/projects/hivemind.jpg",
     links: [{ label: "GitHub", href: "https://github.com/yih0nk/hivemind" }],
   },
   {
@@ -109,6 +109,7 @@ export const projects: Project[] = [
       "Traffic Simulation",
       "Real TLC Data",
     ],
+    image: "/images/projects/robotaxi-simulation.jpg",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/sias-project" },
     ],
@@ -156,6 +157,7 @@ export const projects: Project[] = [
       "LaTeX",
       "YAML",
     ],
+    image: "/images/projects/job-hunt-agent.jpg",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/job-hunt-agent" },
     ],
