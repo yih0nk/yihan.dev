@@ -7,8 +7,8 @@ import { useCallback, useRef, useState, type PointerEvent } from 'react'
 import { projects, type Project } from '@/lib/projects'
 import { COLORS, FONTS, LAYOUT, MOTION } from '@/styles/tokens'
 import { useReducedMotion } from '@/components/home/live'
-import AsciiMark from '@/components/decor/AsciiMark'
-import { SHARK } from '@/components/decor/ascii-art'
+import Swimmer from '@/components/decor/Swimmer'
+import { SHARK } from '@/components/decor/art/shark'
 
 /**
  * The projects index — a shelf of cards that tilt to the cursor.
@@ -172,8 +172,22 @@ export default function ProjectsIndex() {
     <div className="relative w-full overflow-x-clip">
       {/* ascii marks in the corners' whitespace — behind the content, never over
           the cards (header and shelf sit above on z-[1]) */}
-      <AsciiMark art={SHARK} className="absolute -left-4 top-[calc(var(--nav-h)+1rem)] z-0 hidden origin-center lg:block [transform:rotate(-32deg)]" />
-      <AsciiMark art={SHARK} className="absolute -right-4 bottom-10 z-0 hidden origin-center lg:block [transform:scaleY(-1)_rotate(-32deg)]" />
+      {/* two ascii hammerheads swimming the side margins. Each lane is exactly
+          the margin beside the 1100px column, and only shown once that margin
+          is wide enough to hold a shark, so they never cross the cards. */}
+      <Swimmer
+        art={SHARK}
+        speed={46}
+        phase={0.08}
+        className="absolute left-0 top-[calc(var(--nav-h)+1rem)] bottom-24 z-0 hidden w-[calc((100%-1100px)/2)] min-[1560px]:block"
+      />
+      <Swimmer
+        art={SHARK}
+        headDown
+        speed={38}
+        phase={0.62}
+        className="absolute right-0 top-[calc(var(--nav-h)+1rem)] bottom-24 z-0 hidden w-[calc((100%-1100px)/2)] min-[1560px]:block"
+      />
 
       <header className={`${LAYOUT.container} relative z-[1] pt-[calc(var(--nav-h)+5rem)]`}>
         <div
