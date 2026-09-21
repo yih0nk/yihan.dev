@@ -139,10 +139,15 @@ export default async function ProjectDetailPage({
         The picture is no longer in a box: a border around a screenshot that
         already has its own edges is an outline drawn on an outline. A hairline
         above and below places it in the column instead.
+
+        Capped at 640px and left-aligned with the prose. At the full 1052px a
+        4:3 cover ran ~790px tall and pushed the writing below the fold; at
+        640 it is ~480px and reads as a figure, not a banner. A side-by-side
+        layout was tried and rejected.
       */}
       {project.image && (
         <figure
-          className="mt-12 border-y py-px md:mt-16"
+          className="mt-12 max-w-[640px] border-y py-px md:mt-16"
           style={{ borderColor: COLORS.hairline }}
         >
           <Image
@@ -150,7 +155,7 @@ export default async function ProjectDetailPage({
             alt={`${project.title} screenshot`}
             width={1100}
             height={619}
-            sizes="(min-width: 1100px) 1052px, 100vw"
+            sizes="(min-width: 700px) 640px, 100vw"
             className="h-auto w-full"
           />
         </figure>

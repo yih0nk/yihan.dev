@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import FooterDog from "@/components/decor/FooterDog";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/site";
 import { COLORS, FONTS } from "@/styles/tokens";
 
@@ -12,8 +13,9 @@ import { COLORS, FONTS } from "@/styles/tokens";
  * setting the one long sentence in mono and the five short labels in the body
  * face, and it sat in a 1400px container while every page sits in 1100.
  *
- * The rule is kept: this is the bottom of the document and the hairline is what
- * closes it. Hierarchy inside the footer still comes from size and space.
+ * No rule on top. The hairline used to be what closed the page; the dog does
+ * that now, and the line only cut the page's background off in a hard edge.
+ * Hierarchy inside the footer still comes from size and space.
  */
 /**
  * The URLs come from src/lib/site.ts rather than being typed here. They were
@@ -32,32 +34,40 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16" style={{ borderTop: `1px solid ${COLORS.hairline}` }}>
-      <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-5 px-6 py-10 md:flex-row">
-        <p
-          className="text-[14px]"
-          style={{ fontFamily: `var(--font-body, ${FONTS.body})`, color: COLORS.muted }}
-        >
-          © {new Date().getFullYear()} yihan hong · built with next.js and too much coffee.
-        </p>
+    <footer>
+      {/*
+        Copyright over links on the left, the dog on the right, with room to
+        breathe above and below it. The dog sets the footer's height.
+      */}
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col items-center gap-3 md:items-start">
+          <p
+            className="text-[14px]"
+            style={{ fontFamily: `var(--font-body, ${FONTS.body})`, color: COLORS.muted }}
+          >
+            © {new Date().getFullYear()} yihan hong · built with next.js and too much coffee.
+          </p>
 
-        <nav>
-          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            {SOCIAL_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-[12px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-[var(--color-ink)] focus-visible:text-[var(--color-ink)]"
-                  style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav>
+            <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {SOCIAL_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="text-[12px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-[var(--color-ink)] focus-visible:text-[var(--color-ink)]"
+                    style={{ fontFamily: FONTS.mono, color: COLORS.muted }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        <FooterDog className="self-end md:self-auto" />
       </div>
     </footer>
   );

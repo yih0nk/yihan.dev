@@ -20,7 +20,7 @@ export const projects: Project[] = [
     tagline:
       "An all-in-one cafe operations platform with real-time inventory, automated ordering, and ML-driven demand forecasting.",
     description: [
-      "Built for the USC LavaLab accelerator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
+      "Built in LavaLab, USC's premier startup incubator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
       "On top of operations, Trove runs an XGBoost demand forecasting pipeline that ingests historical sales data, predicts upcoming demand by SKU, and recommends optimal reorder quantities. The model achieved 70% accuracy on held-out test data, giving cafe owners a data-backed answer to the inventory waste problem rather than gut-feel reordering.",
       "Trove won the Best Traction Award ($500) at the USC LavaLab Demo Day.",
     ],
@@ -60,9 +60,8 @@ export const projects: Project[] = [
       "Open Source",
       "PyPI",
     ],
-    image: "/images/projects/cotter.svg",
+    image: "/images/projects/cotter.jpg",
     links: [
-      { label: "Website", href: "https://cotter-website.vercel.app" },
       { label: "PyPI", href: "https://pypi.org/project/cotterbot/" },
       { label: "GitHub", href: "https://github.com/yih0nk/cotter" },
     ],
@@ -87,7 +86,7 @@ export const projects: Project[] = [
       "Operator Pattern",
       "Ollama / Groq",
     ],
-    image: "/images/projects/hivemind.svg",
+    image: "/images/projects/hivemind.jpg",
     links: [{ label: "GitHub", href: "https://github.com/yih0nk/hivemind" }],
   },
   {
@@ -110,6 +109,7 @@ export const projects: Project[] = [
       "Traffic Simulation",
       "Real TLC Data",
     ],
+    image: "/images/projects/robotaxi-simulation.jpg",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/sias-project" },
     ],
@@ -136,6 +136,30 @@ export const projects: Project[] = [
     image: "/images/projects/rocket.png",
     links: [
       { label: "GitHub", href: "https://github.com/uscmakers/Rocket" },
+    ],
+  },
+  {
+    slug: "job-hunt-agent",
+    title: "Job Hunt Agent",
+    tagline:
+      "A multi-agent recruiting pipeline for Claude Code that watches job sources, scores each role against your profile, tailors the application, and fills the form to the submit button for you to review.",
+    description: [
+      "A reproducible multi-agent pipeline built on Claude Code and orchestrated by a /recruit skill. Four agents split the work: Scout polls job-listing sources and queues the new roles, Matcher scores each one 0 to 100 on a transparent rubric and picks a résumé category, Applier resolves the real ATS link and tailors the package, and Tracker maintains the board and catches recruiter replies by email.",
+      "Scoring is a weighted rubric over role type, tech-stack overlap, eligibility, level, and domain, with hard gates that flag citizenship-required, grad-only, wrong-term, or defense roles ineligible regardless of score. Above the threshold it auto-drafts, in the grey band it asks for a manual look, and below that it drops the role. It reads the source repos' own HTML to resolve links, never a private API.",
+      "It fills each application up to the submit button and stops: a human reviews and submits. By design it never submits, creates accounts, types passwords, or solves CAPTCHAs. Configs, résumés, and drafted packages are gitignored and stay on the machine; only the agent and skill code is public.",
+    ],
+    tags: [
+      "Python",
+      "Claude Code",
+      "Multi-Agent",
+      "LLM Agents",
+      "Browser Automation",
+      "LaTeX",
+      "YAML",
+    ],
+    image: "/images/projects/job-hunt-agent.jpg",
+    links: [
+      { label: "GitHub", href: "https://github.com/yih0nk/job-hunt-agent" },
     ],
   },
 ];
