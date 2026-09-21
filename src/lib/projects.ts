@@ -137,6 +137,29 @@ export const projects: Project[] = [
       { label: "GitHub", href: "https://github.com/uscmakers/Rocket" },
     ],
   },
+  {
+    slug: "job-hunt-agent",
+    title: "Job Hunt Agent",
+    tagline:
+      "A multi-agent recruiting pipeline for Claude Code that watches job sources, scores each role against your profile, tailors the application, and fills the form to the submit button for you to review.",
+    description: [
+      "A reproducible multi-agent pipeline built on Claude Code and orchestrated by a /recruit skill. Four agents split the work: Scout polls job-listing sources and queues the new roles, Matcher scores each one 0 to 100 on a transparent rubric and picks a résumé category, Applier resolves the real ATS link and tailors the package, and Tracker maintains the board and catches recruiter replies by email.",
+      "Scoring is a weighted rubric over role type, tech-stack overlap, eligibility, level, and domain, with hard gates that flag citizenship-required, grad-only, wrong-term, or defense roles ineligible regardless of score. Above the threshold it auto-drafts, in the grey band it asks for a manual look, and below that it drops the role. It reads the source repos' own HTML to resolve links, never a private API.",
+      "It fills each application up to the submit button and stops: a human reviews and submits. By design it never submits, creates accounts, types passwords, or solves CAPTCHAs. Configs, résumés, and drafted packages are gitignored and stay on the machine; only the agent and skill code is public.",
+    ],
+    tags: [
+      "Python",
+      "Claude Code",
+      "Multi-Agent",
+      "LLM Agents",
+      "Browser Automation",
+      "LaTeX",
+      "YAML",
+    ],
+    links: [
+      { label: "GitHub", href: "https://github.com/yih0nk/job-hunt-agent" },
+    ],
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {

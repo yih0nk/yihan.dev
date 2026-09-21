@@ -55,6 +55,10 @@ const INDEX: Record<string, IndexEntry> = {
     line: 'A walking robot built from scratch, taught to move in simulation.',
     keys: ['Isaac Sim', 'Jetson', 'I2C'],
   },
+  'job-hunt-agent': {
+    line: 'Watches job sources, scores each role, tailors it, and stops at the submit button.',
+    keys: ['Python', 'Claude Code', 'Multi-Agent'],
+  },
 }
 
 const EASE = MOTION.ease
