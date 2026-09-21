@@ -1,23 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">
 <!--
-  Lowercase y in Instrument Serif: the same face and case as the wordmark in
-  the nav. An OUTLINE, not text — a favicon is its own document and cannot load
-  the site's fonts.
+  The footer dog's head, as a favicon. Cropped from the same source as the
+  footer retriever (private/ascii-sources), replacing a serif y whose descender
+  ran into the bottom edge and read as chopped.
 
-  The stroke is deliberate. Instrument Serif is a display face with very fine
-  hairlines, and at 16px the unstroked glyph renders as a faint smudge. 40 units
-  thickens it enough to read in a tab; 60 was legible too but blobbed the serifs
-  at 64px, and this one file has to serve every size.
-
-  FILL AND STROKE BOTH FLIP. Theming only the fill leaves a light letter with a
-  dark outline on dark chrome.
-
-  Ink is from src/styles/tokens.ts; the dark value is pure white rather than the
-  token's #e9eaec, chosen deliberately for contrast against dark browser chrome.
+  Two 32px rasters, one per theme. Dark is not the light one recoloured: with
+  light ink, dense would mean bright and the head would read as a photo
+  negative, so the dark raster inverts the interior (pale fur bright, shadow
+  dim) with a floor, and holds the outline at a mid tone. Same approach as
+  FooterDog.
 -->
 <style>
-path{fill:#14161a;stroke:#14161a}
-@media (prefers-color-scheme:dark){path{fill:#fff;stroke:#fff}}
+.dark{display:none}
+@media (prefers-color-scheme:dark){.light{display:none}.dark{display:inline}}
 </style>
-<path stroke-width="40" stroke-linejoin="round" transform="translate(22.194 3.000) scale(0.13147 -0.13147) translate(14 -510)" d="M83 -205Q56 -205 40.0 -186.5Q24 -168 24 -144Q24 -125 35.0 -112.0Q46 -99 65 -99Q81 -99 88.0 -106.0Q95 -113 98.0 -122.0Q101 -131 104.0 -138.0Q107 -145 116 -145Q127 -145 136.0 -129.5Q145 -114 161 -64Q171 -34 173.5 -12.0Q176 10 172.5 35.0Q169 60 157 96L48 443Q41 467 34.5 474.0Q28 481 14 484L-1 487Q-14 490 -14 500Q-14 510 0 510H165Q179 510 179 500Q179 489 166 487L150 485Q126 482 119.5 473.5Q113 465 120 443L208 150Q211 140 217.5 140.0Q224 140 227 150L312 425Q320 452 316.5 465.5Q313 479 288 483L267 487Q254 490 254 500Q254 510 268 510H395Q409 510 409 499Q409 489 397 485L388 482Q373 477 363.0 464.0Q353 451 342 419L193 -46Q171 -116 153.5 -150.0Q136 -184 120.0 -194.5Q104 -205 83 -205Z"/>
+<image class="light" width="32" height="32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFQ0lEQVR4nK2Xy29VVRTGf709t6WUlpZ3C1XoI0WsoEUTH1EBo2iMiRoVE+PMxLFjHTjwH3DiwKlx7CtGfAVRGGii1hhEhVoq8vLyLn3d3rZmNb+d7BgggJ7k5J6z9z5rfev71lp737oVqzr5j9dO4CbgMLDnej+uu0EA24BHgNXAJLAG6AOOAEuBv4ElwGJgHPgAePv/ArAN6NBp1ejjngI+B3qBfmAR0AXMAeuACeAE8IbrbgjAdmAF8CAwJoDzYUc2moAycFSQcd0iqLIgfwXeAj6+XgBB+fM6PmyEI8BmYAA4DfwiiBlgi7+/y8i9zhWycRJ4NV6u5XoW2AT8ABwTREQd18+CCf2Pq3uwdABYrgT1QAVYCTSYJyHPO8U1Rh4fnQEO+jxgktWAQ4IICW4FzgKrHJ/T2Um/a1GyRn8bimtwfjcwD4zKQjg9J401jUaE3UbY5Fwk5l7n7hDARatmpTlRuhqAh4EnTZrW7MO4N+gkZCgEuNTxVrM9GLjfPFikw7CxTMYC8NLSVQD0mUDzRnwzcEGnIcclKe6S/qoSjQli0LnUC3oFGNR/D3wEnLoSA08A7ZmjiCLANkvpjPR3yFDJhPsT6MxKc8hI+5Sgwed+vz9bXMH5dsuqZrJNW8PrzfA5mTltdrca+W0yMWI3jLG7DKYw+RYJLlhpuxyA58zaTtFPy8RfwI/A0xqo6XytRpfIzGm1P+AYrm9RjiT7ApvFv1ps6DxsFFWjPmpCTWkonh+T5noz+ysd3ylLU45/bXIOycRgBipYJAewxojLUrdFfQ9llD8FPG4UbXa+feZJ2bFzWe5UHQuGvjFZe5wLkCQ6wvADWZvdrOMzls2sOg5IY5uU9meJudjyK4z4jGtSSY4p2wWBhVxziYEWEykMfgH8ZsbOGFE8vwLcbjSpIjYr0SfueI2OH/O5RUlqsvilMrTbR1YnANNKcE5qvpWucbvYAZOypLFgBNe+73vaB+Y1noC3+hyANhrUBTvmdAIQiz5Tx2i9+6VspeW0S0qrOpl1frff1xvhhCU461hNh2NWUbN9IOaKvArWORkOv7PBTFlOHRreI4Advh+RynQwaTbiso5TvhR2wJKVETl2j1LOpvPAe/bpJiP90LLstfFERK+5ueTXo4JPci22/U7Kaqe/9dq5ZHsvzLeGeHjGyBs1Mqzjkh+Fpq9fxnmS7qI5hM/dRjxtvw9G7pOd3TK8wzX1hQvHbRCN0vsHsFUqh8zedG23ITWZ4aNKMJmddva7bqe5Me43W+0dB907BgppXKUmTZ4Bjqlvu/LE9ZDzjRrboOF+qa94n/f4ldpvOdsL4vklQcdctchaY1CN76kNT2h8W7YRDTu+3vIMUKeULRz9BLzg2rTxpP1goyBOuCVPFjaGcTWaV8ddIlxmWe61lo+7ptetd9ZoRjQcYy/a/1N/qVOGkr9pT1nwVbjztWUM1AmmZASDGp426qpZ3amO+yzVAct2bdaswlZ+6JnP3oONykIzMNpL2Yl11Ig61HqT6CuuX6Y05YzSGZ33mCcLu50g0p2CbBJgV95aK2ZyxYNF6tfLzeYe/xf0CCJVS+p275oLhYE0Zo2p7HhKxKrz7emUMmxE9aIcyUopHaVqrguGPnVds/mQDixvCrw7a8/5lj+XnYYWmCi5m0XkYTgmoyQjJ2ITCofpPBhjkQsBLigMydL2HU5Cxmg0UQXhIFiN8XSWiDvG4jcxMxaG4yQTCZUiDSDpEBlgwmlEE5FG34/uF+CieyYHsTbmQ6qX3f9jLFiNso47AKa+EMyFndZ/AKSihTBLhV3iAAAAAElFTkSuQmCC"/>
+<image class="dark" width="32" height="32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFG0lEQVR4nK2W209cZRTF15w5M8AABSkwQEsv1CoxtjUaU61Go1Hj5cGX+h+Y9A/wwSf/A9991ieNsT6ob1aj9ZJU4zVIsRcKWiy23BwGBoYzYxb5fckXgthWT3LmnPkue6+91t77O7lms6n/eK1K+l3SiKT8rW7O3SaAhqRPJf0pqU3SrKRLkvZJqkjqlVQFXEnS85IO/18AMhzaeZHofwPI45ImJV2UVJN0VVIiaUbSkKQWSa/wvC0AmaQ5SV9K6gBAF3OzON2QtEfSNcZ/BVRdUqukOyW9zH7dCgAbP83GEf7vlzQmaVxSj6RRxlPG/TwEI+eQJIOtfkmv3SwA0z2Bk0FAeGNO0qKk79B/ECdzPOcl7QbgFcbXyQ/nylEj/LdrTdINnN8FlTa4LKkAG/dIui7pvKRu3g+h/5KkMvuqSLYepEtvgvZviHQYBwWctLG/QlWECGvMOQFPkBM/47SDuTkAaScJHPmHRF2hjJztf0maxlATBznGp1hbhoEMwNcB0ECyAQC37wRgnE15qHRkuyi7CuNVDLkaOhkzS8HoHYCx4+8ZG4YZ2zv7TxJYt1/QvR2qG1EWFxibhaEGtNr4H+hrEEcAOAXlDugyVWGw/dsBMJVncR6iLFLD0zhKoL2HrlehCsZYu48y66BCFpFqjchFh9R2ErzJ5hobijga4vkB6/I4X2FtFSe7aD6jUTuepDF5bZPbwR+LGWiQZFM4rULZHkqtlY1Oro+hOcPho4D7ARstjJ+A0aMw8SN2BYva/ImazRWcFkFdwnmg/CNJb7PWcvTR/weYXwJYyJ0CAMzQwzSqlDV9MQB3rK+iNjvGswf98jzPQ+kSjegCtGY8y7wfoQKWkXME2ynVEpJYQYIKSC8S0WGYCGidwW/QUGpIsUKlWKKnOfFCmx3gfRmmUoJ9TNJPBOM+Ug8AWqG1m/cH+N+O01HKy3mSRh8e1voF/g/ATg7pugFR4X0Nxgrkx2rMgKN/gkjdeh+Cqhtk+vvIUWRjAqVPsT8DRBsnZJ6KSHHYQRWt8OGScSehDD9j0jV+P44c3ec0mzayv8BYiVp3tA+yfoWI6zgej/Kjwd3JfS6cGSkRjOFkFY2ek/QFyVnB0KktVSPGZ9C5xP+r2LLjBfZn2CrxQTJEvinhoJiDmkWS7jKI54ny1W2ch+R1RHuRqAz1E8j3rKQXSVTL8IykkwAwa0p4KUW92u8HAGWG7oP6cGU4CRmuKLG6iP441XCGz7dNZzSqKufH3SEJz4A29OlPaBgLMOIvWgGwxniTjlmKekEfXz9daNwA5AZ26txvcWgtBwBGFA6EHP8LlGPIiwadcR52SkQ/ynw/8wZ3r6R3WRt6Rg4bFwBUhtliSjK0QH+CpqcBYoPfSnqEWh7E2CV0zxPNfgx77B1yQxH1OYAk0WHksc6U5FjaMlkH8RpVsReQ0xhtcLotoPcsXfFrqiJ8xDRZG67AhDgxe1OSapmuV6cpDfM+i9YTGOxl/SK6b/C/jGwzSBHYVBRUiFpIY5BZErXWXnTfTTShX8+TmD4p3+OZkQemPsH5S+RCBvg1gGxsueus95xSXg5En1s5DB+n661H34YjyPVklLCT0QfLKYAHkEn00RpyQAS2eSVs9ICp9+XGZCfW/iBorZvH3FAM1hRaMiesQYW+YFZcBZ7bpJinAfgO72bBezYZMOVuEOGEc0PxpKN2f3ACGpyj9Qnpc97gjpGQBmiDZsIsOpjXo0rY8fobXobXsNG5uCAAAAAASUVORK5CYII="/>
 </svg>
