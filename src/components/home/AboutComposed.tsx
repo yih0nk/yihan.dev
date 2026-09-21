@@ -323,7 +323,7 @@ export default function AboutComposed({
                 >
                   say hi
                 </a>
-                .
+                . Don&rsquo;t be a stranger :)
               </p>
             </div>
           </div>
