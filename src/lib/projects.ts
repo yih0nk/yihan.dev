@@ -20,7 +20,7 @@ export const projects: Project[] = [
     tagline:
       "An all-in-one cafe operations platform with real-time inventory, automated ordering, and ML-driven demand forecasting.",
     description: [
-      "Built for the USC LavaLab accelerator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
+      "Built in LavaLab, USC's premier startup incubator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
       "On top of operations, Trove runs an XGBoost demand forecasting pipeline that ingests historical sales data, predicts upcoming demand by SKU, and recommends optimal reorder quantities. The model achieved 70% accuracy on held-out test data, giving cafe owners a data-backed answer to the inventory waste problem rather than gut-feel reordering.",
       "Trove won the Best Traction Award ($500) at the USC LavaLab Demo Day.",
     ],
