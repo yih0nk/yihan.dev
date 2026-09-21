@@ -4,6 +4,10 @@
  * was read as a grayscale photo: inked glyphs blurred into tone, cropped to the
  * dog, box-downsampled to 28 rows at a 0.72 cell aspect, then rank-equalised so
  * the whole ramp gets used. Ramp, light to dense: ` .,:;irsXA253hMHGS#9B&@`.
+ *
+ * Three cells by the eye (rows 9 and 10) came out blank, a hole enclosed by
+ * the fur that read as a gap. They are filled with the average density of
+ * their neighbours.
  */
 export const DOG = `                    :;A;;;;:
                   :iisAssA3SSX:
@@ -14,8 +18,8 @@ export const DOG = `                    :;A;;;;:
             :rsAi:;SHX:s5srsS@BB&@H#:
             rs:;;;SB9s:;i;iir53HMGG93
             sXi;s5G9Gi;iirXsA3MHB#&&&:
-           :52is3:  :;iiXAX35rMH#&BG&H
-           :hMr2r ::;ii;s3333AAMS99h#S
+           :52is3:AA:;iiXAX35rMH#&BG&H
+           :hMr2rr::;ii;s3333AAMS99h#S
            5MH3M2:i;srisH@@@@@hG9&@HBX
            Xhh33Hssir;:5&&&&&&S9H9BG:
 :          A5hhAHM2s;i;:S&&&&B99H9&#:
