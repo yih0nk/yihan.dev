@@ -117,10 +117,10 @@ const cityOf = (loc: string) => loc.split(',')[0].trim()
 
 // ── hobby badges — the dotted terms in the copy ───────────────────────────────
 const HOBBIES = {
-  piano: { icon: '🎹', desc: 'Fifteen years. Where I learned harmony: chords, voicings, what actually holds a song up.' },
-  'tenor sax': { icon: '🎷', desc: 'Three years in. Still bad at it, which is most of the fun.' },
-  photography: { icon: '📷', desc: 'How I practice seeing. Composition, contrast, the way light lands.' },
-  badminton: { icon: '🏸', desc: "Retired competitive doubles, provincial gold. I still can't let a rally go." },
+  piano: { desc: 'Fifteen years. Where I learned harmony: chords, voicings, what actually holds a song up.' },
+  'tenor sax': { desc: 'Three years in. Still bad at it, which is most of the fun.' },
+  photography: { desc: 'How I practice seeing. Composition, contrast, the way light lands.' },
+  badminton: { desc: "Retired competitive doubles, provincial gold. I still can't let a rally go." },
 } as const
 
 /** Snapshots for the "lately" strip — fanned left to right. */
@@ -252,7 +252,7 @@ export default function AboutComposed({
             <div className="space-y-5 text-[16px] leading-relaxed md:text-[18px]" style={{ fontFamily: BODY, color: INK }}>
               <p>
                 I&rsquo;m Yihan, a computer engineering and CS student at{' '}
-                <NavTerm href="https://www.usc.edu" icon="🏛">
+                <NavTerm href="https://www.usc.edu">
                   USC
                 </NavTerm>
                 . Most of my week goes to{' '}
@@ -260,7 +260,7 @@ export default function AboutComposed({
                   href="/projects"
                   className="whitespace-nowrap border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
                 >
-                  <span aria-hidden className="mr-[3px]">🛠</span>making software act on its own
+                  making software act on its own
                 </Link>
                 : fine-tuning models to someone&rsquo;s taste, testing whether AI systems behave the way
                 they&rsquo;re supposed to (and documenting the many ways they don&rsquo;t), and wiring up
@@ -269,19 +269,19 @@ export default function AboutComposed({
               <p>
                 The rest of my time is less structured. Fifteen years of{' '}
                 <BadgeTerm label="piano" onOpen={openBadge} onClose={closeBadge}>
-                  <span aria-hidden className="mr-[3px]">{HOBBIES.piano.icon}</span>piano
+                  piano
                 </BadgeTerm>
                 , three of{' '}
                 <BadgeTerm label="tenor sax" onOpen={openBadge} onClose={closeBadge}>
-                  <span aria-hidden className="mr-[3px]">{HOBBIES['tenor sax'].icon}</span>tenor sax
+                  tenor sax
                 </BadgeTerm>
                 , some{' '}
                 <BadgeTerm label="photography" onOpen={openBadge} onClose={closeBadge}>
-                  <span aria-hidden className="mr-[3px]">{HOBBIES.photography.icon}</span>photography
+                  photography
                 </BadgeTerm>
                 , and more movies than a person can reasonably defend. I also play{' '}
                 <BadgeTerm label="badminton" onOpen={openBadge} onClose={closeBadge}>
-                  <span aria-hidden className="mr-[3px]">{HOBBIES.badminton.icon}</span>badminton
+                  badminton
                 </BadgeTerm>{' '}
                 with a level of competitiveness the sport did not ask for and cannot contain.
               </p>
@@ -526,7 +526,7 @@ function BadgeTerm({
 }
 
 /** A solid-underline link in the copy — navigates. */
-function NavTerm({ href, icon, children }: { href: string; icon: string; children: React.ReactNode }) {
+function NavTerm({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a
       href={href}
@@ -534,7 +534,6 @@ function NavTerm({ href, icon, children }: { href: string; icon: string; childre
       rel="noreferrer"
       className="whitespace-nowrap border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
     >
-      <span aria-hidden className="mr-[3px]">{icon}</span>
       {children}
     </a>
   )
