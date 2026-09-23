@@ -27,8 +27,9 @@ const RECENT_URL = "https://api.spotify.com/v1/me/player/recently-played?limit=1
  * hardcoded list with extra steps, and the whole point of replacing the written
  * favourites was to show something that moves.
  */
+/** Five: enough to read as a taste, short enough to stay one quiet line. */
 const TOP_ARTISTS_URL =
-  "https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=8";
+  "https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=5";
 
 export interface NowPlaying {
   title: string;

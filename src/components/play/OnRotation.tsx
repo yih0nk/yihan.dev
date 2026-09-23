@@ -23,14 +23,17 @@ import type { TopArtist } from '@/lib/spotify'
  *
  * ── names only, no portraits ────────────────────────────────────────────────
  * Spotify does return an artist portrait, and this rendered them for a while as
- * 28px circles held to grayscale so eight full-colour photographs would not put
+ * 28px circles held to grayscale so five full-colour photographs would not put
  * more uncontrolled colour on the page than the rest of the site carries in
  * total. They were unreadable: a desaturated photograph at 28px is a pale blob,
- * carrying no information and adding eight of them to a line whose whole value
+ * carrying no information and adding five of them to a line whose whole value
  * is that it is quiet. The names are the data. `TopArtist.image` is still
  * fetched and typed, so this is one JSX element away if it is ever wanted at a
  * size where a face is actually legible.
  */
+
+/** The line shows at most this many, whatever the API returns. */
+const TOP_N = 5
 
 export default function OnRotation() {
   const [artists, setArtists] = useState<TopArtist[] | null>(null)
@@ -59,7 +62,7 @@ export default function OnRotation() {
         On repeat lately:
       </span>
 
-      {artists.map((a) => (
+      {artists.slice(0, TOP_N).map((a) => (
         <a
           key={a.url}
           href={a.url}
