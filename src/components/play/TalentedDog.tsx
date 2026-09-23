@@ -66,51 +66,55 @@ type Draw = (g: CanvasRenderingContext2D) => void
 
 const PROPS: Record<string, Draw> = {
   none: () => {},
-  // a thick band over the head, a big cup on the near ear, the far cup peeking
+  // The cup sits on the ear, at the head's back edge, clear of the eye at
+  // row 9: centred on the head it read as a blindfold. The band arcs over the
+  // top of the skull so the pair reads as headphones, not a patch.
   headphones: (g) => {
     g.lineCap = 'round'
-    g.lineWidth = 5
+    g.lineWidth = 6
     g.beginPath()
-    g.moveTo(px(16.5), py(7.5))
-    g.bezierCurveTo(px(14.5), py(-5.5), px(33.5), py(-6.5), px(34.5), py(3.5))
+    g.moveTo(px(14.2), py(6.5))
+    g.bezierCurveTo(px(13), py(-5), px(33), py(-6), px(34.5), py(3))
     g.stroke()
+    // near cup: a ring, so the fur shows through and it reads as a cup
+    g.lineWidth = 4.5
     g.beginPath()
-    g.ellipse(px(16.5), py(9.5), 3.4 * CHAR_W, 3.4 * LINE_H, 0, 0, Math.PI * 2)
-    g.fill()
-    g.globalAlpha = 0.5
+    g.ellipse(px(14.4), py(8.6), 2.3 * CHAR_W, 2.5 * LINE_H, 0, 0, Math.PI * 2)
+    g.stroke()
+    // far cup, just peeking past the other side of the head
+    g.lineWidth = 4
     g.beginPath()
-    g.ellipse(px(16.5), py(9.5), 1.6 * CHAR_W, 1.6 * LINE_H, 0, 0, Math.PI * 2)
-    g.globalCompositeOperation = 'destination-out'
-    g.fill()
-    g.globalCompositeOperation = 'source-over'
-    g.globalAlpha = 1
-    g.beginPath()
-    g.ellipse(px(34.8), py(4.5), 1.7 * CHAR_W, 2.2 * LINE_H, 0, 0, Math.PI * 2)
-    g.fill()
+    g.ellipse(px(35), py(4.2), 1.3 * CHAR_W, 1.7 * LINE_H, 0, 0, Math.PI * 2)
+    g.stroke()
   },
-  // held in the mouth: eraser, ferrule, a thick body, the sharpened cone, lead
+  // Held in the mouth and angled up and out, so the barrel clears the snout
+  // and the sharpened end is against the lips: lying flat past the face it
+  // read as a stray bar.
   pencil: (g) => {
     g.save()
-    g.translate(px(31), py(12.5))
-    g.rotate(-0.32)
-    const h = 2.3 * LINE_H
-    g.fillRect(0, -h / 2, 13 * CHAR_W, h)
-    g.globalAlpha = 0.6
-    g.fillRect(13 * CHAR_W, -h / 2, 1.4 * CHAR_W, h)
-    g.globalAlpha = 0.35
-    g.fillRect(14.4 * CHAR_W, -h / 2, 2.4 * CHAR_W, h)
+    g.translate(px(35.5), py(12))
+    g.rotate(-0.62)
+    const h = 2 * LINE_H
+    // barrel
+    g.fillRect(0, -h / 2, 15 * CHAR_W, h)
+    // ferrule, then the eraser, each a step lighter
     g.globalAlpha = 0.55
+    g.fillRect(15 * CHAR_W, -h / 2, 1.6 * CHAR_W, h)
+    g.globalAlpha = 0.3
+    g.fillRect(16.6 * CHAR_W, -h / 2, 3 * CHAR_W, h)
+    // the sharpened cone, and the lead at its point
+    g.globalAlpha = 0.5
     g.beginPath()
     g.moveTo(0, -h / 2)
-    g.lineTo(-4 * CHAR_W, 0)
+    g.lineTo(-5.5 * CHAR_W, 0)
     g.lineTo(0, h / 2)
     g.closePath()
     g.fill()
     g.globalAlpha = 1
     g.beginPath()
-    g.moveTo(-2.4 * CHAR_W, -h * 0.2)
-    g.lineTo(-4 * CHAR_W, 0)
-    g.lineTo(-2.4 * CHAR_W, h * 0.2)
+    g.moveTo(-3.6 * CHAR_W, -h * 0.26)
+    g.lineTo(-5.5 * CHAR_W, 0)
+    g.lineTo(-3.6 * CHAR_W, h * 0.26)
     g.closePath()
     g.fill()
     g.restore()
