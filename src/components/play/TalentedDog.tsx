@@ -183,11 +183,11 @@ const PROPS: Record<string, Draw> = {
  * so two visits don't open on the same line.
  */
 const THOUGHTS = [
-  'i wonder what\u2019s for dinner...',
-  'he has been at this since noon',
-  'that is the third song about the same girl',
-  'someone should throw something for me',
-  'the sax one needs more practice',
+  'i wonder what\u2019s for dinner?',
+  'oh no this guy is falling into some rabbit hole again.',
+  'yihan really needs to study for the algorithms class...',
+  'wow life is beautiful :p',
+  '\u266A \u201Ci want it that way\u201D \u266A',
 ]
 /** Seconds between thoughts, and how long one stays up. */
 const GAP = [9, 16]
