@@ -166,7 +166,14 @@ export default function FooterDog({ className = '' }: { className?: string }) {
     transitionTimingFunction: MOTION.ease,
     transitionDelay: awake ? `${delay}ms` : '0ms',
   })
-  const shown = awake ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'
+/**
+ * The bubble rises and fades; it does NOT scale. A scaled-up element is
+ * rasterised at its small size and stretched, so the text came in blurry and
+ * only sharpened when the transition ended. The dots have no text, so they keep
+ * their grow.
+ */
+  const shown = awake ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1'
+  const shownDot = awake ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'
   const dot = { border: '1px solid var(--color-hairline)', background: 'var(--color-bg)' }
 
   return (
@@ -194,8 +201,8 @@ export default function FooterDog({ className = '' }: { className?: string }) {
           welcome to yihan&apos;s website :&apos;)
         </p>
         {/* the trail of little thought circles, down toward the head */}
-        <span className={`mr-10 mt-1 block h-[6px] w-[6px] rounded-full ${shown}`} style={{ ...bit(70), ...dot }} />
-        <span className={`mr-8 mt-0.5 block h-[4px] w-[4px] rounded-full ${shown}`} style={{ ...bit(0), ...dot }} />
+        <span className={`mr-10 mt-1 block h-[6px] w-[6px] rounded-full ${shownDot}`} style={{ ...bit(70), ...dot }} />
+        <span className={`mr-8 mt-0.5 block h-[4px] w-[4px] rounded-full ${shownDot}`} style={{ ...bit(0), ...dot }} />
       </div>
       <pre
         ref={artRef}
