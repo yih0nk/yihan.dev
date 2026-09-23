@@ -452,7 +452,7 @@ export default function TalentedDog() {
     <div
       ref={wrapRef}
       className={`pointer-events-none fixed top-0 hidden min-[1500px]:block ${
-        dragged ? 'z-40' : 'left-0 z-0'
+        dragged ? 'z-40' : `left-0 ${thought ? 'z-40' : 'z-0'}`
       }`}
       style={{
         overflowAnchor: 'none',
@@ -460,89 +460,96 @@ export default function TalentedDog() {
         transform: 'translateY(var(--y, 40vh))',
       }}
     >
-      {/* the thought bubble: the small circle first, then the bubble */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 flex -translate-x-1/2 flex-col items-center"
-      >
-        <p
-          // rises and fades, but never scales: a scaled-up element is rasterised
-          // at its small size and stretched, so the text came in blurry
-          className={`whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] ${
-            thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1'
-          }`}
+      {/* One box the width of the drawing: the bubble hangs off ITS left edge,
+          so in the margin the bubble starts where the dog starts instead of at
+          the screen's edge. */}
+      <div className="relative mx-auto w-max">
+        {/* the thought bubble: the small circle first, then the bubble */}
+        <div
+          aria-hidden
+          // opens rightwards from the dog's left edge: centred, the longer
+          // thoughts ran off the left edge of the screen
+          className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 flex flex-col items-start"
+        >
+          <p
+            // rises and fades, but never scales: a scaled-up element is rasterised
+            // at its small size and stretched, so the text came in blurry
+            className={`whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] ${
+              thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1'
+            }`}
+            style={{
+              transitionProperty: 'opacity, translate, scale',
+              transitionDuration: '420ms',
+              transitionTimingFunction: MOTION.ease,
+              transitionDelay: thought ? '140ms' : '0ms',
+              fontFamily: FONTS.body,
+              color: 'var(--color-ink)',
+              background: 'var(--color-bg)',
+              border: '1px solid var(--color-hairline)',
+            }}
+          >
+            {thought ?? ''}
+          </p>
+          <span
+            className={`ml-8 mt-1 block h-[6px] w-[6px] rounded-full ${thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'}`}
+            style={{
+              transitionProperty: 'opacity, translate, scale',
+              transitionDuration: '420ms',
+              transitionTimingFunction: MOTION.ease,
+              transitionDelay: thought ? '70ms' : '0ms',
+              border: '1px solid var(--color-hairline)',
+              background: 'var(--color-bg)',
+            }}
+          />
+          <span
+            className={`ml-6 mt-0.5 block h-[4px] w-[4px] rounded-full ${thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'}`}
+            style={{
+              transitionProperty: 'opacity, translate, scale',
+              transitionDuration: '420ms',
+              transitionTimingFunction: MOTION.ease,
+              border: '1px solid var(--color-hairline)',
+              background: 'var(--color-bg)',
+            }}
+          />
+        </div>
+        <pre
+          ref={artRef}
+          aria-hidden
+          className="pointer-events-auto m-0 mx-auto touch-none select-none"
           style={{
-            transitionProperty: 'opacity, translate, scale',
-            transitionDuration: '420ms',
-            transitionTimingFunction: MOTION.ease,
-            transitionDelay: thought ? '140ms' : '0ms',
-            fontFamily: FONTS.body,
-            color: 'var(--color-ink)',
-            background: 'var(--color-bg)',
-            border: '1px solid var(--color-hairline)',
+            cursor: 'grab',
+            overflowAnchor: 'none',
+            width: COLS * CHAR_W,
+            fontFamily: FONTS.mono,
+            fontSize: FONT_PX,
+            lineHeight: `${LINE_H}px`,
           }}
         >
-          {thought ?? ''}
-        </p>
-        <span
-          className={`mt-1 block h-[6px] w-[6px] rounded-full ${thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'}`}
-          style={{
-            transitionProperty: 'opacity, translate, scale',
-            transitionDuration: '420ms',
-            transitionTimingFunction: MOTION.ease,
-            transitionDelay: thought ? '70ms' : '0ms',
-            border: '1px solid var(--color-hairline)',
-            background: 'var(--color-bg)',
-          }}
-        />
-        <span
-          className={`mt-0.5 block h-[4px] w-[4px] rounded-full ${thought ? 'opacity-100' : 'opacity-0 motion-safe:translate-y-1 motion-safe:scale-90'}`}
-          style={{
-            transitionProperty: 'opacity, translate, scale',
-            transitionDuration: '420ms',
-            transitionTimingFunction: MOTION.ease,
-            border: '1px solid var(--color-hairline)',
-            background: 'var(--color-bg)',
-          }}
-        />
+          {Array.from({ length: ROWS }, (_, r) => (
+            <span key={r}>
+              {Array.from({ length: COLS }, (_, c) => {
+                const d = BASE[r * COLS + c]
+                return (
+                  <span key={c} data-c style={{ color: dogInk(d, false) }}>
+                    {RAMP[d]}
+                  </span>
+                )
+              })}
+              {r < ROWS - 1 ? '\n' : null}
+            </span>
+          ))}
+        </pre>
+        {dragged ? (
+          <button
+            type="button"
+            onClick={sendHome}
+            className="pointer-events-auto mx-auto mt-1 block text-[11px] tracking-[0.08em] underline-offset-4 hover:underline"
+            style={{ fontFamily: FONTS.mono, color: 'var(--color-muted)' }}
+          >
+            put back
+          </button>
+        ) : null}
       </div>
-      <pre
-        ref={artRef}
-        aria-hidden
-        className="pointer-events-auto m-0 mx-auto touch-none select-none"
-        style={{
-          cursor: 'grab',
-          overflowAnchor: 'none',
-          width: COLS * CHAR_W,
-          fontFamily: FONTS.mono,
-          fontSize: FONT_PX,
-          lineHeight: `${LINE_H}px`,
-        }}
-      >
-        {Array.from({ length: ROWS }, (_, r) => (
-          <span key={r}>
-            {Array.from({ length: COLS }, (_, c) => {
-              const d = BASE[r * COLS + c]
-              return (
-                <span key={c} data-c style={{ color: dogInk(d, false) }}>
-                  {RAMP[d]}
-                </span>
-              )
-            })}
-            {r < ROWS - 1 ? '\n' : null}
-          </span>
-        ))}
-      </pre>
-      {dragged ? (
-        <button
-          type="button"
-          onClick={sendHome}
-          className="pointer-events-auto mx-auto mt-1 block text-[11px] tracking-[0.08em] underline-offset-4 hover:underline"
-          style={{ fontFamily: FONTS.mono, color: 'var(--color-muted)' }}
-        >
-          put back
-        </button>
-      ) : null}
     </div>
   )
 }
