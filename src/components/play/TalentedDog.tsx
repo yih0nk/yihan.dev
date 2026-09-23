@@ -318,6 +318,18 @@ export default function TalentedDog() {
     const fromRing = ringOf(from)
     const toRing = ringOf(to)
 
+    // The grid keeps blank rows above the drawing for the props, so a bubble
+    // hung off the box's top floated 35 to 55px above the dog depending on the
+    // prop. Park it just above whatever the topmost inked cell is now.
+    let firstRow = ROWS
+    for (let i = 0; i < ROWS * COLS; i++) {
+      if (to[i] > 0.1 || BASE[i] > 0) {
+        firstRow = Math.floor(i / COLS)
+        break
+      }
+    }
+    wrapRef.current?.style.setProperty('--head', `${Math.max(0, firstRow * LINE_H - 6)}px`)
+
     const paint = (now: number) => {
       const t = still ? Infinity : now - start
       const wave = (now / 1000) * 2.6
@@ -469,7 +481,8 @@ export default function TalentedDog() {
           aria-hidden
           // opens rightwards from the dog's left edge: centred, the longer
           // thoughts ran off the left edge of the screen
-          className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 flex flex-col items-start"
+          style={{ transform: 'translateY(var(--head, 0px))' }}
+        className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 flex flex-col items-start"
         >
           <p
             // rises and fades, but never scales: a scaled-up element is rasterised
