@@ -3,6 +3,7 @@ import Image from "next/image";
 import AudioPlayer from "@/components/ui/AudioPlayer";
 import OnRotation from "@/components/play/OnRotation";
 import Rally from "@/components/play/Rally";
+import TalentedDog from "@/components/play/TalentedDog";
 import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
 export const metadata: Metadata = {
@@ -236,6 +237,9 @@ export default function PlayPage() {
         </div>
         <Rally />
       </section>
+
+      {/* the footer dog, along for the ride: a prop per section, draggable */}
+      <TalentedDog />
     </div>
   );
 }
