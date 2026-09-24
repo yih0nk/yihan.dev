@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import PostList from "@/components/blog/PostList";
+import PaperPlanes from "@/components/decor/PaperPlanes";
 import { getAllPosts, getCategoryCounts, getWelcomePost } from "@/lib/mdx";
 import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
@@ -102,6 +103,9 @@ export default function BlogPage() {
       >
         <PostList posts={posts} counts={counts} />
       </section>
+
+      {/* paper planes gliding in the margins; grab one and throw it */}
+      <PaperPlanes />
     </div>
   );
 }
