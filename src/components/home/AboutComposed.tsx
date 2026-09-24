@@ -194,7 +194,7 @@ export default function AboutComposed({
   return (
     <section
       id="about"
-      className="w-full scroll-mt-20 pt-20 pb-12 md:pt-28 md:pb-16"
+      className="w-full scroll-mt-20 pt-20 pb-12 md:pt-28 md:pb-14"
       style={{ backgroundColor: BG, color: INK }}
     >
       <div className="relative z-[1] mx-auto max-w-[1100px] px-6">

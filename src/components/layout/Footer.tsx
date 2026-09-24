@@ -15,6 +15,8 @@ import { COLORS, FONTS } from "@/styles/tokens";
  *
  * No rule on top. The hairline used to be what closed the page; the dog does
  * that now, and the line only cut the page's background off in a hard edge.
+ * Without a line, the footer needs air above it instead: the margin here plus
+ * each page's own bottom padding.
  * Hierarchy inside the footer still comes from size and space.
  */
 /**
@@ -34,7 +36,7 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer>
+    <footer className="mt-14 md:mt-20">
       {/*
         Copyright over links on the left, the dog on the right, with room to
         breathe above and below it. The dog sets the footer's height.
