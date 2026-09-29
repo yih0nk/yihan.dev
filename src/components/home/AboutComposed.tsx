@@ -9,29 +9,21 @@ import { EMAIL } from '@/lib/site'
 import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import VinylCompact from './VinylCompact'
-import {
-  CELL_EDGE,
-  RAMP,
-  buildCells,
-  useContributions,
-  useElapsed,
-  useReducedMotion,
-  useSpotify,
-} from './live'
+import { shortDate, useElapsed, useLatestPost, useReducedMotion, useSpotify } from './live'
 
 /**
  * Everything below the reel, as one composition: the about, the experience
  * folded in from what used to be its own page, and a live column — what is
- * playing, the commit block, and a few photographs.
+ * playing, what was written last, and a few photographs. The commit graph
+ * moved to its own section below (HomeWork), where it has room for a year.
  *
  * The through-line is one interaction. A dotted term in the copy and a row in
  * the experience ledger both open the same small white badge on hover; a solid
  * underline navigates instead. So "photography" and "SIAS Lab" behave the same
  * way, and the page teaches its own vocabulary once.
  *
- * Hierarchy is size and space. Nothing here is a card; the only saturated colour
- * is the GitHub ramp, quarantined to the commit block, and one accent for
- * interaction.
+ * Hierarchy is size and space. Nothing here is a card; the only colour is one
+ * accent for interaction.
  */
 
 const { ink: INK, muted: MUTED, bg: BG, hairline: HAIRLINE, accent: ACCENT } = COLORS
@@ -134,12 +126,6 @@ function clock(ms: number): string {
   return `${m}:${sec < 10 ? '0' : ''}${sec}`
 }
 
-const COLS = 10
-const ROWS = 3
-const SPAN = COLS * ROWS
-const CELL = 13
-const GAP = 4
-
 interface BadgeState {
   label: string
   text: string
@@ -176,9 +162,8 @@ export default function AboutComposed({
   const elapsedMs = useElapsed(live)
   const progress = live?.durationMs && elapsedMs !== null ? elapsedMs / live.durationMs : 0
 
-  // the commit block
-  const { days, total } = useContributions(SPAN)
-  const cells = buildCells(days, SPAN)
+  // the last post
+  const { post } = useLatestPost()
 
   // the shared badge
   const [badge, setBadge] = useState<BadgeState | null>(null)
@@ -380,53 +365,31 @@ export default function AboutComposed({
                 </div>
               </div>
 
-              {/* commits */}
-              <div>
+              {/* last wrote: the newest post, the way "last played" is the
+                  newest song */}
+              <div aria-hidden={!post} style={{ opacity: post ? 1 : 0, transition: fade }}>
                 <span className={LABEL} style={{ fontFamily: MONO, color: MUTED }}>
-                  commits
+                  last wrote
                 </span>
-                <div className="mt-[19px]">
-                  <div
-                    role="img"
-                    aria-label={
-                      total === null
-                        ? 'GitHub contribution activity for the last thirty days'
-                        : `${total.toLocaleString('en-US')} contribution${total === 1 ? '' : 's'} in the last thirty days`
-                    }
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: `repeat(${COLS}, ${CELL}px)`,
-                      gridTemplateRows: `repeat(${ROWS}, ${CELL}px)`,
-                      gap: GAP,
-                    }}
-                  >
-                    {cells.map((c, i) => (
-                      <div
-                        key={c.key}
-                        aria-hidden
-                        style={{
-                          borderRadius: 2,
-                          background: RAMP[c.level] ?? RAMP[0],
-                          boxShadow: `inset 0 0 0 1px ${CELL_EDGE}`,
-                          transition: still ? 'none' : 'background-color 500ms ease',
-                          transitionDelay: still ? '0ms' : `${i * 8}ms`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div
-                    aria-hidden={total === null}
-                    className="mt-3 flex items-baseline gap-2.5"
-                    style={{ opacity: total === null ? 0 : 1, visibility: total === null ? 'hidden' : 'visible', transition: fade }}
-                  >
-                    <span className="text-[32px] leading-none" style={{ fontFamily: font, color: INK }}>
-                      {total === null ? '0' : total.toLocaleString('en-US')}
-                    </span>
-                    <span className="text-[12px] uppercase leading-none tracking-[0.18em]" style={{ fontFamily: MONO, color: MUTED }}>
-                      in 30 days
-                    </span>
-                  </div>
+                <div className="mt-3 min-h-[3.5rem]">
+                  {post ? (
+                    <Link
+                      href={post.href}
+                      className="text-balance text-[18px] leading-[1.2] underline-offset-4 hover:underline"
+                      style={{ fontFamily: font, color: INK }}
+                    >
+                      {post.title}
+                    </Link>
+                  ) : null}
+                  {post?.excerpt ? (
+                    <p className="mt-1 line-clamp-2 text-[14px]" style={{ fontFamily: BODY, color: MUTED }}>
+                      {post.excerpt}
+                    </p>
+                  ) : null}
                 </div>
+                <span className="mt-2 block text-[11px] uppercase tracking-[0.18em]" style={{ fontFamily: MONO, color: MUTED }}>
+                  {post ? [post.date ? shortDate(post.date) : '', post.category].filter(Boolean).join(' · ') : ''}
+                </span>
               </div>
             </div>
 
