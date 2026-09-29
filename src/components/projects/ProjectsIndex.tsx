@@ -171,6 +171,11 @@ function TiltCard({ project, n, entry }: { project: Project; n: number; entry: I
   )
 }
 
+/** One project's card, as it appears on the index: used by the homepage too. */
+export function ProjectCard({ project, n }: { project: Project; n: number }) {
+  return <TiltCard project={project} n={n} entry={INDEX[project.slug]} />
+}
+
 export default function ProjectsIndex() {
   return (
     <div className="relative w-full overflow-x-clip">

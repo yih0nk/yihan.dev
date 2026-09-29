@@ -4,9 +4,12 @@ import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import ReelHero from './ReelHero'
 import AboutComposed from './AboutComposed'
+import HomeWork from './HomeWork'
 
 /**
- * The homepage: two movements.
+ * The homepage: three movements. The reel, the about (who, where, what's
+ * playing, what was written last), then the work: the year's commit graph and
+ * the flagship projects.
  *
  * The arrangement this replaced stacked four sections, each carrying its own
  * `py-24 md:py-32`, so every seam double-padded — ~3,200px of scroll with two
@@ -40,6 +43,7 @@ export default function Home({
     <div className="w-full overflow-x-clip" style={{ backgroundColor: BG, color: INK }}>
       <ReelHero font={face} />
       <AboutComposed font={face} nowPlaying={nowPlaying} />
+      <HomeWork />
 
       {/* The page exhales instead of stopping — but only a little. AboutComposed
           already carries its own bottom padding, and stacking a tall spacer on
