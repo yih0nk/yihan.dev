@@ -27,7 +27,8 @@ export async function GET() {
       slug: newest.slug,
       date: newest.date,
       excerpt: newest.excerpt,
-      href: `/blog/${newest.category}/${newest.slug}`,
+      // flat, like every post URL; the category form only works via a 308
+      href: `/blog/${newest.slug}`,
     },
   });
 }
