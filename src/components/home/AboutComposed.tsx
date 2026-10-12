@@ -17,10 +17,10 @@ import { shortDate, useElapsed, useLatestPost, useReducedMotion, useSpotify } fr
  * playing, what was written last, and a few photographs. The commit graph
  * moved to its own section below (HomeWork), where it has room for a year.
  *
- * The through-line is one interaction. A dotted term in the copy and a row in
- * the experience ledger both open the same small white badge on hover; a solid
- * underline navigates instead. So "photography" and "SIAS Lab" behave the same
- * way, and the page teaches its own vocabulary once.
+ * Two kinds of interaction, kept apart. A row in the experience ledger opens a
+ * small white badge on hover with what the role was; a solid underline in the
+ * copy navigates. The copy itself carries no hover notes: they only restated
+ * what the sentence around them already said.
  *
  * Hierarchy is size and space. Nothing here is a card; the only colour is one
  * accent for interaction.
@@ -106,14 +106,6 @@ function span(r: Role): string {
 }
 
 const cityOf = (loc: string) => loc.split(',')[0].trim()
-
-// ── hobby badges — the dotted terms in the copy ───────────────────────────────
-const HOBBIES = {
-  piano: { desc: 'Fifteen years. Where I learned harmony: chords, voicings, what actually holds a song up.' },
-  'tenor sax': { desc: 'Three years in. Still bad at it, which is most of the fun.' },
-  photography: { desc: 'How I practice seeing. Composition, contrast, the way light lands.' },
-  badminton: { desc: "Retired competitive doubles, provincial gold. I still can't let a rally go." },
-} as const
 
 /** Snapshots for the "lately" strip — fanned left to right. */
 const LATELY = ['/images/lately/01.jpg', '/images/lately/02.jpg', '/images/lately/03.jpg']
@@ -240,35 +232,24 @@ export default function AboutComposed({
                 <NavTerm href="https://www.usc.edu">
                   USC
                 </NavTerm>
-                . Most of my week goes to{' '}
+                . Right now I&rsquo;m building personalized AI agents at{' '}
+                <NavTerm href="https://www.gojuly.ai">July AI</NavTerm> and doing some research on the side.
+                Lately I&rsquo;ve been pulled toward robotics and hardware, and you can look at my recent
+                work{' '}
                 <Link
                   href="/projects"
-                  className="whitespace-nowrap border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
+                  className="border-b [border-color:var(--color-accent)] transition-colors duration-200 hover:[color:var(--color-accent)]"
                 >
-                  making software act on its own
+                  here
                 </Link>
-                : fine-tuning models to someone&rsquo;s taste, testing whether AI systems behave the way
-                they&rsquo;re supposed to (and documenting the many ways they don&rsquo;t), and wiring up
-                retrieval across hundreds of thousands of records that all insist they&rsquo;re relevant.
+                .
               </p>
               <p>
-                The rest of my time is less structured. Fifteen years of{' '}
-                <BadgeTerm label="piano" onOpen={openBadge} onClose={closeBadge}>
-                  piano
-                </BadgeTerm>
-                , three of{' '}
-                <BadgeTerm label="tenor sax" onOpen={openBadge} onClose={closeBadge}>
-                  tenor sax
-                </BadgeTerm>
-                , some{' '}
-                <BadgeTerm label="photography" onOpen={openBadge} onClose={closeBadge}>
-                  photography
-                </BadgeTerm>
-                , and more movies than a person can reasonably defend. I also play{' '}
-                <BadgeTerm label="badminton" onOpen={openBadge} onClose={closeBadge}>
-                  badminton
-                </BadgeTerm>{' '}
-                with a level of competitiveness the sport did not ask for and cannot contain.
+                Outside of that, I dabble in a bit of everything. I&rsquo;ve played piano for fifteen years and
+                counting (I performed at Carnegie Hall!), and tenor sax for three, although I&rsquo;m still
+                kind of bad at it. I paint and sketch, occasionally take banger photos with my camera, and I
+                played competitive badminton in Ontario, where I won doubles gold. Like many other engineers,
+                I unfortunately play the infamous League of Legends in my free time&hellip;
               </p>
               <p>So I&rsquo;m an engineer, and a few other things. Most of them started as the thing I did instead of studying.</p>
               <p>
@@ -470,34 +451,6 @@ export default function AboutComposed({
         {badge?.text ?? ''}
       </div>
     </section>
-  )
-}
-
-/** A dotted term in the copy: hovering opens the shared badge, does not navigate. */
-function BadgeTerm({
-  label,
-  children,
-  onOpen,
-  onClose,
-}: {
-  label: string
-  children: React.ReactNode
-  onOpen: (e: MouseEvent | FocusEvent, label: string, text: string) => void
-  onClose: () => void
-}) {
-  const text = HOBBIES[label as keyof typeof HOBBIES].desc
-  return (
-    <span
-      tabIndex={0}
-      className="cursor-help whitespace-nowrap border-b border-dotted transition-colors duration-200 hover:[color:var(--color-accent)] hover:[border-color:var(--color-accent)] focus:[color:var(--color-accent)]"
-      style={{ borderColor: MUTED }}
-      onMouseEnter={(e) => onOpen(e, label, text)}
-      onMouseLeave={onClose}
-      onFocus={(e) => onOpen(e, label, text)}
-      onBlur={onClose}
-    >
-      {children}
-    </span>
   )
 }
 
