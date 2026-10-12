@@ -63,18 +63,19 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
   /**
-   * The homepage opens on the reel, which is a title sequence — a bar floating
-   * over it is exactly the chrome that hero is built to do without. So on `/`
-   * it waits, and comes back the moment the ASCII name lands.
+   * The homepage opens on the hero, a machine that boots up as you arrive — a
+   * bar floating over it is exactly the chrome that first screen is built to do
+   * without. So on `/` it waits, and comes back the moment the hero has landed
+   * (the desktop is up, or the hero has fallen back to the name in type).
    *
-   * It listens for ReelHero's settle event rather than watching scroll. Scroll
-   * position is a proxy and it was wrong in the common case: the reel resolves
-   * itself after six idle seconds, so a visitor who simply waits gets the name
-   * with no bar until they scroll, which is the opposite of the intent.
+   * It listens for the hero's settle event rather than watching scroll. Scroll
+   * position is a proxy and it was wrong in the common case: a visitor who
+   * simply waits would get no bar until they scrolled, which is the opposite of
+   * the intent.
    *
-   * ONE WAY, like the reel. `setResolved(true)` latches — scrolling back up to
-   * the name does not take the bar away again. A bar that comes and goes on one
-   * page is a bar you cannot rely on, and by then the payoff is already spent.
+   * ONE WAY. `setResolved(true)` latches — scrolling back up to the hero does
+   * not take the bar away again. A bar that comes and goes on one page is a bar
+   * you cannot rely on, and by then the payoff is already spent.
    *
    * Route changes remount this, which is what resets the latch.
    */

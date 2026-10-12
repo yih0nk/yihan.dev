@@ -21,18 +21,14 @@ export const revalidate = 10;
 /**
  * The homepage.
  *
- * A SERVER component, deliberately. The old one loaded PianoHero through
- * `dynamic(..., { ssr: false })`, and copying that pattern here would have shipped
- * the page with no <h1> in its initial HTML — ReelHero's screen-reader heading is
- * the only one the homepage has. Importing Home directly keeps that heading in
- * the server render and lets this file export `metadata`, which it could not do
- * as a client component.
+ * A SERVER component, deliberately: it exports `metadata`, which a client
+ * component cannot. Home is `'use client'` (a client component imported by a
+ * server one is fine), and the Classic inside it loads with `ssr: false`; the
+ * shell that holds its place while it loads carries the page's one <h1>, so the
+ * heading is in the initial HTML all the same.
  *
- * Home is still `'use client'`; a client component imported by a server one is
- * fine, and the canvases inside it need the browser anyway.
- *
- * The nav does not offset this page — it is hidden until the reel is scrolled
- * past (see Nav.tsx), so the reel gets the whole first screen.
+ * The nav does not offset this page: it stays hidden until the hero has landed
+ * (see Nav.tsx), so the hero gets the whole first screen.
  */
 export const metadata: Metadata = {
   title: "Yihan Hong",
