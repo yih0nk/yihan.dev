@@ -115,6 +115,38 @@
   }
 }
 
+/* Page changes (RouteTransitions.tsx): the page you leave fades out quickly,
+   the one you arrive at fades up a few pixels into place. The nav has its own
+   name, so it is left out of the cross-fade and simply stays put. Nothing moves
+   for a reader who asked for less motion. */
+body > header {
+  view-transition-name: site-nav;
+}
+::view-transition-old(root) {
+  animation: route-out 160ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: route-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes route-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 @layer utilities {
   /* sketch-hover, hover-wobble, btn-grain, content-width and font-mono-display
      were deleted: all from the old hand-drawn look, none with a consumer left,
