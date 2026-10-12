@@ -340,8 +340,18 @@ export default function AboutComposed({
               only piled the slack into a single void between the two blocks. */}
           <div className="flex flex-col gap-12">
             <div className="grid grid-cols-1 items-start gap-x-10 gap-y-10 sm:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
-              {/* now playing */}
-              <div className="flex items-start gap-5" aria-hidden={!live} style={{ opacity: live ? 1 : 0, transition: fade }}>
+              {/* now playing: the whole record is the way to the song on Spotify,
+                  and its title takes the accent on hover, as every link here does */}
+              <a
+                href={live?.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-hidden={!live}
+                aria-label={live ? `${live.title} by ${live.artist}, on Spotify` : undefined}
+                tabIndex={live ? 0 : -1}
+                className="group flex items-start gap-5"
+                style={{ opacity: live ? 1 : 0, transition: fade, pointerEvents: live ? 'auto' : 'none' }}
+              >
                 <div className="shrink-0" style={{ width: 128, height: 128 }}>
                   {live ? <VinylCompact reduced={still} size={128} art={live.image} progress={progress} /> : null}
                 </div>
@@ -350,7 +360,10 @@ export default function AboutComposed({
                     {live && !live.isPlaying ? 'last played' : 'now playing'}
                   </span>
                   <div className="mt-3 min-h-[3.5rem]">
-                    <p className="text-balance text-[18px] leading-[1.2]" style={{ fontFamily: font, color: INK }}>
+                    <p
+                      className="text-balance text-[18px] leading-[1.2] underline-offset-4 transition-colors duration-200 group-hover:[color:var(--color-accent)] group-hover:underline group-focus-visible:underline"
+                      style={{ fontFamily: font, color: INK }}
+                    >
                       {live?.title ?? ''}
                     </p>
                     <p className="mt-1 text-[14px]" style={{ fontFamily: BODY, color: MUTED }}>
@@ -363,7 +376,7 @@ export default function AboutComposed({
                       : '33 1/3 rpm'}
                   </span>
                 </div>
-              </div>
+              </a>
 
               {/* last wrote: the newest post, the way "last played" is the
                   newest song */}
