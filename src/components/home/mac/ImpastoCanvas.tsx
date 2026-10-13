@@ -205,6 +205,8 @@ export default function ImpastoCanvas({
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let disposed = false
+    let force = true // draw on the next frame regardless (a resize, a repaint)
+    let drawn = { x: -1, y: -1, d: -1, at: -1e9 }
     let Wc = 0, Hc = 0, W = 0, Hp = 0
     let face = ''
     let nameStrokes: Stroke[] = []
@@ -451,6 +453,7 @@ export default function ImpastoCanvas({
       for (const s of userStrokes) lay(s, cx, hx)
       uploadCanvas(gl, texH, cH)
       uploadCanvas(gl, texC, cC)
+      force = true
     }
     repaintRef.current = repaint
 
@@ -460,6 +463,7 @@ export default function ImpastoCanvas({
       W = canvas.width = Math.round(Wc * dpr)
       Hp = canvas.height = Math.round(Hc * dpr)
       gl.viewport(0, 0, W, Hp)
+      force = true
       // Laid out at zero size (a hidden tab, a parent mid-mount): planning would
       // throw on a 0×0 canvas, and on first load that throw landed before the
       // frame loop started, so the name never drew at all. The observer calls
@@ -538,6 +542,7 @@ export default function ImpastoCanvas({
         uploadCanvas(gl, texH, cH)
         uploadCanvas(gl, texC, cC)
         dirty = false
+        force = true
       }
       const t = (now - t0) / 1000
       if (now - lastPointer > 2500) {
@@ -557,6 +562,22 @@ export default function ImpastoCanvas({
         ly += (lty - ly) * k
         acc -= h
       }
+      // draw only when something shows a change: the lamp has moved, the paint or
+      // the theme or the size has. The lamp's own idle sweep is slow, so it is
+      // drawn at a third of the frame rate
+      const dark = themeRef.current.bg === COLORS_DARK.bg ? 1 : 0
+      const moved = Math.abs(lx - drawn.x) + Math.abs(ly - drawn.y) > 0.25
+      if (!force && !moved && dark === drawn.d) return
+      if (!force && now - lastPointer > 2500 && now - drawn.at < 50) return
+      drawn = { x: lx, y: ly, d: dark, at: now }
+      force = false
+      // and only round the letters: bare canvas is the page colour, so nothing
+      // outside the name (and the room its shadows need) has to be shaded at all
+      if (!paintable && lampBox) {
+        const m = 56 * dpr
+        gl.enable(gl.SCISSOR_TEST)
+        gl.scissor(Math.floor(lampBox.x - m), Math.floor(Hp - (lampBox.y + lampBox.h + m)), Math.ceil(lampBox.w + 2 * m), Math.ceil(lampBox.h + 2 * m))
+      } else gl.disable(gl.SCISSOR_TEST)
       const g = palette().ground
       gl.uniform2f(uRes, W, Hp)
       // GL is bottom-up; the lamp hangs ~ a fifth of the screen above the canvas
