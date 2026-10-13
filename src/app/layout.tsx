@@ -4,6 +4,7 @@ import { body, display, mono } from "./fonts";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import RouteTransitions from "@/components/layout/RouteTransitions";
+import SmoothScroll from "@/components/layout/SmoothScroll";
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, X_HANDLE } from "@/lib/site";
 import { THEME_ATTR, THEME_KEY } from "@/styles/tokens";
@@ -135,6 +136,7 @@ export default function RootLayout({
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
         <RouteTransitions />
+        <SmoothScroll />
         <Analytics />
       </body>
     </html>
