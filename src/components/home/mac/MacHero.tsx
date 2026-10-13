@@ -2307,7 +2307,6 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
     let mousePid = -1
     let overScreen = false
     let lastClient: { x: number; y: number } | null = null
-    let offSince = 0 // when the mouse left the machine altogether
     const screenLive = () => power === 'on' && bootStage() >= 2
     const onWindowMove = (e: PointerEvent) => {
       par.tx = (e.clientX / window.innerWidth) * 2 - 1
@@ -2328,7 +2327,6 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       overScreen = h?.kind === 'screen'
       lastClient = { x: e.clientX, y: e.clientY }
       // wander off the machine for a moment and the camera stands back
-      if (e.pointerType === 'mouse') offSince = h ? 0 : offSince || wall
       if (overScreen && screenLive()) {
         cancelDemo()
         wake()
@@ -2343,9 +2341,10 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
     const onDown = (e: PointerEvent) => {
       unlockAudio()
       const h = pick(e.clientX, e.clientY)
+      // a click off the machine lets go of the keyboard, but leaning in is only
+      // undone on purpose: the back button, or Escape on an empty desktop
       if (!h) {
         setFocus(false)
-        lean(0)
         return
       }
       setFocus(true)
@@ -2410,11 +2409,8 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
         if (screenLive()) wmUp(cur.x, cur.y)
       }
     }
-    const onLeave = (e: PointerEvent) => {
+    const onLeave = () => {
       overScreen = false
-      // (a finger always "leaves" after it lifts; only a mouse wandering off means stand back)
-      if (e.pointerType !== 'mouse') return
-      offSince = offSince || wall
     }
     /** Touch: only a drag that starts on something draggable on the screen keeps the page from scrolling. */
     const onTouchStart = (e: TouchEvent) => {
@@ -2443,6 +2439,11 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       // the caps go down whenever you type, focused or not
       const k = keyFor(e)
       if (k && !e.repeat) pressKey(k)
+      // leaned in but the keyboard let go (a click off the machine): Escape still stands back
+      if (!focused && e.key === 'Escape' && view.goal === 1) {
+        lean(0)
+        return
+      }
       if (!focused) return
       if (e.key.length === 1 || ['Enter', 'Escape', 'Backspace', 'Delete', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         // capture phase, so the page's own shortcuts already see data-hero-keys
@@ -2782,7 +2783,6 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
         // the darts drift a pixel at a time: two dozen frames a second is plenty
         if (Math.floor(wall / 42) !== Math.floor((wall - wdt) / 42)) fbDirty = true
       } else if (booted && power === 'on' && !demo && !drag && wall - lastAct > 60000) startSaver()
-      if (offSince && wall - offSince > 900) lean(0)
       if (demo) stepDemo(wdt)
       else if (demoArmed && booted && power === 'on' && wall - lastAct > 6000 && !drag && !saver) {
         demoArmed = false
