@@ -1,62 +1,62 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Component, useEffect, type ReactNode } from 'react'
+import { Component, useEffect, useState, type ReactNode } from 'react'
 
 import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import AboutComposed from './AboutComposed'
 import HomeWork from './HomeWork'
+import { NameLayer } from './mac/NameLayer'
+import { canRunWebGL2 } from './mac/shared'
 import { REEL_SETTLED } from './reelEvent'
 
-/**
- * The first screen while the Classic's chunk (three.js and all) is on its way:
- * the fold held at full height, so the about does not jump up and back down,
- * and the page's one <h1>. A component loaded with `ssr: false` renders its own
- * heading only in the browser; this one is in the server's HTML.
- */
-function HeroShell() {
-  return (
-    <section className="relative h-[100svh] w-full">
-      <h1 className="sr-only">Yihan Hong, engineer, and a few other things.</h1>
-    </section>
-  )
-}
+/** The machine (three.js and all) comes in its own chunk, after the page. */
+const MacHero = dynamic(() => import('./mac/MacHero'), { ssr: false })
 
-/** What is left if the machine cannot run at all: the name and the line, set in type, where the hero would be. */
-function NameOnly() {
-  // the hero has landed, as far as it is going to: the nav can come back
-  useEffect(() => {
-    window.dispatchEvent(new CustomEvent(REEL_SETTLED))
-  }, [])
-  return (
-    <section className="relative flex h-[100svh] w-full items-center">
-      <div className="mx-auto w-full max-w-[1100px] px-6">
-        <h1 style={{ fontFamily: FONTS.display, fontSize: 'clamp(72px, 13vw, 200px)', lineHeight: 0.98, color: COLORS.ink }}>
-          <span style={{ color: COLORS.accent }}>yihan</span>
-          <br />
-          hong
-        </h1>
-        <p className="mt-6" style={{ fontFamily: FONTS.display, fontSize: 'clamp(18px, 2vw, 26px)', color: COLORS.inkSoft }}>
-          engineer, and a few other things.
-        </p>
-      </div>
-    </section>
-  )
-}
-
-/** A GPU that will not compile a shader throws from the hero's effect; the page keeps its fold instead of going blank. */
-class HeroGuard extends Component<{ children: ReactNode }, { failed: boolean }> {
+/** A GPU that will not compile a shader throws from the machine's effect; the page carries on without it. */
+class HeroGuard extends Component<{ children: ReactNode; onFail: () => void }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() {
     return { failed: true }
   }
+  componentDidCatch() {
+    this.props.onFail()
+  }
   render() {
-    return this.state.failed ? <NameOnly /> : this.props.children
+    return this.state.failed ? null : this.props.children
   }
 }
 
-const MacHero = dynamic(() => import('./mac/MacHero'), { ssr: false, loading: HeroShell })
+/**
+ * The first screen. The heading and the painted name are part of the page, so
+ * they are up the moment it hydrates; the machine arrives after, in its own
+ * chunk, and fades in. If this browser cannot run it (no WebGL2, or it
+ * throws), the name is set in type instead and the page goes on, and the nav
+ * comes back either way.
+ */
+function Hero() {
+  const [gl, setGl] = useState(true)
+  const [leaned, setLeaned] = useState(false)
+  useEffect(() => setGl(canRunWebGL2()), [])
+  useEffect(() => {
+    // no machine to boot: the hero has landed as far as it is going to
+    if (!gl) window.dispatchEvent(new CustomEvent(REEL_SETTLED))
+  }, [gl])
+  return (
+    <section className="relative h-[100svh] w-full overflow-hidden select-none" style={{ background: COLORS.bg }}>
+      <h1 className="sr-only">Yihan Hong, engineer, and a few other things.</h1>
+      <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: leaned ? 0 : 1 }}>
+        <NameLayer mode={gl ? 'paint' : 'type'} />
+      </div>
+      {gl && (
+        <HeroGuard onFail={() => setGl(false)}>
+          <MacHero onLean={setLeaned} />
+        </HeroGuard>
+      )}
+    </section>
+  )
+}
 
 /**
  * The homepage: three movements. The Classic (a compact all-in-one with a
@@ -94,9 +94,7 @@ export default function Home({
 
   return (
     <div className="w-full overflow-x-clip" style={{ backgroundColor: BG, color: INK }}>
-      <HeroGuard>
-        <MacHero />
-      </HeroGuard>
+      <Hero />
       <AboutComposed font={face} nowPlaying={nowPlaying} />
       <HomeWork />
 

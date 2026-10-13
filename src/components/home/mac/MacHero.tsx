@@ -120,7 +120,7 @@ import {
   savePrefs,
 } from './macApps'
 import { type Piano, createPiano } from './macPiano'
-import { NameLayer, heroLayout } from './NameLayer'
+import { heroLayout } from './NameLayer'
 import { META, NAME, TAGLINE, THINGS, hexToRgb, loadFace } from './shared'
 
 /**
@@ -363,23 +363,16 @@ type Menu = { title: string; x: number; w: number; items: Item[]; hidden?: boole
 type Step = { k: 'move'; to: () => [number, number] | null; ms?: number } | { k: 'wait'; ms: number } | { k: 'down' } | { k: 'up' }
 type Plane = { x: number; y: number; v: number; ph: number }
 
-/** Can this browser run the machine at all? (Without WebGL2: the name, in type, and no machine.) */
-const canRun = () => {
-  try {
-    return !!document.createElement('canvas').getContext('webgl2')
-  } catch {
-    return false
-  }
-}
-
-export default function MacHero() {
+/**
+ * The machine itself: the 3D scene and everything on its screen. It fills the
+ * hero's box; the page around it (Home) owns the box, the heading and the
+ * painted name, so those are up before this chunk has even arrived.
+ * `onLean` says when the camera has leaned in, so the name can step aside.
+ */
+export default function MacHero({ onLean }: { onLean?: (leaned: boolean) => void }) {
   const hostRef = useRef<HTMLDivElement>(null)
-  // read once, on the client (this component never renders on the server)
-  const [gl] = useState(canRun)
-  // no machine to boot: the name in type is all there is, so the nav comes back now
-  useEffect(() => {
-    if (!gl) window.dispatchEvent(new CustomEvent(REEL_SETTLED))
-  }, [gl])
+  const onLeanRef = useRef(onLean ?? (() => {}))
+  onLeanRef.current = onLean ?? (() => {})
   const theme = useThemeColors()
   const themeRef = useRef(theme)
   themeRef.current = theme
@@ -393,8 +386,12 @@ export default function MacHero() {
   }, [theme])
 
   useEffect(() => {
+    onLeanRef.current(leaned)
+  }, [leaned])
+
+  useEffect(() => {
     const host = hostRef.current
-    if (!host || !gl) return
+    if (!host) return
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     let disposed = false
@@ -414,7 +411,7 @@ export default function MacHero() {
     renderer.shadowMap.needsUpdate = true
     renderer.setClearColor(0x000000, 0)
     const canvas = renderer.domElement
-    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;outline:none'
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;outline:none;opacity:0;transition:opacity 700ms ease'
     host.appendChild(canvas)
 
     const scene = new THREE.Scene()
@@ -942,6 +939,12 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
     let yhSpr: Spr | null = null
 
     // ── state ───────────────────────────────────────────────────────────
+    // drawing on demand: the frame is only rendered when something on screen changed
+    let lastFrameSig = ''
+    let renderAgain = true // asked for from outside the loop (a resize, the theme)
+    let presented = false // the screen's texture changed this frame
+    let rendered = 0
+    let shown = false
     let wall = 0 // ms of wall time, clamped per frame
     let power: 'off' | 'on' = 'off'
     let bootAt = -1 // wall time the tube was switched on
@@ -1675,6 +1678,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
     }
 
     const present = () => {
+      presented = true
       if (fbDirty) {
         drawBase()
         fbDirty = false
@@ -2239,7 +2243,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
           const r = canvas.getBoundingClientRect()
           return [r.left + ((v.x + 1) / 2) * r.width, r.top + ((1 - v.y) / 2) * r.height]
         },
-        state: () => ({ wins: wins.map((w) => w.kind), sel, mounted, floppy: floppy.state, saver: !!saver, trashed: [...trashed], view: deskView, bar: menus.filter((m) => !m.hidden).map((m) => [m.title, m.x]) }),
+        state: () => ({ rendered, wins: wins.map((w) => w.kind), sel, mounted, floppy: floppy.state, saver: !!saver, trashed: [...trashed], view: deskView, bar: menus.filter((m) => !m.hidden).map((m) => [m.title, m.x]) }),
         saver: () => startSaver(),
         /** A point on the case (body space, z = 0 the face) on the page. */
         at: (x: number, y: number, z: number) => {
@@ -2564,6 +2568,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       view.H = H
       renderer.setSize(W, H, false)
       post.setSize(W, H, dpr)
+      renderAgain = true
       const L = heroLayout(W, H)
       camera.aspect = W / H
       camera.fov = L.portrait ? 26 : 21
@@ -2641,6 +2646,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       renderer.toneMappingExposure = L.exposure
       post.mix.uFloor.value = L.aoFloor
       renderer.shadowMap.needsUpdate = true
+      renderAgain = true
       spill = L.spill
       drawBadge()
     }
@@ -2784,7 +2790,6 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       }
       if (fbDirty || curDirty) present()
 
-      const t = wall / 1000
       if (power === 'on') crt.uPower.value = reduced ? 1 : Math.min(1, (wall - bootAt) / 420)
       else crt.uPower.value = offAt < 0 ? 0 : Math.max(0, 1 - (wall - offAt) / 260)
       spillU.uSpill.value = spill * crt.uPower.value
@@ -2806,8 +2811,8 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       // hold the camera still while the pointer works the screen, so the cursor stays under it
       stillK += ((overScreen || screenPid >= 0 ? 0 : 1) - stillK) * (1 - Math.exp(-dt * 6))
       const still = stillK
-      const drift = reduced ? 0 : Math.sin(t * 0.21) * 0.01 * still
-      applyCam(par.x * 0.05 * still + drift, par.y * 0.025 * still)
+      // no idle drift: it kept the whole frame redrawing for a motion nobody saw
+      applyCam(par.x * 0.05 * still, par.y * 0.025 * still)
       // while the camera leans in or out under a resting pointer, keep the cursor under it
       // (not while the button is held: that would turn a click into a drag)
       if (Math.abs(view.lv) > 1e-3 && overScreen && lastClient && screenPid < 0) {
@@ -2823,7 +2828,23 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
         lastShadowSig = shadowSig
         renderer.shadowMap.needsUpdate = true
       }
-      post.render()
+      // render only when something on screen changed: the camera, the parts that
+      // move, the tube's light, the desktop. An idle machine costs nothing, and
+      // neither does scrolling past it
+      const c = camera.position
+      const frameSig = `${c.x.toFixed(5)},${c.y.toFixed(5)},${c.z.toFixed(5)},${view.lean.toFixed(4)},${shadowSig},${crt.uPower.value.toFixed(3)}`
+      if (presented || renderAgain || frameSig !== lastFrameSig) {
+        lastFrameSig = frameSig
+        renderAgain = false
+        presented = false
+        post.render()
+        rendered++
+        if (!shown) {
+          // the first frame is up: fade the machine in
+          shown = true
+          canvas.style.opacity = '1'
+        }
+      }
     }
 
     // ── assets: the faces, then the photographs ──────────────────────────
@@ -2840,7 +2861,14 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       boot()
     })
     updateCords()
-    raf = requestAnimationFrame(frame)
+    // compile the scene's shaders in parallel where the browser can, so the
+    // first frame does not freeze the page while they build
+    renderer
+      .compileAsync(scene, camera)
+      .catch(() => {})
+      .finally(() => {
+        if (!disposed) raf = requestAnimationFrame(frame)
+      })
 
     return () => {
       disposed = true
@@ -2880,14 +2908,10 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       renderer.dispose()
       canvas.remove()
     }
-  }, [gl])
+  }, [])
 
   return (
-    <section className="relative h-[100svh] w-full overflow-hidden select-none" style={{ background: COLORS.bg }}>
-      <h1 className="sr-only">Yihan Hong, engineer, and a few other things.</h1>
-      <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: leaned ? 0 : 1 }}>
-        <NameLayer mode={gl ? 'paint' : 'type'} />
-      </div>
+    <div className="absolute inset-0">
       <div ref={hostRef} aria-hidden className="absolute inset-0" style={{ touchAction: 'pan-y' }} />
       <div className="sr-only">
         <p>{TAGLINE}</p>
@@ -2946,6 +2970,6 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       >
         ← back
       </button>
-    </section>
+    </div>
   )
 }

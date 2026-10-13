@@ -104,3 +104,12 @@ export function uploadCanvas(gl: WebGLRenderingContext, tex: WebGLTexture, src: 
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
 }
+
+/** Can this browser run the machine at all? Without WebGL2: the name in type, and no machine. */
+export function canRunWebGL2(): boolean {
+  try {
+    return !!document.createElement('canvas').getContext('webgl2')
+  } catch {
+    return false
+  }
+}
