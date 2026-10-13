@@ -248,8 +248,8 @@ export default function AboutComposed({
                 Outside of that, I dabble in a bit of everything. I&rsquo;ve played piano for fifteen years and
                 counting (I performed at Carnegie Hall!), and tenor sax for three, although I&rsquo;m still
                 kind of bad at it. I paint and sketch, occasionally take banger photos with my camera, and I
-                played competitive badminton in Ontario, where I won doubles gold. Like many other engineers,
-                I unfortunately play the infamous League of Legends in my free time&hellip;
+                played competitive badminton in Ontario, where I won doubles gold.
+                Unfortunately, like many other engineers, I also play an infamous game called League of Legends in my free time&hellip;
               </p>
               <p>So I&rsquo;m an engineer, and a few other things. Most of them started as the thing I did instead of studying.</p>
               <p>
