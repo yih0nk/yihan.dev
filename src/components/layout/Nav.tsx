@@ -236,10 +236,10 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="relative text-[14px] lowercase transition-colors duration-200 hover:text-[var(--color-ink)]"
+      className="relative text-[15px] lowercase transition-colors duration-200 hover:text-[var(--color-ink)]"
       style={{
         fontFamily: `var(--font-body, ${FONTS.body})`,
-        color: active ? COLORS.ink : COLORS.muted,
+        color: active ? COLORS.ink : COLORS.inkSoft,
       }}
     >
       {children}
