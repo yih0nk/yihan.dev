@@ -60,6 +60,24 @@ const artImages = [
   { src: "/images/IMG_9513.jpg", width: 1636, height: 2181, w: "94%", pull: false },
 ];
 
+/**
+ * The photographs: the five frames the homepage's film reel runs, on the same
+ * ragged sheet as the sketches and at their true proportions (two of them stand
+ * upright, which the reel's strip never let them do). Sizes measured with
+ * `sips`, for the same no-layout-shift reason as above.
+ */
+const photoImages = [
+  { src: "/images/reel/01.jpg", width: 1066, height: 1600, w: "100%", pull: false },
+  { src: "/images/reel/02.jpg", width: 1600, height: 1066, w: "90%", pull: true },
+  { src: "/images/reel/03.jpg", width: 1600, height: 1066, w: "100%", pull: false },
+  { src: "/images/reel/04.jpg", width: 1066, height: 1600, w: "92%", pull: true },
+  { src: "/images/reel/05.jpg", width: 1600, height: 1200, w: "96%", pull: false },
+  { src: "/images/reel/06.jpg", width: 1600, height: 1067, w: "94%", pull: true },
+  { src: "/images/reel/07.jpg", width: 1067, height: 1600, w: "100%", pull: false },
+  { src: "/images/reel/08.jpg", width: 1600, height: 1067, w: "92%", pull: true },
+  { src: "/images/reel/09.jpg", width: 1600, height: 1067, w: "100%", pull: false },
+];
+
 const RULE = "flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]";
 const HEADING = "border-t pt-8 text-[32px] leading-none tracking-[-0.01em]";
 /**
@@ -209,6 +227,27 @@ export default function PlayPage() {
           </p>
           <p>Everything&apos;s on Instagram.</p>
         </div>
+        <ul
+          className="mt-10 columns-2 gap-x-6 md:columns-3 md:gap-x-8"
+          aria-label="photographs"
+        >
+          {photoImages.map((img) => (
+            <li
+              key={img.src}
+              className="mb-6 break-inside-avoid md:mb-8"
+              style={{ width: img.w, marginLeft: img.pull ? "auto" : undefined }}
+            >
+              <Image
+                src={img.src}
+                alt=""
+                width={img.width}
+                height={img.height}
+                sizes="(min-width: 1100px) 340px, (min-width: 768px) 31vw, 46vw"
+                className="h-auto w-full"
+              />
+            </li>
+          ))}
+        </ul>
         {/* Was a bordered button that inverted to solid black. One accent,
             interaction only — so it is text, the way the project links are. */}
         <a
