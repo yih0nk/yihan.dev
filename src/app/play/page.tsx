@@ -116,7 +116,7 @@ export default function PlayPage() {
       </p>
 
       {/* Music */}
-      <section id="music" className="mt-16 md:mt-20">
+      <section id="music" data-reveal className="mt-16 md:mt-20">
         <h2 className={HEADING} style={headingStyle}>
           music
         </h2>
@@ -223,7 +223,7 @@ export default function PlayPage() {
       </section>
 
       {/* Badminton */}
-      <section id="badminton" className="mt-20 md:mt-24">
+      <section id="badminton" data-reveal className="mt-20 md:mt-24">
         <h2 className={HEADING} style={headingStyle}>
           badminton
         </h2>

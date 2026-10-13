@@ -153,7 +153,7 @@ export default function PostList({
         {shown.map((post) => {
           const on = hovered === post.slug
           return (
-            <li key={`${post.category}/${post.slug}`}>
+            <li key={`${post.category}/${post.slug}`} data-reveal>
               <Link
                 href={`/blog/${post.slug}`}
                 className="bl-anim block py-7 md:py-9"

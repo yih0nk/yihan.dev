@@ -244,7 +244,7 @@ export default function HomeWork() {
             the cards. A 32px "building" on top was a third header for two
             things, and the heaviest type on the page below the hero. The rule
             is what separates it from the about. */}
-        <div className="border-t pt-10" style={{ borderColor: HAIRLINE }}>
+        <div data-reveal className="border-t pt-10" style={{ borderColor: HAIRLINE }}>
           <YearGraph />
         </div>
 
@@ -253,8 +253,11 @@ export default function HomeWork() {
             some cool stuff i built:
           </span>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {flagship.map(({ project, n }) => (
-              <ProjectCard key={project.slug} project={project} n={n} />
+            {flagship.map(({ project, n }, i) => (
+              // a wrapper takes the reveal: the card's own transform is its tilt
+              <div key={project.slug} data-reveal style={{ '--reveal-delay': `${i * 90}ms` } as React.CSSProperties}>
+                <ProjectCard project={project} n={n} />
+              </div>
             ))}
           </div>
           <Link

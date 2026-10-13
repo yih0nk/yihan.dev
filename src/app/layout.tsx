@@ -4,6 +4,7 @@ import { body, display, mono } from "./fonts";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import RouteTransitions from "@/components/layout/RouteTransitions";
+import ScrollReveal from "@/components/layout/ScrollReveal";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, X_HANDLE } from "@/lib/site";
@@ -130,12 +131,17 @@ export default function RootLayout({
             __html: `try{var t=localStorage.getItem(${JSON.stringify(THEME_KEY)});if(t==="light"||t==="dark")document.documentElement.setAttribute(${JSON.stringify(THEME_ATTR)},t)}catch(e){}`,
           }}
         />
+        {/* Arms the scroll reveals (ScrollReveal.tsx) before first paint, for
+            the same reason: set in an effect, content already on screen would
+            flash, vanish and fade back. */}
+        <script dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add("js-reveal")` }} />
       </head>
       <body className="flex flex-col min-h-screen">
         <Nav />
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
         <RouteTransitions />
+        <ScrollReveal />
         <SmoothScroll />
         <Analytics />
       </body>
