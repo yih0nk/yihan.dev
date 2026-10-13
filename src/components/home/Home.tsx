@@ -7,6 +7,7 @@ import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import AboutComposed from './AboutComposed'
 import HomeWork from './HomeWork'
+import Loader from './Loader'
 import { NameLayer } from './mac/NameLayer'
 import { canRunWebGL2 } from './mac/shared'
 import { REEL_SETTLED } from './reelEvent'
@@ -94,6 +95,7 @@ export default function Home({
 
   return (
     <div className="w-full overflow-x-clip" style={{ backgroundColor: BG, color: INK }}>
+      <Loader />
       <Hero />
       <AboutComposed font={face} nowPlaying={nowPlaying} />
       <HomeWork />
