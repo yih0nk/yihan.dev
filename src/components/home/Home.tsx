@@ -6,6 +6,7 @@ import { Component, useEffect, useState, type ReactNode } from 'react'
 import type { InitialNowPlaying } from '@/lib/spotify'
 import { COLORS, FONTS } from '@/styles/tokens'
 import AboutComposed from './AboutComposed'
+import ForRecruiters from './ForRecruiters'
 import HomeWork from './HomeWork'
 import Loader from './Loader'
 import { NameLayer } from './mac/NameLayer'
@@ -60,10 +61,11 @@ function Hero() {
 }
 
 /**
- * The homepage: three movements. The Classic (a compact all-in-one with a
- * working one-bit desktop, beside the name), the about (who, where, what's
- * playing, what was written last), then the work: the year's commit graph and
- * the flagship projects.
+ * The homepage: three movements and a coda. The Classic (a compact all-in-one
+ * with a working one-bit desktop, beside the name), the about (who, where,
+ * what's playing, what was written last), then the work: the year's commit
+ * graph and the flagship projects. Last, the recruiter summary: the résumé's
+ * first glance, in public.
  *
  * The arrangement this replaced stacked four sections, each carrying its own
  * `py-24 md:py-32`, so every seam double-padded — ~3,200px of scroll with two
@@ -99,6 +101,7 @@ export default function Home({
       <Hero />
       <AboutComposed font={face} nowPlaying={nowPlaying} />
       <HomeWork />
+      <ForRecruiters />
 
       {/* The page exhales instead of stopping — but only a little. AboutComposed
           already carries its own bottom padding, and stacking a tall spacer on
