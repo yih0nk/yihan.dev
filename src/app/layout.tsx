@@ -65,18 +65,18 @@ export const metadata: Metadata = {
      * function invocation and the cold start, which is every remaining variable
      * at once.
      *
-     * The cost is that the card no longer regenerates when the copy changes.
-     * The generator that produced public/og.png is at 2dd13a7 in
-     * src/app/opengraph-image.tsx — restore it, hit /opengraph-image, save the
-     * PNG over public/og.png, and delete the route again. The per-post cards
-     * under /blog/[slug] are still generated, since those genuinely have to be.
+     * The card is the homepage itself: the painted name and the Mac, captured
+     * from the live hero at 1440×756 (2× DPR, nav hidden) on a real GPU and
+     * downscaled to 1200×630. To redo it, capture the hero the same way and
+     * save over public/og.png. The per-post and per-project cards are still
+     * generated, since those genuinely have to be.
      */
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME}, personal site`,
+        alt: `${SITE_NAME}, his name painted in oils beside a 3D compact Mac`,
       },
     ],
   },
