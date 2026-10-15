@@ -13,7 +13,7 @@ import { COLORS_LIGHT } from "@/styles/tokens";
  * a specific post rendering the generic site card tells a reader nothing they
  * did not already know from the URL. Projects get their own the same way
  * (src/app/projects/[slug]/opengraph-image.tsx); everything else keeps the
- * site card at public/og.png.
+ * site card at public/og-mac.png.
  *
  * Set in the real faces, on the same roles as the post page itself: the title
  * in Instrument Serif, the rule and the date line in Source Code Pro. See

@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
    * tracing follows imports, and a path assembled from `process.cwd()` is not
    * an import, so nothing would otherwise tell it these are needed.
    *
-   * The site-wide card is a static public/og.png now and needs none of this.
+   * The site-wide card is a static file in public/ now and needs none of this.
    */
   outputFileTracingIncludes: {
     "/blog/[slug]/opengraph-image": ["./src/lib/og/fonts/**"],

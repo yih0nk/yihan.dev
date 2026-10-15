@@ -68,12 +68,15 @@ export const metadata: Metadata = {
      * The card is the homepage itself: the painted name and the Mac, captured
      * from the live hero at 1440×756 (2× DPR, nav hidden) on a real GPU and
      * downscaled to 1200×630. To redo it, capture the hero the same way and
-     * save over public/og.png. The per-post and per-project cards are still
+     * save it under a NEW filename. LinkedIn and others cache a card by its
+     * URL for weeks and ignore a re-scrape of the page, so overwriting the old
+     * file leaves them showing the old card (it was public/og.png until the
+     * Mac replaced it). The per-post and per-project cards are still
      * generated, since those genuinely have to be.
      */
     images: [
       {
-        url: "/og.png",
+        url: "/og-mac.png",
         width: 1200,
         height: 630,
         alt: `${SITE_NAME}, his name painted in oils beside a 3D compact Mac`,
