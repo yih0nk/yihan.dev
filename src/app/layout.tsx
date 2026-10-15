@@ -30,7 +30,8 @@ import { THEME_ATTR, THEME_KEY } from "@/styles/tokens";
  */
 const TITLE = {
   default: SITE_NAME,
-  template: "%s | Yihan",
+  // the full name: it is what people search, and what a result should show
+  template: "%s | Yihan Hong",
 } as const;
 
 export const metadata: Metadata = {

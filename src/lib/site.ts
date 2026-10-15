@@ -10,15 +10,17 @@ export const SITE_NAME = "Yihan Hong";
 /**
  * One description, used by the root metadata, the homepage, and the schema.org
  * `Person`. There were two of these and they disagreed; keeping a single
- * constant is why the OG card and the meta tag can no longer describe the same
- * person two different ways.
+ * constant is why the share card and the meta tag can no longer describe the
+ * same person two different ways.
  *
- * This is the site's through-line, not a keyword line. The domain ranks for
- * "Yihan Hong" through the Person schema and `sameAs`, not through this string,
- * so the description is free to be the one sentence that actually sounds like
- * him and reads well on a share card. No em dash — the voice does not use them.
+ * It is the search snippet, so it says plainly who he is, where, and what he
+ * is looking for: "I'm an engineer, and a few other things" told a search
+ * engine, a recruiter's search and an AI answer nothing. The voice line still
+ * closes the about on the page itself. Kept under ~160 characters, where
+ * Google cuts snippets. No em dash — the voice does not use them.
  */
-export const SITE_DESCRIPTION = "I'm an engineer, and a few other things.";
+export const SITE_DESCRIPTION =
+  "Yihan Hong: USC computer engineering & CS student and software engineering intern at July AI, building AI agents. Open to Summer 2027 SWE and AI internships.";
 
 /**
  * These were written out by hand in three files and two of them were wrong: the
