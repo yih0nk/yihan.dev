@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import Home from "@/components/home/Home";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
+import { EDUCATION } from "@/lib/experience";
+import { CURRENT_ROLE, SEEKING, STRENGTHS } from "@/lib/recruiting";
+import { EMAIL, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
 import { getInitialNowPlaying } from "@/lib/spotify";
 import { FONTS } from "@/styles/tokens";
 
@@ -52,28 +54,43 @@ export const metadata: Metadata = {
  *
  * `@id` is a stable identifier rather than a URL to fetch, so the BlogPosting
  * on each post can point its `author` at this exact node instead of restating
- * the person. One entity, referenced twice.
+ * the person. One entity, referenced from the posts and the projects.
+ *
+ * It sits inside a ProfilePage, which is how Google is told this page is ABOUT
+ * the person rather than merely by them. The role, the school, the skills and
+ * what he is looking for come from the same modules as the visible recruiter
+ * section, so the markup cannot claim anything the page does not show.
  */
-const personLd = {
+const profileLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": `${SITE_URL}/#person`,
-  name: SITE_NAME,
+  "@type": "ProfilePage",
+  "@id": `${SITE_URL}/#profile`,
   url: SITE_URL,
-  description: SITE_DESCRIPTION,
-  image: `${SITE_URL}/images/pfp.jpg`,
-  sameAs: SOCIALS,
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "University of Southern California",
-    url: "https://www.usc.edu",
+  name: SITE_NAME,
+  mainEntity: {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#person`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    email: `mailto:${EMAIL}`,
+    description: SITE_DESCRIPTION,
+    image: `${SITE_URL}/images/pfp.jpg`,
+    sameAs: SOCIALS,
+    jobTitle: CURRENT_ROLE.title,
+    worksFor: { "@type": "Organization", name: CURRENT_ROLE.org, url: "https://www.gojuly.ai" },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "University of Southern California",
+      url: "https://www.usc.edu",
+    },
+    hasCredential: {
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "degree",
+      name: EDUCATION.title,
+    },
+    seeks: { "@type": "Demand", description: SEEKING },
+    knowsAbout: STRENGTHS,
   },
-  knowsAbout: [
-    "Artificial intelligence",
-    "Reinforcement learning",
-    "AI agents",
-    "Machine learning infrastructure",
-  ],
 };
 
 export default async function HomePage() {
@@ -81,7 +98,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <JsonLd data={personLd} />
+      <JsonLd data={profileLd} />
       <Home font={FONTS.display} nowPlaying={nowPlaying} />
     </>
   );
