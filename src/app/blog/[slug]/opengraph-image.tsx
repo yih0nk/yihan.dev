@@ -11,9 +11,9 @@ import { COLORS_LIGHT } from "@/styles/tokens";
  *
  * Posts get their own because the title is the thing worth showing — a link to
  * a specific post rendering the generic site card tells a reader nothing they
- * did not already know from the URL. Everything else on the site keeps the
- * default card at src/app/opengraph-image.tsx; per-page cards beyond this were
- * considered and declined.
+ * did not already know from the URL. Projects get their own the same way
+ * (src/app/projects/[slug]/opengraph-image.tsx); everything else keeps the
+ * site card at public/og.png.
  *
  * Set in the real faces, on the same roles as the post page itself: the title
  * in Instrument Serif, the rule and the date line in Source Code Pro. See

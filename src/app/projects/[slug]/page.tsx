@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProject, projects } from "@/lib/projects";
+import JsonLd from "@/components/seo/JsonLd";
+import { getProject, projects, type Project } from "@/lib/projects";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
 
 /**
@@ -30,6 +32,36 @@ import { COLORS, FONTS, LAYOUT } from "@/styles/tokens";
  * past three paragraphs. If one ever does, this is the first thing to revisit.
  */
 
+/**
+ * The project as structured data: source code where there is a public repo,
+ * a creative work where there is not, either way tied (by @id, not restated)
+ * to the one Person the homepage defines, so a search engine can tie each
+ * project back to him.
+ */
+function projectLd(project: Project) {
+  const repo = project.links?.find((l) => l.href.startsWith("https://github.com/"))?.href;
+  const url = `${SITE_URL}/projects/${project.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": repo ? "SoftwareSourceCode" : "CreativeWork",
+    "@id": `${url}#project`,
+    name: project.title,
+    description: project.tagline,
+    url,
+    ...(repo ? { codeRepository: repo } : {}),
+    ...(project.image ? { image: `${SITE_URL}${project.image}` } : {}),
+    keywords: project.tags.join(", "),
+    sameAs: project.links?.map((l) => l.href) ?? [],
+    // a repo under someone else's account (a club's, a lab's) is one he
+    // contributed to, not one he can claim to have authored
+    [!repo || repo.startsWith("https://github.com/yih0nk/") ? "author" : "contributor"]: {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#person`,
+      name: SITE_NAME,
+    },
+  };
+}
+
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
@@ -46,16 +78,14 @@ export async function generateMetadata({
   /**
    * NO `openGraph` BLOCK HERE, AND THAT IS THE POINT.
    *
-   * There is no per-project share card — these fall through to the site default
-   * at src/app/opengraph-image.tsx, which was the call: a card per project is
-   * five more images to keep true to five write-ups that change. Falling
-   * through only works if this page leaves openGraph alone. Setting one, even
-   * just to say `type: "article"`, replaces the inherited object wholesale and
-   * takes the default card's og:image with it — measured: /projects/cotter
-   * rendered with no og:image at all, and no warning anywhere.
+   * The share card is the sibling opengraph-image.tsx, which Next wires in by
+   * file convention. Setting an openGraph object here, even just to say
+   * `type: "article"`, replaces the inherited one wholesale and can take the
+   * card's og:image with it — measured once: /projects/cotter rendered with no
+   * og:image at all, and no warning anywhere.
    *
-   * So title, description and the card are all inherited, and the only thing
-   * declared is the canonical, which cannot be.
+   * So the title, the description and the canonical are declared, and the
+   * card comes from the file.
    */
   return {
     title: project.title,
@@ -78,6 +108,7 @@ export default async function ProjectDetailPage({
 
   return (
     <div className={`${LAYOUT.container} pt-[calc(var(--nav-h)+5rem)] pb-24 md:pb-32`}>
+      <JsonLd data={projectLd(project)} />
       {/* The index's header rule, carrying the way back and the entry number. */}
       <div
         className="flex items-baseline justify-between gap-6 border-b pb-3 text-[12px] uppercase tracking-[0.18em]"
