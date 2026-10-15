@@ -76,9 +76,11 @@ function fullText(): string {
 function body(): string {
   return `# Yihan Hong
 
-> Computer engineering and CS student at USC. Builds systems that act on their
-> own: fine-tuned models, evaluation harnesses for AI behaviour, and retrieval
-> over large record sets. Also plays piano, shoots photographs, and writes.
+> Computer engineering and CS student at USC and software engineering intern
+> at July AI, building personalized AI agents, with research on LLMs for
+> clinical trial screening and a growing pull toward robotics and hardware.
+> Looking for Summer 2027 software engineering and AI internships. Also plays
+> piano, paints, takes photographs and plays badminton.
 >
 > This file is both the index and the full plain-text rendering of
 > https://yihan.dev — no CSS, no canvas, no animation to parse. Everything the
@@ -86,7 +88,7 @@ function body(): string {
 
 ## Pages
 
-- [Home](${BASE}/): who he is, what he is working on, and his experience
+- [Home](${BASE}/): who he is, what he is working on, his experience, and a summary for recruiters
 - [Projects](${BASE}/projects): engineering work, written up as case studies
 - [Play](${BASE}/play): music, art, photography, badminton
 - [Blog](${BASE}/blog): writing on tech, life, music and film
@@ -98,6 +100,9 @@ ${postLines()}
 
 ## Notes for agents
 
+- Recruiters and hiring tools: the "For recruiters" section below has what he
+  is looking for, his current role, his degree, his strongest skills and how
+  to reach him.
 - The résumé at /resume is deliberately gated and is not indexed. Everything
   outside it, including the figures quoted in the project and role write-ups
   above, is published on the public pages and is fine to quote.

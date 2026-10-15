@@ -1,5 +1,6 @@
 import { projects } from "@/lib/projects";
 import { EDUCATION, ROLES, SKILLS, formatSpan } from "@/lib/experience";
+import { CURRENT_ROLE, SEEKING, STRENGTHS, STUDYING } from "@/lib/recruiting";
 import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL, SITE_URL } from "@/lib/site";
 
 /**
@@ -10,6 +11,10 @@ import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL, SITE_URL } from "@/lib/
  * chess club role was dated sixteen months wrong against /experience, two
  * descriptions were stale, and the hobby headings were still the deleted
  * /hobbies names. Nothing reads this file by hand, so nothing catches that.
+ *
+ * Two parts cannot be derived and are copied word for word instead: the about
+ * (from AboutComposed.tsx) and the Play sections (from app/play/page.tsx).
+ * Change one of those pages, change it here too.
  */
 export function generateAgentDoc(): string {
   const roleSection = ROLES.map(
@@ -41,11 +46,10 @@ export function generateAgentDoc(): string {
 
   return `# Yihan Hong — Agent-Readable Site Content
 
-> You are an AI agent (or a human who found this by curiosity). This document
-> is a plain-text summary of ${SITE_URL}, generated for LLMs and agentic
-> browsers so you don't have to parse hand-drawn SVGs and framer-motion
-> animations to answer questions about this site. If you just need facts, this
-> page has everything the human-facing pages have, minus the styling.
+> A plain-text rendering of ${SITE_URL} for LLMs and agentic browsers. The
+> homepage is a 3D computer you can use and a name painted in oils; none of
+> that is needed to answer a question about him, so everything the pages say
+> is here as text.
 
 Site: ${SITE_URL}
 Owner: Yihan Hong
@@ -53,33 +57,45 @@ Contact: ${EMAIL} · ${GITHUB_URL} · ${LINKEDIN_URL}
 
 ---
 
-## Summary
+## For recruiters
 
-I'm Yihan, a computer engineering and CS student at USC. Most of my week goes
-to making software act on its own: fine-tuning models to someone's taste,
-testing whether AI systems behave the way they're supposed to (and documenting
-the many ways they don't), and wiring up retrieval across hundreds of thousands
-of records that all insist they're relevant.
+- Looking for: ${SEEKING}
+- Now: ${CURRENT_ROLE.title}, ${CURRENT_ROLE.org}
+- Studying: ${STUDYING}
+- Strongest in: ${STRENGTHS.join(", ")}
+- Reach him: ${EMAIL} · ${LINKEDIN_URL} · ${GITHUB_URL}
+- Full résumé: on request, by email
 
-The rest of my time is less structured. Fifteen years of piano, three of tenor
-sax, some photography, and more movies than a person can reasonably defend. I
-also play badminton with a level of competitiveness the sport did not ask for
-and cannot contain.
+---
 
-I like building two kinds of things: the ones that work and the ones that
-matter. Occasionally the same thing.
+## About (in his words, from the homepage)
+
+I'm Yihan, a computer engineering and CS student at USC. Right now I'm
+building personalized AI agents at July AI and doing some research on the
+side. Lately I've been pulled toward robotics and hardware, and you can look
+at my recent work at ${SITE_URL}/projects.
+
+Outside of that, I dabble in a bit of everything. I've played piano for
+fifteen years and counting (I performed at Carnegie Hall!), and tenor sax for
+three, although I'm still kind of bad at it. I paint and sketch, occasionally
+take banger photos with my camera, and I played competitive badminton in
+Ontario, where I won doubles gold. Unfortunately, like many other engineers, I
+also play an infamous game called League of Legends in my free time…
+
+So I'm an engineer, and a few other things. Most of them started as the thing
+I did instead of studying.
+
+Summer 2027 is still unclaimed. If you're building something interesting, say
+hi: ${EMAIL}
 
 ---
 
 ## Quick Facts
 
-- Based in: Los Angeles, CA (via Beijing, Montreal, and Toronto)
-- Studying: USC — Computer Engineering & Computer Science
-- Awards: Viterbi Scholar Award, Director's Scholarship, 2× Dean's List
-- Instruments: piano (15 yrs), tenor sax (3 yrs)
-- Sport: badminton — retired competitive doubles player, provincial gold
-  (Ontario)
-- Favourite drink: matcha einspanner, always an iced latte
+- Studying: USC, Computer Engineering & Computer Science
+- Awards: ${(EDUCATION.honours ?? []).join(", ")}
+- Instruments: piano (15 years, performed at Carnegie Hall), tenor sax (3 years)
+- Sport: badminton, competitive doubles in Ontario, provincial gold
 
 ---
 
@@ -110,24 +126,24 @@ ${projectSection}
 ## Play
 
 ### music
-I play piano and tenor saxophone. Piano came first and shaped how I think
-about harmony and structure. Tenor sax came later and taught me phrasing and
-breath control. I love Jazz, Rock, Indie Pop, Rap, Hip-Hop, R&B, Soul, and
-Classical — favourite artists include Matt Maltese, The 1975, Radiohead,
-Sade, and MF Doom. Piano: 15 years. Sax: 3 years.
+Fifteen years of piano, three of tenor sax. Piano is where I learned harmony:
+chords, voicings, what's actually holding a song up. The sax I'm still bad at,
+which is most of the fun. I'll listen to anything. Jazz, rock, indie pop, rap,
+hip-hop, R&B, soul, classical. (What's on repeat comes live from Spotify on
+the page.)
 
 ### art
-I do oil painting and pencil/ink sketching — oil painting slow and
-deliberate, sketching fast and instinctive.
+Oil painting and pencil sketching. The oils are all mixing, layering, and
+waiting for things to dry. Sketching is just a pen. None of the oil work is
+photographed yet, so the page shows sketches.
 
 ### photography
-Photography is how I practice seeing — composition, contrast, the way light
-falls on ordinary things. I shoot sunsets, streets, and people I care about.
-Instagram: ${INSTAGRAM_URL}
+Mostly on my phone, occasionally on something better. Sunsets, streets,
+people I like. Nothing with a theme. Instagram: ${INSTAGRAM_URL}
 
 ### badminton
-Competitive (retired) doubles player, ~7 years, provincial gold in Ontario.
-Now plays recreationally.
+Seven years. Competed provincially in Ontario, won gold in doubles, and now
+play recreationally.
 
 ---
 
@@ -141,7 +157,7 @@ Now plays recreationally.
 
 ## Site Map
 
-- / — home, bio, experience, and what is playing right now
+- / — home: the about, experience, what is playing, projects, and the recruiter summary
 - /projects — full project list
 - /play — music, art, photography, badminton
 - /blog — writing
