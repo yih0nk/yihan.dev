@@ -30,7 +30,7 @@ const LABEL = 'text-[12px] uppercase leading-none tracking-[0.2em]'
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 /** The projects the homepage leads with, by slug, in this order. */
-const FLAGSHIP = ['trove', 'cotter', 'rocket-robot']
+const FLAGSHIP = ['trove', 'fast-mafft', 'rocket-robot']
 
 /** Enough days to cover the rolling year out of the route's answer. */
 const FETCH_SPAN = 400

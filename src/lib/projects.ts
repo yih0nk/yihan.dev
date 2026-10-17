@@ -40,33 +40,6 @@ export const projects: Project[] = [
     links: [{ label: "Live Site", href: "https://usetrove.org" }],
   },
   {
-    slug: "cotter",
-    title: "Cotter",
-    tagline:
-      "Compliance testing for AI-controlled robot policies: pytest for robots.",
-    description: [
-      "Cotter loads a trained robot policy as a black box (observation → action), runs it through a battery of standardized tests in MuJoCo simulation, and produces structured pass/fail results with statistical guarantees. It targets the emerging regulatory need for evidence that a learned controller actually behaves (EU Machinery Regulation, ISO 10218), but the core is just honest, reproducible testing. Everything runs on CPU. Developed on Apple Silicon, with no CUDA anywhere in the stack.",
-      "Four test categories, each backed by a real statistical method. Performance uses Wald's sequential probability ratio test (SPRT), which stops sampling as soon as the evidence is decisive, cutting the median trials needed from 20 to 9. Safety runs per-timestep checks on joint velocities, actuator forces, and contacts, where a single violation anywhere fails with no averaging. Regression uses matched pairs on a shared seed sequence with exact McNemar and Wilcoxon signed-rank tests.",
-      "The adversarial suite trains a PPO adversary to perturb the policy's observations within an L∞ budget, alongside a guaranteed random-noise baseline. On a trained victim policy it drove task success from 100% to 0% at a bounded budget where random noise had zero effect. As founder I built and published the framework to PyPI (as cotterbot); the statistical core is validated by 75 passing tests with green CI.",
-    ],
-    tags: [
-      "Python",
-      "PyTorch",
-      "Gymnasium",
-      "MuJoCo",
-      "PPO",
-      "Wald's SPRT",
-      "Hypothesis Testing",
-      "Open Source",
-      "PyPI",
-    ],
-    image: "/images/projects/cotter.jpg",
-    links: [
-      { label: "PyPI", href: "https://pypi.org/project/cotterbot/" },
-      { label: "GitHub", href: "https://github.com/yih0nk/cotter" },
-    ],
-  },
-  {
     slug: "fast-mafft",
     title: "fast-mafft",
     tagline:
@@ -183,6 +156,41 @@ export const projects: Project[] = [
     image: "/images/projects/job-hunt-agent.jpg",
     links: [
       { label: "GitHub", href: "https://github.com/yih0nk/job-hunt-agent" },
+    ],
+  },
+];
+
+/**
+ * Off the site for now: not on the homepage, the index, the sitemap or
+ * /llms.txt, and /projects/<slug> is a 404. To bring one back, move it into
+ * `projects` above; the cover image and its index line are still in place.
+ */
+export const shelvedProjects: Project[] = [
+  {
+    slug: "cotter",
+    title: "Cotter",
+    tagline:
+      "Compliance testing for AI-controlled robot policies: pytest for robots.",
+    description: [
+      "Cotter loads a trained robot policy as a black box (observation → action), runs it through a battery of standardized tests in MuJoCo simulation, and produces structured pass/fail results with statistical guarantees. It targets the emerging regulatory need for evidence that a learned controller actually behaves (EU Machinery Regulation, ISO 10218), but the core is just honest, reproducible testing. Everything runs on CPU. Developed on Apple Silicon, with no CUDA anywhere in the stack.",
+      "Four test categories, each backed by a real statistical method. Performance uses Wald's sequential probability ratio test (SPRT), which stops sampling as soon as the evidence is decisive, cutting the median trials needed from 20 to 9. Safety runs per-timestep checks on joint velocities, actuator forces, and contacts, where a single violation anywhere fails with no averaging. Regression uses matched pairs on a shared seed sequence with exact McNemar and Wilcoxon signed-rank tests.",
+      "The adversarial suite trains a PPO adversary to perturb the policy's observations within an L∞ budget, alongside a guaranteed random-noise baseline. On a trained victim policy it drove task success from 100% to 0% at a bounded budget where random noise had zero effect. As founder I built and published the framework to PyPI (as cotterbot); the statistical core is validated by 75 passing tests with green CI.",
+    ],
+    tags: [
+      "Python",
+      "PyTorch",
+      "Gymnasium",
+      "MuJoCo",
+      "PPO",
+      "Wald's SPRT",
+      "Hypothesis Testing",
+      "Open Source",
+      "PyPI",
+    ],
+    image: "/images/projects/cotter.jpg",
+    links: [
+      { label: "PyPI", href: "https://pypi.org/project/cotterbot/" },
+      { label: "GitHub", href: "https://github.com/yih0nk/cotter" },
     ],
   },
 ];

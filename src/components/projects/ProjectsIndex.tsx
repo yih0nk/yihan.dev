@@ -35,6 +35,7 @@ interface IndexEntry {
 }
 
 const INDEX: Record<string, IndexEntry> = {
+  // shelved for now (see shelvedProjects); kept so it can come straight back
   cotter: {
     line: 'Compliance testing for learned robot policies: pytest, for robots.',
     keys: ['Python', 'MuJoCo', "Wald's SPRT"],
