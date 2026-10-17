@@ -2,8 +2,9 @@ import { EDUCATION, ROLES, formatMonth } from "@/lib/experience";
 
 /**
  * The recruiter summary: what Yihan is looking for, where he is now, and what
- * he is strongest in, in one place. The homepage section, /llms.txt and the
- * schema.org Person all read it, so the three can never say different things.
+ * he is strongest in, in one place. /llms.txt and the schema.org Person both
+ * read it, so the two can never say different things. It is for machines
+ * only: on the homepage it repeated the about word for word, so it came off.
  *
  * The résumé itself stays gated; this is the public version of its first
  * glance. Every fact here is already on a public page.

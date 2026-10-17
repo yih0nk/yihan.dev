@@ -88,7 +88,7 @@ function body(): string {
 
 ## Pages
 
-- [Home](${BASE}/): who he is, what he is working on, his experience, and a summary for recruiters
+- [Home](${BASE}/): who he is, what he is working on, and his experience
 - [Projects](${BASE}/projects): engineering work, written up as case studies
 - [Play](${BASE}/play): music, art, photography, badminton
 - [Blog](${BASE}/blog): writing on tech, life, music and film
