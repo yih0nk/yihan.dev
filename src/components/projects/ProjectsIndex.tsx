@@ -39,6 +39,10 @@ const INDEX: Record<string, IndexEntry> = {
     line: 'Compliance testing for learned robot policies: pytest, for robots.',
     keys: ['Python', 'MuJoCo', "Wald's SPRT"],
   },
+  'fast-mafft': {
+    line: 'A sequence aligner, made 9.7–36× faster without changing a byte of output.',
+    keys: ['C', 'SIMD', 'HPC'],
+  },
   trove: {
     line: 'Cafe operations: live inventory, autonomous reordering, forecast demand.',
     keys: ['Next.js', 'XGBoost', 'Supabase'],

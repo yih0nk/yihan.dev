@@ -67,6 +67,29 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "fast-mafft",
+    title: "fast-mafft",
+    tagline:
+      "A drop-in replacement for MAFFT, the standard multiple sequence aligner, that runs 9.7–36× faster on 32 cores with byte-identical output.",
+    description: [
+      "MAFFT is one of the standard tools for multiple sequence alignment: give it thousands of DNA, RNA, or protein sequences and it lines them up so related positions share a column. fast-mafft is a faster drop-in replacement for MAFFT v7.526 in its default mode (FFT-NS-2), built for the USC CSCI 270 bonus project. The constraint was that none of the speed could change the answer: for the same compiler and flags, its output is byte-identical to MAFFT's.",
+      "Every stage was rewritten in C. The 6-mer distance step uses a SIMD sum-of-absolute-differences identity, inverted indexes, and bit masks. The guide tree keeps MAFFT's greedy clustering but uses candidate lists to certify most nearest-neighbour rescans. The progressive passes run branch-free, AVX2-vectorized Gotoh DP rows, schedule merges along the critical path, let idle threads tile large DPs, and stay threaded above 20,000 sequences, where MAFFT goes serial. Floating-point values come from the same operations in the same order, and each new kernel has a bitwise self-check against the original code.",
+      "On USC's CARC cluster (32-core AMD EPYC, 64 GB), against MAFFT built with -O3 -march=native -flto, fast-mafft ran 9.7× to 36× faster on average across 12 datasets of up to 93,681 sequences, and its slowest single run was still 8.3× faster. The largest RNA set went from 42 minutes to 88 seconds. Output was byte-identical in all 36 timed runs and on all 386 BAliBASE cases.",
+    ],
+    tags: [
+      "C",
+      "AVX2 SIMD",
+      "pthreads",
+      "Dynamic Programming",
+      "Performance Engineering",
+      "Bioinformatics",
+      "HPC",
+      "Slurm",
+    ],
+    image: "/images/projects/fast-mafft.jpg",
+    links: [{ label: "GitHub", href: "https://github.com/yih0nk/fast-mafft" }],
+  },
+  {
     slug: "hivemind",
     title: "Hivemind",
     tagline:
