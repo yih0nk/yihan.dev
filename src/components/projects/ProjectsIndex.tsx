@@ -43,6 +43,10 @@ const INDEX: Record<string, IndexEntry> = {
     line: 'Cafe operations: live inventory, autonomous reordering, forecast demand.',
     keys: ['Next.js', 'XGBoost', 'Supabase'],
   },
+  rewardsmith: {
+    line: 'Type a robot behavior in plain English, get a trained policy.',
+    keys: ['JAX', 'MuJoCo', 'PPO'],
+  },
   hivemind: {
     line: 'A Prometheus alert becomes a root-caused pull request.',
     keys: ['Go', 'Kubernetes', 'LLM Agents'],

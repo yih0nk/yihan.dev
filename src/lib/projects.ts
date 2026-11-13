@@ -63,6 +63,29 @@ export const projects: Project[] = [
     links: [{ label: "GitHub", href: "https://github.com/yih0nk/fast-mafft" }],
   },
   {
+    slug: "rewardsmith",
+    title: "Rewardsmith",
+    tagline:
+      "Describe a robot behavior in plain English and get a trained policy: Claude writes the scene, the test, and the reward, and a GPU trains it in minutes. Built at Cal Hacks 13.0.",
+    description: [
+      "Rewardsmith turns a sentence like \"push the ball into the goal\" into a trained quadruped policy. Claude writes a pass/fail check for the behavior before any training starts, then drafts several candidate reward functions. Each one is compiled and smoke-tested, trained with PPO, rendered to video, and measured.",
+      "A critic watches frames from each rollout and scores it, and a request only succeeds if the check passes and the score clears the bar. The best candidate seeds the next round, where an editor revises its reward using the critic's notes, until the robot does what was asked.",
+      "I built the JAX training core around brax PPO and MuJoCo Playground: reward injection, the compile-and-rollout gate, training, rendering, and metrics, warm-started from a pretrained walker so each request does not relearn walking from scratch. The whole loop, with a FastAPI server, a worker, and a React board, runs on one GPU pod. Built from scratch at Cal Hacks 13.0.",
+    ],
+    tags: [
+      "Python",
+      "JAX",
+      "brax PPO",
+      "MuJoCo Playground",
+      "Reinforcement Learning",
+      "Claude",
+      "FastAPI",
+      "React",
+    ],
+    image: "/images/projects/rewardsmith.jpg",
+    links: [{ label: "GitHub", href: "https://github.com/yih0nk/rewardsmith" }],
+  },
+  {
     slug: "hivemind",
     title: "Hivemind",
     tagline:
