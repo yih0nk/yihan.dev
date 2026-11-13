@@ -2957,9 +2957,11 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       <button
         type="button"
         onClick={() => standBackRef.current()}
-        className="absolute top-5 left-5 z-20 cursor-pointer rounded-full px-3 py-2 transition-opacity duration-500"
+        className="absolute left-5 z-20 cursor-pointer rounded-full px-3 py-2 transition-opacity duration-500"
         style={{
           ...META,
+          // below the fixed nav (z-50), which otherwise sits over it and takes the click
+          top: 'calc(var(--nav-h) + 0.75rem)',
           color: COLORS.ink,
           background: `color-mix(in srgb, ${COLORS.bg} 80%, transparent)`,
           border: `1px solid ${COLORS.hairline}`,
