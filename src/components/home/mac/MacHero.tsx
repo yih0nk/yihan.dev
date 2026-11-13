@@ -121,6 +121,7 @@ import {
 } from './macApps'
 import { type Piano, createPiano } from './macPiano'
 import { heroLayout } from './NameLayer'
+import { holdScroll } from '@/components/layout/SmoothScroll'
 import { ABOUT_GREETING, ABOUT_NOTE, MACHINE_BLURB, MACHINE_TRIES, META, NAME, TAGLINE, hexToRgb, loadFace } from './shared'
 
 /**
@@ -388,6 +389,20 @@ export default function MacHero({ onLean }: { onLean?: (leaned: boolean) => void
 
   useEffect(() => {
     onLeanRef.current(leaned)
+  }, [leaned])
+
+  // leaned in, the machine is the whole page: hold the smooth scroll and the
+  // native one (touch, reduced motion), and give both back on standing back
+  useEffect(() => {
+    if (!leaned) return
+    const root = document.documentElement
+    const was = root.style.overflow
+    holdScroll(true)
+    root.style.overflow = 'hidden'
+    return () => {
+      holdScroll(false)
+      root.style.overflow = was
+    }
   }, [leaned])
 
   useEffect(() => {
