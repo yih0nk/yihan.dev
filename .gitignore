@@ -16,3 +16,5 @@ docs/
 
 # Editor and agent tooling. Local convenience, not repo content.
 .claude/
+.vercel
+.env*
