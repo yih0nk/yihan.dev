@@ -23,6 +23,10 @@ import { redis } from "@/lib/redis";
  * Anything that slips through can be taken down with DELETE and the
  * GUESTBOOK_ADMIN_TOKEN (see the route).
  *
+ * A signer may also leave an email so Yihan can reach out. It is optional,
+ * never part of a Note, and never on the wall: it goes into a separate hash
+ * (`guestbook:contacts`, keyed by note id) that only the admin-token GET reads.
+ *
  * Storage is the site's Upstash Redis in production. In development it is an
  * in-memory list instead: the dev server talks to the production database, and
  * test notes must never land on the real wall.
@@ -34,6 +38,11 @@ export const NAME_MAX = 24;
 export const NOTE_MAX = 140;
 const KEEP = 300; // how many notes the wall keeps
 const KEY = "guestbook:notes";
+const CONTACTS = "guestbook:contacts";
+export const EMAIL_MAX = 254;
+
+/** Private: who left a note and how to reach them. Never sent to the wall. */
+export type Contact = { id: string; name: string; email: string; note: string; at: number };
 
 const matcher = new RegExpMatcher({ ...englishDataset.build(), ...englishRecommendedTransformers });
 
@@ -92,12 +101,20 @@ export function check(rawName: unknown, rawNote: unknown): Verdict {
   return { ok: true, name, note };
 }
 
+/** The optional email: null when left blank, an error when it is not an address. */
+export function checkEmail(raw: unknown): { ok: true; email: string | null } | { ok: false; error: string } {
+  const email = tidy(raw).toLowerCase();
+  if (!email) return { ok: true, email: null };
+  if (email.length > EMAIL_MAX || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, error: "that email does not look right" };
+  return { ok: true, email };
+}
+
 // ── storage ─────────────────────────────────────────────────────────────────
 const live = process.env.NODE_ENV === "production";
-type Memory = { notes: Note[]; hits: Map<string, number[]> };
+type Memory = { notes: Note[]; hits: Map<string, number[]>; contacts: Contact[] };
 const g = globalThis as unknown as { __guestbook?: Memory };
 /** The dev wall, kept on globalThis so a hot reload does not wipe it. */
-const mem = (): Memory => (g.__guestbook ??= { notes: [], hits: new Map() });
+const mem = (): Memory => (g.__guestbook ??= { notes: [], hits: new Map(), contacts: [] });
 
 export async function listNotes(limit = 60): Promise<Note[]> {
   if (!live) return mem().notes.slice(0, limit);
@@ -133,6 +150,25 @@ export async function addNote(name: string, note: string): Promise<Note | "dupli
   await redis.lpush(KEY, JSON.stringify(entry));
   await redis.ltrim(KEY, 0, KEEP - 1);
   return entry;
+}
+
+/** File the signer's email privately, against the note it came with. */
+export async function saveContact(entry: Note, email: string): Promise<void> {
+  const contact: Contact = { id: entry.id, name: entry.name, email, note: entry.note, at: entry.at };
+  if (!live) {
+    (mem().contacts ??= []).unshift(contact);
+    return;
+  }
+  await redis.hset(CONTACTS, { [entry.id]: JSON.stringify(contact) });
+}
+
+/** Everyone who left an email, newest first. Admin only. */
+export async function listContacts(): Promise<Contact[]> {
+  if (!live) return mem().contacts ?? [];
+  const raw = (await redis.hgetall<Record<string, Contact | string>>(CONTACTS)) ?? {};
+  return Object.values(raw)
+    .map((r) => (typeof r === "string" ? (JSON.parse(r) as Contact) : r))
+    .sort((a, b) => b.at - a.at);
 }
 
 export async function removeNote(id: string): Promise<boolean> {

@@ -613,17 +613,22 @@ const offset = (r: Rect, c: Rect): Rect => ({ x: c.x + r.x, y: c.y + r.y, w: r.w
 
 // ── the guest book ────────────────────────────────────────────────────────
 type GNote = { id: string; name: string; note: string; at: number }
-export const GUEST_SIZE = { w: 300, h: 216 }
+export const GUEST_SIZE = { w: 300, h: 228 } // tall enough for a two-line hint under the fields
 const G = {
   list: { x: 8, y: 6, w: 284, h: 110 },
   older: { x: 8, y: 119, w: 15, h: 13 },
   newer: { x: 27, y: 119, w: 15, h: 13 },
   name: { x: 44, y: 142, w: 130, h: 15 },
+  email: { x: 212, y: 142, w: 80, h: 15 },
   note: { x: 44, y: 161, w: 248, h: 27 },
   sign: { x: 240, y: 194, w: 52, h: 17 },
 }
 const G_NAME_MAX = 24
 const G_NOTE_MAX = 140
+const G_EMAIL_MAX = 254
+/** The order Tab and Enter walk the fields in. */
+const G_FIELDS = ['name', 'email', 'note'] as const
+type GField = (typeof G_FIELDS)[number]
 const ago = (ms: number) => {
   const m = Math.floor(ms / 60000)
   if (m < 1) return 'just now'
@@ -648,9 +653,12 @@ export class GuestBook implements App {
   private state: 'loading' | 'ready' | 'offline' = 'loading'
   private page = 0
   private pages: number[][] = []
-  private field: 'name' | 'note' | null = 'name'
+  private field: GField | null = 'name'
   private name = ''
+  private email = ''
   private note = ''
+  /** The text of the focused field. */
+  private cur = () => (this.field ? this[this.field] : '')
   private status = ''
   private sending = false
   private held: Rect | null = null
@@ -711,7 +719,7 @@ export class GuestBook implements App {
     }
     this.sending = true
     this.status = 'signing…'
-    fetch('/api/guestbook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, note, website: '' }) })
+    fetch('/api/guestbook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, note, email: this.email.trim(), website: '' }) })
       .then(async (r) => {
         const j = (await r.json().catch(() => ({}))) as { note?: GNote; error?: string }
         if (r.ok && j.note) {
@@ -786,13 +794,24 @@ export class GuestBook implements App {
     for (let x = c.x + 8; x < c.x + GUEST_SIZE.w - 8; x += 2) R.px(x, c.y + 137, 1)
     R.text('name', c.x + 10, c.y + G.name.y + 3, 1, true)
     this.box(R, c, G.name, this.name, this.field === 'name', false)
+    // optional, and private: it goes to Yihan, never onto the wall
+    R.text('email', c.x + 180, c.y + G.email.y + 3, 1, true)
+    this.box(R, c, G.email, this.email, this.field === 'email', false)
+    if (!this.email && this.field !== 'email') R.text('optional', c.x + G.email.x + 4, c.y + G.email.y + 3)
     R.text('note', c.x + 10, c.y + G.note.y + 3, 1, true)
     this.box(R, c, G.note, this.note, this.field === 'note', true)
-    R.text(this.status || `${G_NOTE_MAX - this.note.length} letters left · keep it kind`, c.x + 10, c.y + G.sign.y + 4)
+    const hint =
+      this.field === 'email'
+        ? 'only yihan sees this, not posted on the guest book. leave a contact if you want yihan to reach out.'
+        : `${G_NOTE_MAX - this.note.length} letters left · keep it kind`
+    wrapPx(this.status || hint, G.sign.x - 18)
+      .slice(0, 2)
+      .forEach((line, i) => R.text(line, c.x + 10, c.y + G.sign.y + 4 + i * 11))
     button(R, at(G.sign), this.sending ? '…' : 'sign', this.held === G.sign, true)
   }
   down(x: number, y: number) {
     if (inRect(G.name, x, y)) this.field = 'name'
+    else if (inRect(G.email, x, y)) this.field = 'email'
     else if (inRect(G.note, x, y)) this.field = 'note'
     else if (inRect(G.sign, x, y)) this.held = G.sign
     else if (this.pages.length > 1 && this.page < this.pages.length - 1 && inRect(G.older, x, y)) this.held = G.older
@@ -810,47 +829,48 @@ export class GuestBook implements App {
   }
   private put(s: string) {
     if (this.field === 'name') this.name = s.slice(0, G_NAME_MAX)
+    else if (this.field === 'email') this.email = s.replace(/\s/g, '').slice(0, G_EMAIL_MAX)
     else if (this.field === 'note') this.note = s.slice(0, G_NOTE_MAX)
     if (!this.sending) this.status = ''
   }
   key(key: string) {
     if (key === 'Tab') {
-      this.field = this.field === 'name' ? 'note' : 'name'
+      this.field = G_FIELDS[(G_FIELDS.indexOf(this.field ?? 'note') + 1) % G_FIELDS.length]
       return true
     }
     if (key === 'Enter') {
-      if (this.field === 'name') this.field = 'note'
+      if (this.field === 'name' || this.field === 'email') this.field = G_FIELDS[G_FIELDS.indexOf(this.field) + 1]
       else this.submit()
       return true
     }
     if (!this.field) return false
-    const cur = this.field === 'name' ? this.name : this.note
+    const cur = this.cur()
     if (key === 'Backspace') this.put(cur.slice(0, -1))
     else if (key.length === 1 && typeable(key)) this.put(cur + key)
     else return false
     return true
   }
   cursor(x: number, y: number): CursorName | null {
-    return inRect(G.name, x, y) || inRect(G.note, x, y) ? 'ibeam' : null
+    return inRect(G.name, x, y) || inRect(G.email, x, y) || inRect(G.note, x, y) ? 'ibeam' : null
   }
   busy() {
     return !!this.field && this.phase() !== this.shownPhase
   }
   textField() {
     if (!this.field) return null
-    return { value: this.field === 'name' ? this.name : this.note, max: this.field === 'name' ? G_NAME_MAX : G_NOTE_MAX }
+    return { value: this.cur(), max: { name: G_NAME_MAX, email: G_EMAIL_MAX, note: G_NOTE_MAX }[this.field] }
   }
   setText(value: string) {
     this.put(drawable(value))
   }
   can(op: EditOp) {
-    const cur = this.field === 'name' ? this.name : this.field === 'note' ? this.note : ''
+    const cur = this.cur()
     if (op === 'paste') return !!this.field && !!this.ctx.clip.text
     if (op === 'copy' || op === 'cut' || op === 'clear') return !!cur
     return false
   }
   edit(op: EditOp) {
-    const cur = this.field === 'name' ? this.name : this.field === 'note' ? this.note : ''
+    const cur = this.cur()
     if (op === 'copy' || op === 'cut') this.ctx.clip.text = cur
     if (op === 'cut' || op === 'clear') this.put('')
     if (op === 'paste' && this.ctx.clip.text) this.put(cur + drawable(this.ctx.clip.text))
