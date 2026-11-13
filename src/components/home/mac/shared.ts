@@ -23,6 +23,15 @@ export const ABOUT_NOTE = [
   'i love learning, fall into rabbit holes way too easily, and could probably talk about league of legends for hours (lol).',
   'poke around, leave a note in the guest book, or just say hi!',
 ] as const
+/** "about this desktop…": what the machine is, then what to try on it. */
+export const MACHINE_BLURB = 'a one-bit computer, drawn pixel by pixel inside a 3d mac. built from scratch by yihan.'
+export const MACHINE_TRIES = [
+  'drag the disk next to the mac into its slot',
+  'print a window  (file > print)',
+  'drag an icon to the trash',
+  'leave it alone for a minute',
+  'restart it  (special > restart)',
+] as const
 /** The few other things, the same list the nav comment and /play use. */
 export const THINGS = ['engineer', 'pianist', 'saxophonist', 'painter', 'photographer', 'badminton'] as const
 

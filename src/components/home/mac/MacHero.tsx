@@ -121,7 +121,7 @@ import {
 } from './macApps'
 import { type Piano, createPiano } from './macPiano'
 import { heroLayout } from './NameLayer'
-import { ABOUT_GREETING, ABOUT_NOTE, META, NAME, TAGLINE, hexToRgb, loadFace } from './shared'
+import { ABOUT_GREETING, ABOUT_NOTE, MACHINE_BLURB, MACHINE_TRIES, META, NAME, TAGLINE, hexToRgb, loadFace } from './shared'
 
 /**
  * 08 — Classic. A compact all-in-one in the spirit of the mid-eighties
@@ -311,7 +311,7 @@ function makeCord(n: number, radius: number, radial: number, mat: THREE.Material
 
 // ── the desktop's furniture ───────────────────────────────────────────────
 type IconId = BaseIconId | 'piano' | 'guests' | 'disk'
-type WinKind = IconId | 'project' | 'calc' | 'notes' | 'alarm' | 'control'
+type WinKind = IconId | 'project' | 'calc' | 'notes' | 'alarm' | 'control' | 'machine'
 /** A window around an app's content. */
 const around = (s: { w: number; h: number }) => ({ w: s.w + 2, h: s.h + TB + 2 })
 const SPEC: Record<WinKind, Rect & { title: string }> = {
@@ -328,6 +328,7 @@ const SPEC: Record<WinKind, Rect & { title: string }> = {
   notes: { title: 'note pad', x: 150, y: 70, ...around(NOTES_SIZE) },
   alarm: { title: 'alarm clock', x: 168, y: 40, ...around(ALARM_SIZE) },
   control: { title: 'control panel', x: 90, y: 88, ...around(CONTROL_SIZE) },
+  machine: { title: 'about this desktop', x: 96, y: 34, w: 300, h: 206 },
 }
 const ICONS: { id: IconId; label: string; x: number; y: number }[] = [
   { id: 'about', label: 'about', x: 464, y: 28 },
@@ -937,6 +938,10 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
     let nameSpr: Spr | null = null
     let welcomeSpr: Spr | null = null
     let yhSpr: Spr | null = null
+    // for "about this desktop…": when you got here, how many windows you have opened, the site's visits
+    const arrived = Date.now()
+    let winsOpened = 0
+    let visits: number | null = null
 
     // ── state ───────────────────────────────────────────────────────────
     // drawing on demand: the frame is only rendered when something on screen changed
@@ -1088,6 +1093,40 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       }
     }
 
+    const uptime = () => {
+      const s = Math.floor((Date.now() - arrived) / 1000)
+      if (s < 3600) return `${Math.floor(s / 60)}m ${s % 60}s`
+      return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`
+    }
+    const drawMachine = (c: Rect) => {
+      let y = c.y + 10
+      R.text("yihan's desktop", c.x + 14, y, 1, true)
+      y += 15
+      for (const l of wrapPx(MACHINE_BLURB, c.w - 28)) {
+        R.text(l, c.x + 14, y)
+        y += 11
+      }
+      y += 7
+      const stat = (label: string, value: string) => {
+        R.text(label, c.x + 14, y)
+        R.text(value, c.x + 150, y)
+        y += 12
+      }
+      stat('up since you arrived', uptime())
+      stat('visits', visits === null ? '…' : visits >= 1000 ? `${(visits / 1000).toFixed(1)}k` : String(visits))
+      stat('windows opened', String(winsOpened))
+      y += 4
+      for (let x = c.x + 14; x < c.x + c.w - 14; x += 2) R.px(x, y, 1)
+      y += 7
+      R.text('things to try', c.x + 14, y, 1, true)
+      y += 14
+      for (const t of MACHINE_TRIES) {
+        R.text('·', c.x + 16, y)
+        R.text(t, c.x + 24, y)
+        y += 11
+      }
+    }
+
     const drawProjects = (c: Rect) => {
       R.text('name', c.x + 26, c.y + 3, 1, true)
       R.text('about', c.x + 150, c.y + 3, 1, true)
@@ -1205,6 +1244,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       else if (w.kind === 'project') drawProject(w, c)
       else if (w.kind === 'contact') drawContact(w, c)
       else if (w.kind === 'disk') drawDisk(c)
+      else if (w.kind === 'machine') drawMachine(c)
       else drawTrash(c)
       R.unclip()
     }
@@ -1223,7 +1263,18 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       if (zooms.some((z) => z.win?.id === id)) return // already on its way
       if (kind === 'alarm') alarm.hush()
       if (kind === 'guests') guests.load()
+      if (kind === 'machine' && visits === null) {
+        // read-only: the count is bumped once per visit by the nav, never here
+        fetch('/api/views', { cache: 'no-store' })
+          .then((r) => r.json())
+          .then((j: { views?: number }) => {
+            if (typeof j.views === 'number') visits = j.views
+            fbDirty = true
+          })
+          .catch(() => {})
+      }
       const ex = wins.find((w) => w.id === id)
+      if (!ex) winsOpened++
       const s = SPEC[kind]
       const n = slug ? wins.filter((q) => q.kind === 'project').length : 0
       const w: Win = ex ?? {
@@ -1375,7 +1426,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
         x: 0,
         w: 0,
         items: [
-          { label: 'about this desktop…', act: () => openIcon('about') },
+          { label: 'about this desktop…', act: () => openDA('machine') },
           '-',
           { label: 'alarm clock', act: () => openDA('alarm') },
           { label: 'calculator', act: () => openDA('calc') },
@@ -2769,7 +2820,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       if (desktop && wall - clockCheck > 1000) {
         clockCheck = wall
         alarm.tick(new Date())
-        if (clockText() !== clockShown || wins.some((w) => w.kind === 'alarm')) fbDirty = true
+        if (clockText() !== clockShown || wins.some((w) => w.kind === 'alarm' || w.kind === 'machine')) fbDirty = true
       }
       if (alarm.ringing && Math.floor(wall / 500) !== Math.floor((wall - wdt) / 500)) fbDirty = true
       // a minute with nobody at the machine, and the paper planes come out
