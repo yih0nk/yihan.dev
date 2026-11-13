@@ -22,7 +22,7 @@ import { SITE_URL } from "@/lib/site";
  * behind the gate and render on no public page.
  *
  * It previously read "no quantitative résumé metrics, ever". That was already
- * dead: projects.ts names a 70% accuracy, experience.ts names 14,000+ forms and
+ * dead: projects.ts names a 70% cut in over-ordering, experience.ts names 14,000+ cases and
  * a 97% reduction, and all of them render publicly on pages this file mirrors.
  */
 

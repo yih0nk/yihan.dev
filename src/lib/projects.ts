@@ -18,10 +18,10 @@ export const projects: Project[] = [
     slug: "trove",
     title: "Trove",
     tagline:
-      "An all-in-one cafe operations platform with real-time inventory, automated ordering, and ML-driven demand forecasting.",
+      "An all-in-one cafe operations platform that syncs POS sales live, orders from vendors on its own, and forecasts demand. Winner of the LavaLab Best Traction Award.",
     description: [
       "Built in LavaLab, USC's premier startup incubator, Trove gives independent cafes a unified back-office: staff manage live inventory, communicate with vendors, and trigger purchase orders from a single React/Next.js/TypeScript interface backed by Supabase and PostgreSQL. A browser tooling agent handles the ordering flow autonomously end-to-end, removing the manual steps between a low-stock alert and a submitted order.",
-      "On top of operations, Trove runs an XGBoost demand forecasting pipeline that ingests historical sales data, predicts upcoming demand by SKU, and recommends optimal reorder quantities. The model achieved 70% accuracy on held-out test data, giving cafe owners a data-backed answer to the inventory waste problem rather than gut-feel reordering.",
+      "Sales sync live from Clover POS, and each sale deducts its ingredients by recipe, so stock levels stay current without anyone counting. That cut over-ordering by 70%. The ordering agent is built on Playwright and Azure OpenAI, and an XGBoost model forecasts the next 7 days of demand from sales history, so reorder quantities come from data rather than guesswork.",
       "Trove won the Best Traction Award ($500) at the USC LavaLab Demo Day.",
     ],
     tags: [
@@ -32,7 +32,9 @@ export const projects: Project[] = [
       "PostgreSQL",
       "Python",
       "XGBoost",
-      "REST API",
+      "Playwright",
+      "Azure OpenAI",
+      "Clover POS",
       "Browser Agent",
       "Demand Forecasting",
     ],
@@ -43,11 +45,11 @@ export const projects: Project[] = [
     slug: "fast-mafft",
     title: "fast-mafft",
     tagline:
-      "A drop-in replacement for MAFFT, the standard multiple sequence aligner, that runs 9.7–36× faster on 32 cores with byte-identical output.",
+      "A drop-in replacement for MAFFT, the standard multiple sequence aligner, that runs 10.1–43.9× faster on 32 cores with byte-identical output.",
     description: [
       "MAFFT is one of the standard tools for multiple sequence alignment: give it thousands of DNA, RNA, or protein sequences and it lines them up so related positions share a column. fast-mafft is a faster drop-in replacement for MAFFT v7.526 in its default mode (FFT-NS-2), built for the USC CSCI 270 bonus project. The constraint was that none of the speed could change the answer: for the same compiler and flags, its output is byte-identical to MAFFT's.",
       "Every stage was rewritten in C. The 6-mer distance step uses a SIMD sum-of-absolute-differences identity, inverted indexes, and bit masks. The guide tree keeps MAFFT's greedy clustering but uses candidate lists to certify most nearest-neighbour rescans. The progressive passes run branch-free, AVX2-vectorized Gotoh DP rows, schedule merges along the critical path, let idle threads tile large DPs, and stay threaded above 20,000 sequences, where MAFFT goes serial. Floating-point values come from the same operations in the same order, and each new kernel has a bitwise self-check against the original code.",
-      "On USC's CARC cluster (32-core AMD EPYC, 64 GB), against MAFFT built with -O3 -march=native -flto, fast-mafft ran 9.7× to 36× faster on average across 12 datasets of up to 93,681 sequences, and its slowest single run was still 8.3× faster. The largest RNA set went from 42 minutes to 88 seconds. Output was byte-identical in all 36 timed runs and on all 386 BAliBASE cases.",
+      "On USC's CARC cluster (32-core AMD EPYC, 64 GB), against MAFFT built with -O3 -march=native -flto, fast-mafft ran 10.1× to 43.9× faster on average across 12 datasets of up to 93,681 sequences, and its slowest single run was still 9.98× faster. The largest RNA set went from 42 minutes to 72 seconds. Output was byte-identical in all 36 timed runs and on all 386 BAliBASE cases.",
     ],
     tags: [
       "C",
@@ -114,7 +116,7 @@ export const projects: Project[] = [
     tagline:
       "Simulating competitive ride-hailing on a real Manhattan road network, where two companies learn pricing and routing strategies through multi-agent RL.",
     description: [
-      "A research project at USC's SIAS Lab modeling two competing ride-hailing companies, each operating mixed fleets of human-driven and autonomous vehicles across 75 Manhattan taxi zones. Companies learn zone-level pricing and routing strategies via Independent Proximal Policy Optimization (IPPO) while competing for the same customer pool.",
+      "A research project at USC's SIAS Lab modeling two competing ride-hailing companies, each operating a mixed fleet of human-driven and autonomous vehicles (800 vehicles in all) across 75 Manhattan taxi zones. Companies learn zone-level pricing and routing strategies via Independent Proximal Policy Optimization (IPPO) while competing for the same customer pool.",
       "The simulation is closed-loop: customer demand drives traffic, traffic affects routing, routing affects congestion, and congestion feeds back into the next decision. Customers choose between companies using a logit utility model based on price, wait time, and travel time.",
       "The environment runs on SUMO with Python controlling the simulation step-by-step at 1-second resolution, using real TLC trip data from Manhattan. I integrated zonal decision-making with road-level traffic-flow models, ensuring consistency between aggregate fleet actions and link-level congestion dynamics.",
     ],
@@ -137,16 +139,17 @@ export const projects: Project[] = [
     slug: "rocket-robot",
     title: "Rocket the Robot",
     tagline:
-      "A walking robot built from scratch, trained with reinforcement learning to move and interact with its environment.",
+      "A 6-DOF balancing robot built from scratch with USC Makers, with PPO balancing policies trained across 4,096 parallel simulations.",
     description: [
-      "Rocket is a custom-built robot developed with USC Makers. The hardware runs on an ATmega microcontroller and a Jetson for compute, with stepper motors, an IMU, and other sensors.",
-      "I wrote the I2C communication protocol between the ATmega and Jetson and helped assemble the robot: wiring, electronics, and integration. On the software side, I implemented a custom RL environment in Python using Isaac Sim and Isaac Lab, defining state observations, action spaces, and reward functions to prototype autonomous control behaviors in simulation using OpenAI Gymnasium.",
+      "Rocket is a custom-built 6-DOF balancing robot developed with USC Makers. The hardware runs on an ATmega microcontroller and a Jetson for compute, with stepper motors and an IMU.",
+      "I wired the Jetson, ATmega, IMU, and stepper electronics, and wrote the Jetson-side IMU and I2C drivers that connect the two boards.",
+      "On the learning side, I co-trained PPO balancing policies in Isaac Lab, running 4,096 parallel simulations on USC's CARC cluster, and shaped the rewards with sim-to-real transfer in mind.",
     ],
     tags: [
       "Python",
-      "Isaac Sim",
       "Isaac Lab",
-      "OpenAI Gymnasium",
+      "PPO",
+      "HPC",
       "ATmega",
       "Jetson",
       "I2C",

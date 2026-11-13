@@ -36,11 +36,11 @@ interface IndexEntry {
 
 const INDEX: Record<string, IndexEntry> = {
   'fast-mafft': {
-    line: 'A sequence aligner, made 9.7–36× faster without changing a byte of output.',
+    line: 'A sequence aligner, made 10.1–43.9× faster without changing a byte of output.',
     keys: ['C', 'SIMD', 'HPC'],
   },
   trove: {
-    line: 'Cafe operations: live inventory, autonomous reordering, forecast demand.',
+    line: 'Cafe operations: live POS sync, autonomous reordering, forecast demand.',
     keys: ['Next.js', 'XGBoost', 'Supabase'],
   },
   rewardsmith: {
@@ -56,8 +56,8 @@ const INDEX: Record<string, IndexEntry> = {
     keys: ['PyTorch', 'IPPO', 'SUMO'],
   },
   'rocket-robot': {
-    line: 'A walking robot built from scratch, taught to move in simulation.',
-    keys: ['Isaac Sim', 'Jetson', 'I2C'],
+    line: 'A balancing robot built from scratch, with policies trained in simulation.',
+    keys: ['Isaac Lab', 'Jetson', 'I2C'],
   },
   // shelved (see shelvedProjects in projects.ts); kept so it can come straight back
   'job-hunt-agent': {
