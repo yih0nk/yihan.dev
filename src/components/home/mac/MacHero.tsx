@@ -121,7 +121,7 @@ import {
 } from './macApps'
 import { type Piano, createPiano } from './macPiano'
 import { heroLayout } from './NameLayer'
-import { META, NAME, TAGLINE, THINGS, hexToRgb, loadFace } from './shared'
+import { ABOUT_GREETING, ABOUT_NOTE, META, NAME, TAGLINE, hexToRgb, loadFace } from './shared'
 
 /**
  * 08 — Classic. A compact all-in-one in the spirit of the mid-eighties
@@ -315,7 +315,7 @@ type WinKind = IconId | 'project' | 'calc' | 'notes' | 'alarm' | 'control'
 /** A window around an app's content. */
 const around = (s: { w: number; h: number }) => ({ w: s.w + 2, h: s.h + TB + 2 })
 const SPEC: Record<WinKind, Rect & { title: string }> = {
-  about: { title: 'about', x: 22, y: 32, w: 292, h: 196 },
+  about: { title: 'about', x: 22, y: 30, w: 340, h: 234 },
   projects: { title: 'projects', x: 44, y: 54, w: 392, h: 150 },
   guests: { title: 'guest book', x: 40, y: 30, ...around(GUEST_SIZE) },
   paint: { title: 'paint', x: 12, y: 26, w: 442, h: 296 },
@@ -1076,21 +1076,16 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
         R.spr(nameSpr, c.x + 16, y)
         y += nameSpr.h + 6
       }
-      R.text(TAGLINE, c.x + 17, y)
-      y += 18
-      for (let x = c.x + 16; x < c.x + c.w - 16; x += 2) R.px(x, y, 1)
-      y += 9
-      const row = (label: string, lines: string[]) => {
-        R.text(label, c.x + 66 - tw(label, true), y, 1, true)
-        for (const l of lines) {
-          R.text(l, c.x + 74, y)
-          y += 12
+      // a note rather than a fact sheet: the greeting, then a paragraph at a time
+      R.text(ABOUT_GREETING, c.x + 17, y, 1, true)
+      y += 16
+      for (const para of ABOUT_NOTE) {
+        for (const l of wrapPx(para, c.w - 34)) {
+          R.text(l, c.x + 17, y)
+          y += 11
         }
-        y += 3
+        y += 5
       }
-      row('where', ['usc · los angeles'])
-      row('also', wrapPx(`${THINGS.slice(1).join(', ')}.`, c.w - 90))
-      row('site', ['yihan.dev'])
     }
 
     const drawProjects = (c: Rect) => {
@@ -2915,6 +2910,10 @@ diffuseColor.rgb = mix(diffuseColor.rgb, mix(uInk, uInkAcc, vLeg.y), ink * onTop
       <div ref={hostRef} aria-hidden className="absolute inset-0" style={{ touchAction: 'pan-y' }} />
       <div className="sr-only">
         <p>{TAGLINE}</p>
+        <p>{ABOUT_GREETING}</p>
+        {ABOUT_NOTE.map((p) => (
+          <p key={p}>{p}</p>
+        ))}
         <ul>
           {CONTACT_ROWS.map(([label, text, url]) => (
             <li key={label}>

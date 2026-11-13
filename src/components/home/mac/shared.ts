@@ -10,6 +10,19 @@ import { COLORS, FONTS } from '@/styles/tokens'
 
 export const NAME = 'yihan hong'
 export const TAGLINE = 'engineer, and a few other things.'
+/**
+ * The note in the Classic's about window, in his words: a greeting, then a
+ * paragraph per line. All lowercase on purpose, and only what the one-bit
+ * font can draw (plain letters and punctuation, no em dashes).
+ */
+export const ABOUT_GREETING = 'hey! you found me :)'
+export const ABOUT_NOTE = [
+  "i'm yihan, a cs + computer engineering student at usc.",
+  "i like building tech that actually makes a difference. lately, i've been exploring software that reaches into the physical world: robots, sensors, things that move.",
+  "outside of code, i have a real soft spot for art. i perform music (fun fact: i've played piano at carnegie hall three times!), draw and oil paint, and take some photos. i also hit the gym, inconsistently.",
+  'i love learning, fall into rabbit holes way too easily, and could probably talk about league of legends for hours (lol).',
+  'poke around, leave a note in the guest book, or just say hi!',
+] as const
 /** The few other things, the same list the nav comment and /play use. */
 export const THINGS = ['engineer', 'pianist', 'saxophonist', 'painter', 'photographer', 'badminton'] as const
 
