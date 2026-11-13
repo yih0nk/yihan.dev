@@ -30,7 +30,7 @@ if (!process.env.BLOB_READ_WRITE_TOKEN) {
 
 const body = await readFile(path);
 const { url, pathname } = await put("resume/Yihan_Hong_Resume.pdf", body, {
-  access: "public", // unguessable URL; never exposed to the browser by the API
+  access: "private", // the store is private; /api/resume reads it through the SDK
   contentType: "application/pdf",
   addRandomSuffix: true,
   allowOverwrite: true,
