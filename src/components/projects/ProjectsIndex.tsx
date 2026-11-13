@@ -35,11 +35,6 @@ interface IndexEntry {
 }
 
 const INDEX: Record<string, IndexEntry> = {
-  // shelved for now (see shelvedProjects); kept so it can come straight back
-  cotter: {
-    line: 'Compliance testing for learned robot policies: pytest, for robots.',
-    keys: ['Python', 'MuJoCo', "Wald's SPRT"],
-  },
   'fast-mafft': {
     line: 'A sequence aligner, made 9.7–36× faster without changing a byte of output.',
     keys: ['C', 'SIMD', 'HPC'],
@@ -60,6 +55,7 @@ const INDEX: Record<string, IndexEntry> = {
     line: 'A walking robot built from scratch, taught to move in simulation.',
     keys: ['Isaac Sim', 'Jetson', 'I2C'],
   },
+  // shelved (see shelvedProjects in projects.ts); kept so it can come straight back
   'job-hunt-agent': {
     line: 'Watches job sources, scores each role, tailors it, and stops at the submit button.',
     keys: ['Python', 'Claude Code', 'Multi-Agent'],

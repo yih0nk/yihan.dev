@@ -81,7 +81,7 @@ export async function generateMetadata({
    * The share card is the sibling opengraph-image.tsx, which Next wires in by
    * file convention. Setting an openGraph object here, even just to say
    * `type: "article"`, replaces the inherited one wholesale and can take the
-   * card's og:image with it — measured once: /projects/cotter rendered with no
+   * card's og:image with it — measured once: a project page rendered with no
    * og:image at all, and no warning anywhere.
    *
    * So the title, the description and the canonical are declared, and the
