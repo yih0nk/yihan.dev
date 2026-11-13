@@ -1,6 +1,6 @@
 import { projects } from "@/lib/projects";
 import { EDUCATION, ROLES, SKILLS, formatSpan } from "@/lib/experience";
-import { CURRENT_ROLE, SEEKING, STRENGTHS, STUDYING } from "@/lib/recruiting";
+import { CURRENT_ROLE, LATEST_ROLE, SEEKING, STRENGTHS, STUDYING } from "@/lib/recruiting";
 import { EMAIL, GITHUB_URL, INSTAGRAM_URL, LINKEDIN_URL, SITE_URL } from "@/lib/site";
 
 /**
@@ -60,7 +60,7 @@ Contact: ${EMAIL} · ${GITHUB_URL} · ${LINKEDIN_URL}
 ## For recruiters
 
 - Looking for: ${SEEKING}
-- Now: ${CURRENT_ROLE.title}, ${CURRENT_ROLE.org}
+${CURRENT_ROLE ? `- Now: ${CURRENT_ROLE.title}, ${CURRENT_ROLE.org}` : `- Most recently: ${LATEST_ROLE.title}, ${LATEST_ROLE.org} (${formatSpan(LATEST_ROLE)})`}
 - Studying: ${STUDYING}
 - Strongest in: ${STRENGTHS.join(", ")}
 - Reach him: ${EMAIL} · ${LINKEDIN_URL} · ${GITHUB_URL}
@@ -70,8 +70,8 @@ Contact: ${EMAIL} · ${GITHUB_URL} · ${LINKEDIN_URL}
 
 ## About (in his words, from the homepage)
 
-I'm Yihan, a computer engineering and CS student at USC. Right now I'm
-building personalized AI agents at July AI and doing some research on the
+I'm Yihan, a computer engineering and CS student at USC. Most recently I was
+building personalized AI agents at July AI, with some research on the
 side. Lately I've been pulled toward robotics and hardware, and you can look
 at my recent work at ${SITE_URL}/projects.
 
@@ -85,7 +85,7 @@ also play an infamous game called League of Legends in my free time…
 So I'm an engineer, and a few other things. Most of them started as the thing
 I did instead of studying.
 
-Summer 2027 is still unclaimed. If you're building something interesting, say
+Spring 2027 is still unclaimed. If you're building something interesting, say
 hi: ${EMAIL}
 
 ---

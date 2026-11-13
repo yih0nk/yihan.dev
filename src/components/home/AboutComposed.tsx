@@ -232,8 +232,8 @@ export default function AboutComposed({
                 <NavTerm href="https://www.usc.edu">
                   USC
                 </NavTerm>
-                . Right now I&rsquo;m building personalized AI agents at{' '}
-                <NavTerm href="https://www.gojuly.ai">July AI</NavTerm> and doing some research on the side.
+                . Most recently I was building personalized AI agents at{' '}
+                <NavTerm href="https://www.gojuly.ai">July AI</NavTerm>, with some research on the side.
                 Lately I&rsquo;ve been pulled toward robotics and hardware, and you can look at my recent
                 work{' '}
                 <Link
@@ -253,7 +253,7 @@ export default function AboutComposed({
               </p>
               <p>So I&rsquo;m an engineer, and a few other things. Most of them started as the thing I did instead of studying.</p>
               <p>
-                Summer 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}
+                Spring 2027 is still unclaimed. If you&rsquo;re building something interesting,{' '}
                 <a
                   href={`mailto:${EMAIL}`}
                   className="border-b [border-color:var(--color-accent)] [color:var(--color-accent)]"

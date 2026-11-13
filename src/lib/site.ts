@@ -20,7 +20,7 @@ export const SITE_NAME = "Yihan Hong";
  * Google cuts snippets. No em dash — the voice does not use them.
  */
 export const SITE_DESCRIPTION =
-  "Yihan Hong: USC computer engineering & CS student and software engineering intern at July AI, building AI agents. Open to Summer 2027 SWE and AI internships.";
+  "Yihan Hong: USC computer engineering & CS student, former SWE intern at July AI. Builds AI agents and robotics software. Open to Spring 2027 internships.";
 
 /**
  * These were written out by hand in three files and two of them were wrong: the

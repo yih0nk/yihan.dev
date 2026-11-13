@@ -1,4 +1,4 @@
-import { EDUCATION, ROLES, formatMonth } from "@/lib/experience";
+import { EDUCATION, ROLES, formatMonth, type Role } from "@/lib/experience";
 
 /**
  * The recruiter summary: what Yihan is looking for, where he is now, and what
@@ -11,10 +11,17 @@ import { EDUCATION, ROLES, formatMonth } from "@/lib/experience";
  */
 
 /** What he is looking for, and when. No locations, on purpose. */
-export const SEEKING = "Summer 2027 software engineering and AI internships";
+export const SEEKING = "Spring 2027 software engineering and AI internships";
 
-/** The role he holds now: the first ongoing one. */
-export const CURRENT_ROLE = ROLES.find((r) => r.to === null) ?? ROLES[0];
+/**
+ * The role he holds now: the first ongoing one, or nothing between roles.
+ * It used to fall back to the newest role, which kept calling a finished
+ * internship his current job everywhere it was read.
+ */
+export const CURRENT_ROLE: Role | undefined = ROLES.find((r) => r.to === null);
+
+/** The newest role, ongoing or not: what "most recently" points at. */
+export const LATEST_ROLE: Role = CURRENT_ROLE ?? ROLES[0];
 
 /** The degree, and when it ends. */
 export const STUDYING = `${EDUCATION.title}, USC · graduating ${EDUCATION.to ? formatMonth(EDUCATION.to) : ""}`.trim();

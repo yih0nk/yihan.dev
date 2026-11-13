@@ -76,8 +76,8 @@ const profileLd = {
     description: SITE_DESCRIPTION,
     image: `${SITE_URL}/images/pfp.jpg`,
     sameAs: SOCIALS,
-    jobTitle: CURRENT_ROLE.title,
-    worksFor: { "@type": "Organization", name: CURRENT_ROLE.org, url: "https://www.gojuly.ai" },
+    // only while he actually holds a role: a finished internship is not an employer
+    ...(CURRENT_ROLE ? { jobTitle: CURRENT_ROLE.title, worksFor: { "@type": "Organization", name: CURRENT_ROLE.org } } : {}),
     alumniOf: {
       "@type": "CollegeOrUniversity",
       name: "University of Southern California",

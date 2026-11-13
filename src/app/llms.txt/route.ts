@@ -76,11 +76,12 @@ function fullText(): string {
 function body(): string {
   return `# Yihan Hong
 
-> Computer engineering and CS student at USC and software engineering intern
-> at July AI, building personalized AI agents, with research on LLMs for
-> clinical trial screening and a growing pull toward robotics and hardware.
-> Looking for Summer 2027 software engineering and AI internships. Also plays
-> piano, paints, takes photographs and plays badminton.
+> Computer engineering and CS student at USC. Most recently a software
+> engineering intern at July AI, building personalized AI agents, with
+> research on LLMs for clinical trial eligibility. Lately pulled toward
+> robotics and software that reaches into the physical world. Looking for
+> Spring 2027 software engineering and AI internships. Also plays piano,
+> paints, takes photographs and plays badminton.
 >
 > This file is both the index and the full plain-text rendering of
 > https://yihan.dev — no CSS, no canvas, no animation to parse. Everything the
